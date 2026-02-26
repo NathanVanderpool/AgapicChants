@@ -105,6 +105,7 @@ body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--
     <button class="instrument-btn" id="btn-ukulele" onclick="selectInstrument('ukulele',this)">🪕 Ukulele</button>
     <button class="instrument-btn" id="btn-other"   onclick="selectInstrument('other',this)">🎵 Other</button>
   </div>
+  <button id="reset-btn" onclick="resetInstrument()" style="display:none;margin-bottom:24px;background:none;border:none;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--terra);cursor:pointer;padding:0;font-family:inherit;">← Reset instrument</button>
 
   <div id="key-row" style="display:none;margin-top:20px;margin-bottom:0;">
     <div style="display:flex;gap:8px;margin-bottom:16px;">
@@ -181,14 +182,6 @@ body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--
 
       </div>
     </div>
-
-    <div id="play-result" style="display:none;padding:20px 24px;border-left:3px solid var(--terra);background:rgba(210,104,79,0.04);margin-top:4px;border-radius:0 12px 12px 0;">
-      <p id="result-main" style="font-size:16px;color:var(--ink);font-weight:500;margin-bottom:6px;"></p>
-      <p id="result-note" style="font-size:13px;color:var(--ink-soft);margin:0;line-height:1.7;"></p>
-      <p id="result-personal" style="display:none;font-size:11px;color:var(--ink-soft);opacity:0.65;margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);line-height:1.7;font-style:italic;"></p>
-    </div>
-
-    <button id="reset-btn" onclick="resetInstrument()" style="display:none;margin-top:16px;background:none;border:none;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--terra);cursor:pointer;padding:0;font-family:inherit;">← Change instrument</button>
   </div>
 
   <!-- ── SHEET MUSIC ── -->
@@ -242,7 +235,6 @@ function selectInstrument(choice,btn) {
   document.body.classList.add('musician-mode');
   document.getElementById('key-row').style.display='block';
   document.getElementById('step-capo').style.display='none';
-  document.getElementById('play-result').style.display='none';
   document.getElementById('reset-btn').style.display='block';
   document.getElementById('instrument-reassurance').style.display=choice==='piano'?'none':'block';
   document.getElementById('tool-btn-boxes').style.display=choice==='other'?'none':'inline-block';
@@ -280,20 +272,27 @@ function setKeyAndOpenChords(root) {
   positionKeyIndicator();
 }
 
-function showResult(main,note,personal) {
-  document.getElementById('play-result').style.display='block';
-  document.getElementById('result-main').textContent=main;
-  document.getElementById('result-note').textContent=note;
+function showResult(main,note) {
   document.getElementById('reassurance-title').textContent=main;
-  document.getElementById('reassurance-body').textContent=note;
-  const pNote=document.getElementById('result-personal');
-  pNote.style.display=personal?'block':'none';
-  pNote.textContent=personal||'';
+  document.getElementById('reassurance-body').textContent=note||'';
 }
 
 function resetInstrument() {
   document.querySelectorAll('.instrument-btn,.capo-option').forEach(b=>b.classList.remove('active'));
-  ['step-capo','play-result','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{
+  ['step-capo','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  document.getElementById('tool-btn-chords').classList.remove('active');
+  document.getElementById('tool-btn-boxes').classList.remove('active');
+  document.getElementById('tool-btn-boxes').style.display='inline-block';
+  activeTool=null;
+  document.body.classList.remove('musician-mode');
+  updateChords(SONG_KEY);
+}
+
+function resetInstrument() {
+  document.querySelectorAll('.instrument-btn,.capo-option').forEach(b=>b.classList.remove('active'));
+  ['step-capo','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{
     document.getElementById(id).style.display='none';
   });
   document.getElementById('tool-btn-chords').classList.remove('active');
