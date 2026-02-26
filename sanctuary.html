@@ -6,176 +6,58 @@
 <title>Sanctuary — Agapic Chants</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
-
 :root {
-  --cream: #f4e7d4;
-  --terra: #d2684f;
-  --terra-dark: #b04c35;
-  --ink: #2a1f14;
-  --ink-soft: #5a4535;
-  --rule: rgba(210,104,79,0.2);
-  --nav-height: 60px;
-  --bottom-nav-height: 64px;
+  --cream: #f4e7d4; --terra: #d2684f; --terra-dark: #b04c35;
+  --ink: #2a1f14; --ink-soft: #5a4535; --rule: rgba(210,104,79,0.2);
+  --nav-height: 60px; --bottom-nav-height: 64px;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  background:var(--cream); color:var(--ink);
-  font-family:'Jost',Futura,'Century Gothic',sans-serif;
-  font-size:16px; line-height:1.7;
-  padding-bottom:var(--bottom-nav-height);
-}
-a { color:var(--terra); text-decoration:none; }
-a:hover { color:var(--terra-dark); }
-em { color:var(--terra-dark); font-style:italic; }
-p { margin-bottom:18px; color:var(--ink-soft); }
-p:last-child { margin-bottom:0; }
-
-/* NAV */
-.top-nav {
-  display:none; position:sticky; top:0; z-index:100;
-  background:var(--cream); border-bottom:1px solid var(--rule);
-  padding:0 48px; height:var(--nav-height);
-  align-items:center; justify-content:space-between;
-}
-.top-nav .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink); }
-.top-nav .nav-logo img { width:36px; height:36px; }
-.top-nav .nav-logo span { font-size:13px; letter-spacing:0.15em; text-transform:uppercase; font-weight:500; }
-.top-nav .nav-links { display:flex; gap:40px; list-style:none; }
-.top-nav .nav-links a { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-soft); text-decoration:none; transition:color 0.2s; }
-.top-nav .nav-links a:hover, .top-nav .nav-links a.active { color:var(--terra); }
-
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0; z-index:100;
-  background:var(--cream); border-top:1px solid var(--rule);
-  height:var(--bottom-nav-height); display:flex; align-items:stretch;
-}
-.bottom-nav a {
-  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:4px; font-size:9px; letter-spacing:0.15em; text-transform:uppercase;
-  color:var(--ink-soft); text-decoration:none; transition:color 0.2s; padding:8px 4px;
-}
-.bottom-nav a.active, .bottom-nav a:hover { color:var(--terra); }
-.bottom-nav .nav-icon { font-size:18px; line-height:1; }
-
-/* PAGE */
-.page { max-width:720px; margin:0 auto; padding:48px 24px 48px; }
-
-/* SONG HEADER */
-.song-header { text-align:center; padding:40px 0 32px; }
-.song-logo { width:120px; height:120px; border-radius:24px; box-shadow:0 4px 24px rgba(44,36,22,0.15); margin:0 auto 16px; display:block; }
-.song-title { font-size:36px; font-weight:300; margin-bottom:6px; line-height:1.1; color:var(--ink); }
-.song-subtitle { font-size:12px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 20px; }
-.back-link { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-soft); text-decoration:none; opacity:0.6; }
-.back-link:hover { opacity:1; color:var(--terra); }
-
-.soundcloud-embed { display:block; margin-bottom:48px; }
-
-/* LABELS */
-.section-label {
-  font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
-  color:var(--terra); margin-bottom:16px; font-weight:500; display:block;
-}
-.section-label.top-space { margin-top:32px; }
-
-/* BUTTONS */
-.instrument-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
-.instrument-btn {
-  padding:8px 16px; font-size:12px; font-family:'Jost',Futura,sans-serif;
-  letter-spacing:0.06em; border:1px solid var(--rule); background:var(--cream);
-  color:var(--ink-soft); cursor:pointer; transition:all 0.15s; border-radius:12px;
-}
-.instrument-btn:hover { border-color:var(--terra); color:var(--terra); }
-.instrument-btn.active { background:var(--terra); color:var(--cream); border-color:var(--terra); }
-
-.tool-btn {
-  padding:9px 18px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
-  font-family:'Jost',Futura,sans-serif; border:1px solid var(--rule); background:var(--cream);
-  color:var(--ink-soft); cursor:pointer; transition:all 0.15s; border-radius:12px;
-}
-.tool-btn:hover { border-color:var(--terra); color:var(--terra); }
-.tool-btn.active { background:var(--terra); color:var(--cream); border-color:var(--terra); }
-
-.key-btn {
-  padding:6px 12px; font-size:12px; font-family:'Jost',Futura,sans-serif;
-  letter-spacing:0.08em; border:1px solid var(--rule); background:var(--cream);
-  color:var(--ink-soft); cursor:pointer; transition:all 0.15s; border-radius:10px;
-}
-.key-btn:hover { border-color:var(--terra); color:var(--terra); }
-.key-btn.active { background:var(--terra); color:var(--cream); border-color:var(--terra); }
-
-/* TOOL PANELS */
-.tool-row { display:flex; gap:8px; margin-bottom:16px; }
-.tool-panel { margin-top:16px; padding:20px; background:rgba(107,87,68,0.04); border-radius:12px; }
-.tool-panel-title { font-size:13px; color:var(--ink); margin-bottom:4px; font-weight:500; }
-.tool-panel-desc { font-size:12px; color:var(--ink-soft); opacity:0.8; margin-bottom:12px; }
-.tool-panel-desc.spaced { margin-bottom:16px; }
-.key-selector-wrap { position:relative; padding-bottom:20px; }
-#key-selector { display:flex; flex-wrap:wrap; gap:6px; }
-#key-indicator {
-  position:absolute; font-size:10px; color:var(--ink-soft); opacity:0.5;
-  letter-spacing:0.06em; white-space:nowrap; pointer-events:none; bottom:2px; left:0;
-}
-
-/* REASSURANCE */
-.instrument-reassurance { margin-top:20px; margin-bottom:4px; }
-.reassurance-title { font-size:13px; color:var(--ink); margin-bottom:4px; font-weight:500; }
-.reassurance-body { font-size:12px; color:var(--ink-soft); opacity:0.8; margin-bottom:0; }
-
-/* LYRICS */
-.lyric-line {
-  font-size:18px; font-weight:300; color:var(--ink);
-  line-height:1.4; padding-top:24px; margin-bottom:12px; position:relative;
-}
-.lyric-stanza { margin-bottom:40px; }
-cw { display:inline; position:relative; }
-cw::before {
-  content:attr(data-label); position:absolute; top:-22px; left:0;
-  font-size:11px; font-weight:400; font-style:normal; color:var(--ink-soft);
-  opacity:0.4; letter-spacing:0.04em; white-space:nowrap;
-  transition:all 0.25s ease; pointer-events:none;
-}
-body.musician-mode cw::before { font-size:13px; font-weight:700; color:var(--terra); opacity:1; }
-
-/* CAPO OPTIONS */
-.chant-along-section { border-top:1px solid var(--rule); padding-top:32px; margin-bottom:48px; }
-.capo-hint { font-size:11px; color:var(--ink-soft); opacity:0.65; margin-bottom:12px; letter-spacing:0.02em; }
-.capo-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.capo-option {
-  padding:16px; border:1px solid var(--rule); background:var(--cream); cursor:pointer;
-  text-align:left; font-family:'Jost',Futura,sans-serif; border-radius:12px; transition:all 0.15s;
-}
-.capo-option:hover { border-color:var(--terra); background:rgba(210,104,79,0.03); }
-.capo-option.active { border-color:var(--terra); background:rgba(210,104,79,0.06); }
-.opt-tag { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--terra); opacity:0.7; display:block; margin-bottom:6px; }
-.opt-title { font-size:15px; font-weight:500; color:var(--ink); display:block; margin-bottom:4px; }
-.opt-chords { font-size:13px; font-weight:600; color:var(--terra); display:block; margin-bottom:8px; }
-.opt-note { font-size:12px; color:var(--ink-soft); opacity:0.75; display:block; line-height:1.6; }
-
-/* PLAY RESULT */
-.play-result { padding:20px 24px; border-left:3px solid var(--terra); background:rgba(210,104,79,0.04); margin-top:4px; border-radius:0 12px 12px 0; }
-.play-result-main { font-size:16px; color:var(--ink); font-weight:500; margin-bottom:6px; }
-.play-result-note { font-size:13px; color:var(--ink-soft); margin:0; line-height:1.7; }
-.play-result-personal { font-size:11px; color:var(--ink-soft); opacity:0.65; margin-top:10px; padding-top:10px; border-top:1px solid var(--rule); line-height:1.7; font-style:italic; }
-
-/* RESET */
-.reset-btn {
-  margin-top:16px; background:none; border:none; font-size:11px; letter-spacing:0.12em;
-  text-transform:uppercase; color:var(--terra); cursor:pointer; padding:0; font-family:inherit;
-}
-.reset-btn:hover { color:var(--terra-dark); }
-
-/* SHEET MUSIC */
-.sheet-music-wrap { margin-bottom:48px; }
-.sheet-music-wrap img { width:100%; border-radius:4px; }
-
-/* DESKTOP */
-@media (min-width:768px) {
-  body { padding-bottom:0; }
-  .top-nav { display:flex; }
-  .bottom-nav { display:none; }
-  .page { padding:48px 48px 80px; }
-  .song-title { font-size:48px; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'Jost', Futura, 'Century Gothic', sans-serif; font-size: 16px; line-height: 1.7; padding-bottom: var(--bottom-nav-height); }
+a { color: var(--terra); text-decoration: none; }
+a:hover { color: var(--terra-dark); }
+em { color: var(--terra-dark); font-style: italic; }
+.top-nav { display: none; position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--rule); padding: 0 48px; height: var(--nav-height); align-items: center; justify-content: space-between; }
+.top-nav .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.top-nav .nav-logo span { font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
+.top-nav .nav-links { display: flex; gap: 40px; list-style: none; }
+.top-nav .nav-links a { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
+.top-nav .nav-links a:hover, .top-nav .nav-links a.active { color: var(--terra); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cream); border-top: 1px solid var(--rule); height: var(--bottom-nav-height); display: flex; align-items: stretch; }
+.bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; padding: 8px 4px; }
+.bottom-nav a.active, .bottom-nav a:hover { color: var(--terra); }
+.bottom-nav .nav-icon { font-size: 18px; line-height: 1; }
+.page { max-width: 720px; margin: 0 auto; padding: 48px 24px 48px; }
+h1 { font-size: 36px; font-weight: 300; line-height: 1.2; margin-bottom: 24px; color: var(--ink); }
+p { margin-bottom: 18px; color: var(--ink-soft); }
+p:last-child { margin-bottom: 0; }
+.divider { width: 40px; height: 2px; background: var(--terra); opacity: 0.35; margin: 40px 0; }
+.lyric-line { font-size: 18px; font-weight: 300; color: var(--ink); line-height: 1.4; padding-top: 24px; margin-bottom: 12px; position: relative; }
+cw { display: inline; position: relative; }
+cw::before { content: attr(data-label); position: absolute; top: -22px; left: 0; font-size: 11px; font-weight: 400; font-style: normal; color: var(--ink-soft); opacity: 0.4; letter-spacing: 0.04em; white-space: nowrap; transition: all 0.25s ease; pointer-events: none; }
+body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--terra); opacity: 1; }
+.instrument-btn { padding: 8px 16px; font-size: 12px; font-family: 'Jost', Futura, sans-serif; letter-spacing: 0.06em; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 12px; }
+.instrument-btn:hover { border-color: var(--terra); color: var(--terra); }
+.instrument-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
+.tool-btn { padding: 9px 18px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Jost', Futura, sans-serif; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 12px; }
+.tool-btn:hover { border-color: var(--terra); color: var(--terra); }
+.tool-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
+.key-btn { padding: 6px 12px; font-size: 12px; font-family: 'Jost', Futura, sans-serif; letter-spacing: 0.08em; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 10px; }
+.key-btn:hover { border-color: var(--terra); color: var(--terra); }
+.key-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
+.capo-option { padding: 16px; border: 1px solid var(--rule); background: var(--cream); cursor: pointer; text-align: left; font-family: 'Jost', Futura, sans-serif; border-radius: 12px; transition: all 0.15s; }
+.capo-option:hover { border-color: var(--terra); background: rgba(210,104,79,0.03); }
+.capo-option.active { border-color: var(--terra); background: rgba(210,104,79,0.06); }
+.capo-option .opt-tag { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); opacity: 0.7; display: block; margin-bottom: 6px; }
+.capo-option .opt-title { font-size: 15px; font-weight: 500; color: var(--ink); display: block; margin-bottom: 4px; }
+.capo-option .opt-chords { font-size: 13px; font-weight: 600; color: var(--terra); display: block; margin-bottom: 8px; }
+.capo-option .opt-note { font-size: 12px; color: var(--ink-soft); opacity: 0.75; display: block; line-height: 1.6; }
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+  .top-nav { display: flex; }
+  .bottom-nav { display: none; }
+  .page { padding: 48px 48px 80px; }
+  h1 { font-size: 48px; }
 }
 </style>
 </head>
@@ -183,7 +65,7 @@ body.musician-mode cw::before { font-size:13px; font-weight:700; color:var(--ter
 
 <nav class="top-nav">
   <a href="index.html" class="nav-logo">
-    <img src="PASTE_LOGO_BASE64_HERE" alt="Agapic Chants">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:36px;height:36px;border-radius:6px;">
     <span>Agapic Chants</span>
   </a>
   <ul class="nav-links">
@@ -194,137 +76,132 @@ body.musician-mode cw::before { font-size:13px; font-weight:700; color:var(--ter
   </ul>
 </nav>
 
+<nav class="bottom-nav">
+  <a href="index.html"><span class="nav-icon">🏠</span>Home</a>
+  <a href="chants.html" class="active"><span class="nav-icon">🎵</span>Chants</a>
+  <a href="sessions.html"><span class="nav-icon">🙏</span>Sessions</a>
+  <a href="support.html"><span class="nav-icon">♡</span>Support</a>
+</nav>
+
 <div class="page">
 
-  <div class="song-header">
-    <img src="PASTE_LOGO_BASE64_HERE" alt="Agapic Chants" class="song-logo">
-    <h1 class="song-title">Sanctuary</h1>
-    <p class="song-subtitle">with Anne and Jake</p>
-    <a href="chants.html" class="back-link">&#8592; Back to the Chantbook</a>
+  <div style="text-align:center; padding:40px 0 32px;">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:120px;height:120px;border-radius:24px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 16px;object-fit:cover;">
+    <h1 style="font-size:36px;font-weight:300;margin-bottom:6px;line-height:1.1;">Sanctuary</h1>
+    <p style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 20px;">with Anne and Jake</p>
+    <a href="chants.html" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;opacity:0.6;">← Back to the Chantbook</a>
   </div>
 
-  <iframe class="soundcloud-embed"
-    width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/agapicchants/agapic-chants-sanctuary-with-anne-and-jake-feat-secret-chord-collective&color=%23d2684f&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
-  </iframe>
+  <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/agapicchants/agapic-chants-sanctuary-with-anne-and-jake-feat-secret-chord-collective&color=%23d2684f&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"
+    style="display:block;margin-bottom:48px;"></iframe>
 
-  <span class="section-label top-space">Chant Along</span>
+  <p style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-top:32px;margin-bottom:16px;font-weight:500;">Chant Along</p>
 
-  <div class="instrument-row">
-    <button class="instrument-btn" id="btn-guitar"  onclick="selectInstrument('guitar',this)">&#127928; Guitar</button>
-    <button class="instrument-btn" id="btn-piano"   onclick="selectInstrument('piano',this)">&#127929; Piano / Keyboard</button>
-    <button class="instrument-btn" id="btn-ukulele" onclick="selectInstrument('ukulele',this)">&#129685; Ukulele</button>
-    <button class="instrument-btn" id="btn-other"   onclick="selectInstrument('other',this)">&#127925; Other</button>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
+    <button class="instrument-btn" id="btn-guitar"  onclick="selectInstrument('guitar',this)">🎸 Guitar</button>
+    <button class="instrument-btn" id="btn-piano"   onclick="selectInstrument('piano',this)">🎹 Piano / Keyboard</button>
+    <button class="instrument-btn" id="btn-ukulele" onclick="selectInstrument('ukulele',this)">🪕 Ukulele</button>
+    <button class="instrument-btn" id="btn-other"   onclick="selectInstrument('other',this)">🎵 Other</button>
   </div>
 
-  <div id="key-row" style="display:none; margin-top:20px;">
-
-    <div class="tool-row">
+  <div id="key-row" style="display:none;margin-top:20px;margin-bottom:0;">
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
       <button class="tool-btn" id="tool-btn-boxes"  onclick="toggleTool('boxes')">Chord boxes</button>
       <button class="tool-btn" id="tool-btn-chords" onclick="toggleTool('chords')">Change the key</button>
     </div>
-
-    <div id="tool-panel-chords" class="tool-panel" style="display:none;">
-      <p class="tool-panel-title">Change the key</p>
-      <p class="tool-panel-desc spaced">Tap any letter below and all the chords will change together &#8212; useful if someone has told you to play in a specific key, or if the pitch feels too high or low for your voice.</p>
-      <div class="key-selector-wrap">
-        <div id="key-selector"></div>
-        <div id="key-indicator">&#8592; lower &nbsp;&middot;&nbsp; higher &#8594;</div>
+    <div id="tool-panel-chords" style="display:none;margin-top:16px;padding:20px;background:rgba(107,87,68,0.04);border-radius:12px;">
+      <p style="font-size:13px;color:var(--ink);margin-bottom:4px;font-weight:500;">Change the key</p>
+      <p style="font-size:12px;color:var(--ink-soft);opacity:0.8;margin-bottom:12px;">Tap any letter below and all the chords will change together — useful if someone has told you to play in a specific key, or if the pitch feels too high or low for your voice.</p>
+      <div style="position:relative;padding-bottom:20px;">
+        <div id="key-selector" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div id="key-indicator" style="position:absolute;font-size:10px;color:var(--ink-soft);opacity:0.5;letter-spacing:0.06em;white-space:nowrap;pointer-events:none;bottom:2px;left:0;">← lower &nbsp;·&nbsp; higher →</div>
       </div>
     </div>
-
-    <div id="tool-panel-boxes" class="tool-panel" style="display:none;">
-      <p class="tool-panel-title">Chord boxes</p>
-      <p class="tool-panel-desc" id="chord-boxes-desc">Finger positions for each chord in this song.</p>
-      <div id="chord-diagrams-container" style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start;"></div>
+    <div id="tool-panel-boxes" style="display:none;margin-top:16px;padding:20px;background:rgba(107,87,68,0.04);border-radius:12px;">
+      <p style="font-size:13px;color:var(--ink);margin-bottom:4px;font-weight:500;">Chord boxes</p>
+      <p id="chord-boxes-desc" style="font-size:12px;color:var(--ink-soft);opacity:0.8;margin-bottom:16px;">Finger positions for each chord in this song.</p>
+      <div id="chord-diagrams-container" style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;"></div>
     </div>
-
   </div>
 
-  <div id="instrument-reassurance" class="instrument-reassurance" style="display:none;">
-    <p id="reassurance-title" class="reassurance-title">Whatever you know, there's a way to play this.</p>
-    <p id="reassurance-body"  class="reassurance-body">Scroll past any chords you don't recognise and pick the option that suits you &#8212; all of them work, all of them sound good.</p>
+  <div id="instrument-reassurance" style="display:none;margin-top:20px;margin-bottom:4px;">
+    <p id="reassurance-title" style="font-size:13px;color:var(--ink);margin-bottom:4px;font-weight:500;">Whatever you know, there's a way to play this.</p>
+    <p id="reassurance-body" style="font-size:12px;color:var(--ink-soft);opacity:0.8;margin-bottom:0;">Scroll past any chords you don't recognise and pick the option that suits you — all of them work, all of them sound good.</p>
   </div>
 
   <div class="lyrics-section" style="margin-bottom:40px;">
-
-    <div class="lyric-stanza">
-      <div class="lyric-line"><cw data-semitone="10"></cw>Close enough to hold your heart,&#8202;<cw data-semitone="8"></cw>Far enough to feel your soul</div>
-      <div class="lyric-line">We un<cw data-semitone="3"></cw>fold within this <cw data-semitone="10"></cw>wonder</div>
+    <div class="lyric-line">
+      <cw data-semitone="10"></cw>Close enough to hold your heart,&#8202;
+      <cw data-semitone="8"></cw>Far enough to feel your soul
     </div>
-
-    <div class="lyric-stanza">
-      <div class="lyric-line">And I <cw data-semitone="10"></cw>see you <cw data-semitone="8"></cw>see me see it</div>
-      <div class="lyric-line">Open <cw data-semitone="3"></cw>sky, quiet <cw data-semitone="3"></cw>thunder</div>
+    <div class="lyric-line" style="margin-bottom:40px;">
+      We un<cw data-semitone="3"></cw>fold within this <cw data-semitone="10"></cw>wonder
     </div>
-
-    <div class="lyric-stanza">
-      <div class="lyric-line">In this <cw data-semitone="10"></cw>sanctuary you re<cw data-semitone="8"></cw>main a mystery</div>
-      <div class="lyric-line"><cw data-semitone="3"></cw>No escape from the <cw data-semitone="10"></cw>tree of life</div>
+    <div class="lyric-line">
+      And I <cw data-semitone="10"></cw>see you <cw data-semitone="8"></cw>see me see it
     </div>
-
+    <div class="lyric-line" style="margin-bottom:40px;">
+      Open <cw data-semitone="3"></cw>sky, quiet <cw data-semitone="3"></cw>thunder
+    </div>
+    <div class="lyric-line">
+      In this <cw data-semitone="10"></cw>sanctuary you re<cw data-semitone="8"></cw>main a mystery
+    </div>
+    <div class="lyric-line">
+      <cw data-semitone="3"></cw>No escape from the <cw data-semitone="10"></cw>tree of life
+    </div>
   </div>
 
-  <div class="chant-along-section">
-
-    <div id="step-capo" style="display:none; margin-bottom:20px;">
-      <p class="capo-hint">Pick one &#8212; the chords update automatically.</p>
-      <div class="capo-grid">
-
+  <div style="border-top:1px solid var(--rule);padding-top:32px;margin-bottom:48px;">
+    <div id="step-capo" style="display:none;margin-bottom:20px;">
+      <p style="font-size:11px;color:var(--ink-soft);opacity:0.65;margin-bottom:12px;letter-spacing:0.02em;">Pick one — the chords update automatically.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <button class="capo-option" onclick="selectCapo('eb',this)">
           <span class="opt-tag">As recorded</span>
           <span class="opt-title">Tune down a whole step</span>
-          <span class="opt-chords">C &middot; Bb &middot; F shapes</span>
-          <span class="opt-note">Tune all six strings down a full step (a tuner will help). Then use familiar open shapes &#8212; each one sounds a whole step lower.</span>
+          <span class="opt-chords">C · Bb · F shapes</span>
+          <span class="opt-note">Tune all six strings down a full step (a tuner will help). Then use familiar open shapes — each one sounds a whole step lower.</span>
         </button>
-
         <button class="capo-option" onclick="selectCapo('capo',this)">
           <span class="opt-tag">Easiest match</span>
           <span class="opt-title">Capo 1</span>
-          <span class="opt-chords">Play A &middot; G &middot; D</span>
+          <span class="opt-chords">Play A · G · D</span>
           <span class="opt-note">Put the capo on the first fret. An A shape gives you Bb, a G shape gives you Ab, a D shape gives you Eb.</span>
         </button>
-
         <button class="capo-option" onclick="selectCapo('tune',this)">
           <span class="opt-tag">No capo needed</span>
           <span class="opt-title">Standard tuning, open shapes</span>
-          <span class="opt-chords">Play B &middot; A &middot; E open</span>
-          <span class="opt-note">Play B, A and E shapes in standard tuning &#8212; this comes out a half step higher than the recording. Or tune the whole song down a half step to match exactly.</span>
+          <span class="opt-chords">Play B · A · E open</span>
+          <span class="opt-note">Play B, A and E shapes in standard tuning — this comes out a half step higher than the recording.</span>
         </button>
-
         <button class="capo-option" onclick="selectCapo('open',this)">
           <span class="opt-tag">Total beginner</span>
           <span class="opt-title">Play in G</span>
-          <span class="opt-chords">D &middot; C &middot; G</span>
-          <span class="opt-note">The three most common chords on guitar. No capo, no retuning. Slightly different pitch from the recording but it sounds beautiful.</span>
+          <span class="opt-chords">D · C · G</span>
+          <span class="opt-note">The three most common chords on guitar. No capo, no retuning. Slightly different pitch but it sounds beautiful.</span>
         </button>
-
       </div>
     </div>
 
-    <div id="play-result" class="play-result" style="display:none;">
-      <p id="result-main"     class="play-result-main"></p>
-      <p id="result-note"     class="play-result-note"></p>
-      <p id="result-personal" class="play-result-personal" style="display:none;"></p>
+    <div id="play-result" style="display:none;padding:20px 24px;border-left:3px solid var(--terra);background:rgba(210,104,79,0.04);margin-top:4px;border-radius:0 12px 12px 0;">
+      <p id="result-main" style="font-size:16px;color:var(--ink);font-weight:500;margin-bottom:6px;"></p>
+      <p id="result-note" style="font-size:13px;color:var(--ink-soft);margin:0;line-height:1.7;"></p>
+      <p id="result-personal" style="display:none;font-size:11px;color:var(--ink-soft);opacity:0.65;margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);line-height:1.7;font-style:italic;"></p>
     </div>
 
-    <button id="reset-btn" class="reset-btn" onclick="resetInstrument()" style="display:none;">&#8592; Change instrument</button>
-
+    <button id="reset-btn" onclick="resetInstrument()" style="display:none;margin-top:16px;background:none;border:none;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--terra);cursor:pointer;padding:0;font-family:inherit;">← Change instrument</button>
   </div>
 
-  <span class="section-label">Sheet Music</span>
-  <div class="sheet-music-wrap">
-    <img src="PASTE_SHEET_MUSIC_BASE64_HERE" alt="Sanctuary sheet music">
+  <p style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-bottom:20px;font-weight:500;">Sheet Music</p>
+  <div style="margin-bottom:48px;">
+    <!-- PASTE YOUR SHEET MUSIC IMG TAG HERE (the one with the long base64 src) -->
+  </div>
+
+  <div style="padding-top:32px;border-top:1px solid var(--rule);text-align:center;">
+    <a href="chants.html" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);opacity:0.6;">← Back to the Chantbook</a>
   </div>
 
 </div>
-
-<nav class="bottom-nav">
-  <a href="index.html"><span class="nav-icon">&#127968;</span>Home</a>
-  <a href="chants.html" class="active"><span class="nav-icon">&#127925;</span>Chants</a>
-  <a href="sessions.html"><span class="nav-icon">&#10022;</span>Sessions</a>
-  <a href="support.html"><span class="nav-icon">&#9789;</span>Support</a>
-</nav>
 
 <script>
 const NOTES_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
@@ -338,15 +215,12 @@ const KEYS = [
 const SONG_KEY = 3;
 let currentRoot = SONG_KEY;
 
-function noteName(s) {
-  s = ((s%12)+12)%12;
-  return PREFER_FLAT.has(s) ? NOTES_FLAT[s] : NOTES_SHARP[s];
-}
+function noteName(s) { s=((s%12)+12)%12; return PREFER_FLAT.has(s)?NOTES_FLAT[s]:NOTES_SHARP[s]; }
 function transposeSemitone(orig,from,to) { return (((orig-from+to)%12)+12)%12; }
 
 function updateChords(newRoot) {
   document.querySelectorAll('cw').forEach(el=>{
-    const t = transposeSemitone(parseInt(el.dataset.semitone),currentRoot,newRoot);
+    const t=transposeSemitone(parseInt(el.dataset.semitone),currentRoot,newRoot);
     el.dataset.semitone=t; el.dataset.label=noteName(t);
   });
   document.querySelectorAll('#key-selector .key-btn').forEach(btn=>{
@@ -358,9 +232,7 @@ function updateChords(newRoot) {
 }
 
 function initChordLabels() {
-  document.querySelectorAll('cw').forEach(el=>{
-    el.dataset.label=noteName(parseInt(el.dataset.semitone));
-  });
+  document.querySelectorAll('cw').forEach(el=>{ el.dataset.label=noteName(parseInt(el.dataset.semitone)); });
 }
 
 function selectInstrument(choice,btn) {
@@ -387,10 +259,10 @@ function selectInstrument(choice,btn) {
 function selectCapo(choice,btn) {
   document.querySelectorAll('.capo-option').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(choice==='eb'){showResult('Tune down a whole step — C, F, Bb shapes','Tune all six strings down a full step (a clip-on tuner makes this easy). Then play open chord shapes as you normally would — each one sounds lower. A C shape gives you Bb. An F shape gives you Eb. A Bb shape gives you Ab. This is exactly how the recording was made.');setKeyAndOpenChords(5);}
-  else if(choice==='capo'){showResult('Capo 1 — D · G · A shapes','Put a capo on the first fret. A D shape gives you Eb, a G shape gives you Ab, an A shape gives you Bb. This is the most common way guitarists play in Eb.');setKeyAndOpenChords(2);}
-  else if(choice==='tune'){showResult('Standard tuning — B, A, E shapes','Play B, A and E open shapes in standard tuning — no capo, no retuning. This comes out a half step higher than the recording. If you want to match exactly, tune the whole song down a half step.');setKeyAndOpenChords(4);}
-  else{showResult('Play D, C, G — standard tuning, no capo','The three most common chords on guitar. Pick up and play, no setup needed. The pitch sits a little higher than the recording but it will sound beautiful — and if you are just starting out, this is the perfect place to begin.');setKeyAndOpenChords(7);}
+  if(choice==='eb'){showResult('Tune down a whole step — C, F, Bb shapes','Tune all six strings down a full step. A C shape gives you Bb, an F shape gives you Eb, a Bb shape gives you Ab.');setKeyAndOpenChords(5);}
+  else if(choice==='capo'){showResult('Capo 1 — D · G · A shapes','Put a capo on the first fret. A D shape gives you Eb, a G shape gives you Ab, an A shape gives you Bb.');setKeyAndOpenChords(2);}
+  else if(choice==='tune'){showResult('Standard tuning — B, A, E shapes','Play B, A and E open shapes. Comes out a half step higher than the recording.');setKeyAndOpenChords(4);}
+  else{showResult('Play D, C, G — standard tuning, no capo','The three most common chords on guitar. Pick up and play, no setup needed.');setKeyAndOpenChords(7);}
 }
 
 function setKeyAndOpenChords(root) {
@@ -416,7 +288,9 @@ function showResult(main,note,personal) {
 
 function resetInstrument() {
   document.querySelectorAll('.instrument-btn,.capo-option').forEach(b=>b.classList.remove('active'));
-  ['step-capo','play-result','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{document.getElementById(id).style.display='none';});
+  ['step-capo','play-result','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
   document.getElementById('tool-btn-chords').classList.remove('active');
   document.getElementById('tool-btn-boxes').classList.remove('active');
   document.getElementById('tool-btn-boxes').style.display='inline-block';
@@ -426,36 +300,28 @@ function resetInstrument() {
 }
 
 const CHORD_DB = {
-  'E':      {base:1,strings:[0,2,2,1,0,0]},
-  'A':      {base:1,strings:[-1,0,2,2,2,0]},
-  'D':      {base:1,strings:[-1,-1,0,2,3,2]},
-  'G':      {base:1,strings:[3,2,0,0,0,3]},
-  'C':      {base:1,strings:[-1,3,2,0,1,0]},
-  'F':      {base:1,strings:[1,3,3,2,1,1]},
-  'B':      {base:2,strings:[-1,2,4,4,4,2]},
-  'Bb':     {base:1,strings:[-1,1,3,3,3,1]},
-  'Eb':     {base:6,strings:[-1,6,8,8,8,6]},
-  'Ab':     {base:4,strings:[4,6,6,5,4,4]},
-  'Db':     {base:4,strings:[-1,4,6,6,6,4]},
-  'Gb':     {base:2,strings:[2,4,4,3,2,2]},
-  'Emaj7':  {base:1,strings:[0,2,1,1,0,0]},
-  'Amaj7':  {base:1,strings:[-1,0,2,1,2,0]},
-  'Dmaj7':  {base:1,strings:[-1,-1,0,2,2,2]},
-  'Gmaj7':  {base:1,strings:[3,2,0,0,0,2]},
-  'Cmaj7':  {base:1,strings:[-1,3,2,0,0,0]},
-  'Fmaj7':  {base:1,strings:[-1,-1,3,2,1,0]},
-  'Bbmaj7': {base:1,strings:[-1,1,3,2,3,1]},
-  'Ebmaj7': {base:6,strings:[-1,6,8,7,8,6]},
-  'Abmaj7': {base:3,strings:[-1,-1,6,5,4,3]},
-  'Dbmaj7': {base:4,strings:[-1,4,6,5,6,4]},
-  'Gbmaj7': {base:1,strings:[-1,-1,4,3,2,1]},
-  'Bmaj7':  {base:2,strings:[-1,2,4,3,4,2]},
+  'E':{base:1,strings:[0,2,2,1,0,0]},'A':{base:1,strings:[-1,0,2,2,2,0]},
+  'D':{base:1,strings:[-1,-1,0,2,3,2]},'G':{base:1,strings:[3,2,0,0,0,3]},
+  'C':{base:1,strings:[-1,3,2,0,1,0]},'F':{base:1,strings:[1,3,3,2,1,1]},
+  'B':{base:2,strings:[-1,2,4,4,4,2]},'Bb':{base:1,strings:[-1,1,3,3,3,1]},
+  'Eb':{base:6,strings:[-1,6,8,8,8,6]},'Ab':{base:4,strings:[4,6,6,5,4,4]},
+  'Db':{base:4,strings:[-1,4,6,6,6,4]},'Gb':{base:2,strings:[2,4,4,3,2,2]},
+  'Emaj7':{base:1,strings:[0,2,1,1,0,0]},'Amaj7':{base:1,strings:[-1,0,2,1,2,0]},
+  'Dmaj7':{base:1,strings:[-1,-1,0,2,2,2]},'Gmaj7':{base:1,strings:[3,2,0,0,0,2]},
+  'Cmaj7':{base:1,strings:[-1,3,2,0,0,0]},'Fmaj7':{base:1,strings:[-1,-1,3,2,1,0]},
+  'Bbmaj7':{base:1,strings:[-1,1,3,2,3,1]},'Ebmaj7':{base:6,strings:[-1,6,8,7,8,6]},
+  'Abmaj7':{base:3,strings:[-1,-1,6,5,4,3]},'Dbmaj7':{base:4,strings:[-1,4,6,5,6,4]},
+  'Gbmaj7':{base:1,strings:[-1,-1,4,3,2,1]},'Bmaj7':{base:2,strings:[-1,2,4,3,4,2]},
 };
+
+/* FIX: added base:1 to every ukulele entry — this was missing and caused chord boxes to not render */
 const UKE_DB = {
-  'C':{strings:[0,0,0,3]},'Db':{strings:[1,1,1,4]},'D':{strings:[2,2,2,0]},
-  'Eb':{strings:[3,3,3,1]},'E':{strings:[4,4,4,2]},'F':{strings:[2,0,1,0]},
-  'Gb':{strings:[3,1,2,1]},'G':{strings:[0,2,3,2]},'Ab':{strings:[5,3,4,3]},
-  'A':{strings:[2,1,0,0]},'Bb':{strings:[3,2,1,1]},'B':{strings:[4,3,2,2]},
+  'C':{base:1,strings:[0,0,0,3]},'Db':{base:1,strings:[1,1,1,4]},
+  'D':{base:1,strings:[2,2,2,0]},'Eb':{base:1,strings:[3,3,3,1]},
+  'E':{base:1,strings:[4,4,4,2]},'F':{base:1,strings:[2,0,1,0]},
+  'Gb':{base:1,strings:[3,1,2,1]},'G':{base:1,strings:[0,2,3,2]},
+  'Ab':{base:1,strings:[5,3,4,3]},'A':{base:1,strings:[2,1,0,0]},
+  'Bb':{base:1,strings:[3,2,1,1]},'B':{base:1,strings:[4,3,2,2]},
 };
 
 function chordSVG(name,instrument) {
@@ -506,9 +372,9 @@ function renderChordDiagrams() {
   container.innerHTML='';
   const desc=document.getElementById('chord-boxes-desc');
   if(desc){
-    if(currentInstrument==='piano'){desc.textContent='The highlighted keys show which notes to play for each chord. Two octaves shown — play in whichever position feels comfortable.';}
-    else if(currentInstrument==='ukulele'){desc.textContent='Finger positions for each chord. Each grid is your ukulele neck — strings are labelled G C E A at the bottom. Dots show where to press.';}
-    else{desc.textContent='Finger positions for each chord. Each grid is your guitar neck — vertical lines are strings, horizontal lines are frets. Dots show where to press.';}
+    if(currentInstrument==='piano'){desc.textContent='The highlighted keys show which notes to play. Two octaves shown — play wherever feels comfortable.';}
+    else if(currentInstrument==='ukulele'){desc.textContent='Finger positions for each chord on ukulele (G C E A). Dots show where to press.';}
+    else{desc.textContent='Finger positions for each chord. Vertical lines are strings, horizontal lines are frets. Dots show where to press.';}
   }
   const usePiano=currentInstrument==='piano',seen=new Set();
   document.querySelectorAll('cw').forEach(el=>{
