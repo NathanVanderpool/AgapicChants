@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chantbook — Agapic Chants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+:root {
+  --cream: #f4e7d4; --terra: #d2684f; --terra-dark: #b04c35;
+  --ink: #2a1f14; --ink-soft: #5a4535; --rule: rgba(210,104,79,0.2);
+  --nav-height: 60px; --bottom-nav-height: 64px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'Jost', Futura, 'Century Gothic', sans-serif; font-size: 16px; line-height: 1.7; padding-bottom: var(--bottom-nav-height); }
+a { color: var(--terra); text-decoration: none; }
+a:hover { color: var(--terra-dark); }
+.top-nav { display: none; position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--rule); padding: 0 48px; height: var(--nav-height); align-items: center; justify-content: space-between; }
+.top-nav .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.top-nav .nav-logo img { width: 36px; height: 36px; border-radius: 6px; }
+.top-nav .nav-logo span { font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
+.top-nav .nav-links { display: flex; gap: 40px; list-style: none; }
+.top-nav .nav-links a { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
+.top-nav .nav-links a:hover, .top-nav .nav-links a.active { color: var(--terra); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cream); border-top: 1px solid var(--rule); height: var(--bottom-nav-height); display: flex; align-items: stretch; }
+.bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; padding: 8px 4px; }
+.bottom-nav a.active, .bottom-nav a:hover { color: var(--terra); }
+.bottom-nav .nav-icon { font-size: 18px; line-height: 1; }
+.page { max-width: 720px; margin: 0 auto; padding: 48px 24px 48px; }
+
+/* Chant card */
+.chant-card {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  margin-bottom: 16px;
+  background: var(--cream);
+  transition: border-color 0.2s, background 0.2s;
+  color: var(--ink);
+  text-decoration: none;
+}
+.chant-card:hover {
+  border-color: var(--terra);
+  background: rgba(210,104,79,0.03);
+  color: var(--ink);
+}
+.chant-card:hover .chant-arrow { color: var(--terra); }
+.chant-number {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--terra);
+  opacity: 0.6;
+  display: block;
+  margin-bottom: 8px;
+}
+.chant-title {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.chant-with {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  display: block;
+  margin-bottom: 12px;
+}
+.chant-arrow {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.5;
+  transition: color 0.2s, opacity 0.2s;
+}
+.chant-card:hover .chant-arrow { opacity: 1; }
+
+/* Thanks */
+.thanks {
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+.thanks p {
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  line-height: 1.8;
+}
+.thanks strong { font-weight: 500; color: var(--ink-soft); opacity: 1; }
+
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+  .top-nav { display: flex; }
+  .bottom-nav { display: none; }
+  .page { padding: 48px 48px 80px; }
+  .chant-title { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants">
+    <span>Agapic Chants</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="chants.html" class="active">Chantbook</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="support.html">Support</a></li>
+  </ul>
+</nav>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span class="nav-icon">🏠</span>Home</a>
+  <a href="chants.html" class="active"><span class="nav-icon">🎵</span>Chants</a>
+  <a href="sessions.html"><span class="nav-icon">🙏</span>Sessions</a>
+  <a href="support.html"><span class="nav-icon">♡</span>Support</a>
+</nav>
+
+<div class="page">
+
+  <div style="text-align:center; padding:40px 0 40px;">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:120px;height:120px;border-radius:24px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 16px;object-fit:cover;">
+    <h1 style="font-size:36px;font-weight:300;margin-bottom:16px;line-height:1.1;">Chantbook</h1>
+    <p style="font-size:15px;color:var(--ink-soft);max-width:440px;margin:0 auto;line-height:1.8;">Each of these chants began with someone sharing what they were carrying. Now they're yours. Find a friend, open a song, and use your voice — that's all this takes.</p>
+  </div>
+
+  <div style="border-top:1px solid var(--rule);padding-top:40px;">
+
+    <a href="sanctuary.html" class="chant-card">
+      <span class="chant-number">I</span>
+      <div class="chant-title">Sanctuary</div>
+      <span class="chant-with">with Anne and Jake</span>
+      <span class="chant-arrow">Open →</span>
+    </a>
+
+    <a href="there-is-love.html" class="chant-card">
+      <span class="chant-number">II</span>
+      <div class="chant-title">There Is Love, You Are Loved</div>
+      <span class="chant-with">with Caro and Vivian</span>
+      <span class="chant-arrow">Open →</span>
+    </a>
+
+    <a href="be-just.html" class="chant-card">
+      <span class="chant-number">III</span>
+      <div class="chant-title">Be Just the Way You Are</div>
+      <span class="chant-with">with Jim</span>
+      <span class="chant-arrow">Open →</span>
+    </a>
+
+  </div>
+
+  <div class="thanks">
+    <p>Recorded at <a href="https://thefamousgoldwatch.com/" target="_blank" style="color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--rule);">Famous Gold Watch</a> with Cameron James Laing, featuring <a href="https://www.instagram.com/roevardotter__/" target="_blank" style="color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--rule);">Ronja Polzin</a> (<a href="https://open.spotify.com/intl-de/artist/1zGuLgtk8n8zzMNl2agpC3?si=k6Hr9DgWQIy9u_FtGjVCjw" target="_blank" style="color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--rule);">Pappelbaum</a>) and Francesco De Rosa (<a href="https://open.spotify.com/intl-de/artist/262xWmzc20luZm1ji0n9kR?si=N2EVQLRBQs2KS8bpu-jCsQ" target="_blank" style="color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--rule);">Secret Chord Collective</a>).</p>
+  </div>
+
+</div>
+
+</body>
+</html>
