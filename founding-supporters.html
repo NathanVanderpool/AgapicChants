@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An Invitation to Founding Supporters — Agapic Chants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+:root {
+  --cream: #f4e7d4; --terra: #d2684f; --terra-dark: #b04c35;
+  --ink: #2a1f14; --ink-soft: #5a4535; --rule: rgba(210,104,79,0.2);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'Jost', Futura, 'Century Gothic', sans-serif; font-size: 16px; line-height: 1.7; }
+a { color: var(--terra); text-decoration: none; }
+a:hover { color: var(--terra-dark); }
+.page { max-width: 640px; margin: 0 auto; padding: 64px 24px 80px; }
+p { margin-bottom: 18px; color: var(--ink-soft); line-height: 1.9; }
+h2 { font-size: 13px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--terra); opacity: 0.8; margin: 48px 0 16px; }
+.divider { width: 40px; height: 2px; background: var(--terra); opacity: 0.25; margin: 48px 0; }
+
+/* Hero quote */
+.hero-quote {
+  border-left: 3px solid var(--terra);
+  padding: 24px 28px;
+  margin: 48px 0;
+  border-radius: 0 12px 12px 0;
+  background: rgba(210,104,79,0.03);
+}
+.hero-quote p {
+  font-size: 18px;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.hero-quote .attribution {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  display: block;
+  margin: 0;
+}
+
+/* Testimonial */
+.testimonial {
+  border-left: 3px solid var(--rule);
+  padding: 20px 24px;
+  margin: 40px 0;
+  border-radius: 0 12px 12px 0;
+}
+.testimonial p { font-size: 15px; font-style: italic; color: var(--ink); line-height: 1.8; margin-bottom: 12px; }
+.testimonial .attribution { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); opacity: 0.6; font-style: normal; display: block; margin: 0; }
+
+/* Chant examples */
+.chant-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+.chant-list li {
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.5;
+}
+.chant-list li:last-child { border-bottom: none; }
+
+/* What you receive */
+.offer-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+.offer-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 15px;
+  color: var(--ink-soft);
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.6;
+}
+.offer-list li::before { content: '—'; position: absolute; left: 0; color: var(--terra); opacity: 0.5; }
+.offer-list li:last-child { border-bottom: none; }
+
+/* About */
+.about-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin: 20px 0;
+}
+.about-row img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* CTA */
+.cta-block {
+  text-align: center;
+  padding: 48px 0 16px;
+  border-top: 1px solid var(--rule);
+  margin-top: 48px;
+}
+.cta-block p { font-size: 16px; color: var(--ink); max-width: 400px; margin: 0 auto 28px; }
+.cta-btn {
+  display: inline-block;
+  padding: 16px 40px;
+  background: var(--terra);
+  color: var(--cream);
+  border-radius: 100px;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: background 0.2s;
+}
+.cta-btn:hover { background: var(--terra-dark); color: var(--cream); }
+.contact-line {
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  line-height: 2;
+}
+.contact-line a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--rule); }
+
+/* Chantbook link */
+.chantbook-link {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  transition: border-color 0.2s;
+}
+.chantbook-link:hover { border-color: var(--terra); }
+.chantbook-link span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--terra);
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+.chantbook-link strong {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .page { padding: 80px 48px 100px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div style="text-align:center;padding-bottom:48px;border-bottom:1px solid var(--rule);">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:100px;height:100px;border-radius:20px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 24px;object-fit:cover;">
+    <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--terra);opacity:0.7;margin-bottom:12px;">Agapic Chants</p>
+    <h1 style="font-size:32px;font-weight:300;line-height:1.2;color:var(--ink);margin-bottom:0;">An Invitation to<br>Founding Supporters</h1>
+  </div>
+
+  <div class="hero-quote">
+    <p>"When it clicks — when a room full of people is singing together — you can feel it in your body. Something is happening here, right now, and we are all part of it."</p>
+    <span class="attribution">— Hasan Can Tutal, Agapic Chants participant, Berlin</span>
+  </div>
+
+  <h2>The moment we're in</h2>
+  <p>Something shifts when people realise a simple truth: listening to the world's best singer is not the same as using your own voice. Singing together, in real space and time, is nourishing in ways we've almost forgotten.</p>
+  <p>But we have a problem. We don't know the songs.</p>
+  <p>The village had songs. The church had songs. Even pop music once served this function — shared refrains a whole generation could sing together in a car, at a party, in a moment of grief. That musical commons is gone. What replaced it was built for listening, not for singing together.</p>
+
+  <h2>What Agapic Chants does</h2>
+  <p>Agapic Chants are simple, musical repetitions drawn from real human struggles. They do what sacred music has always done: bring us into our bodies, move what is stuck, connect us to each other and to something larger. Without requiring belief in anything except the experience itself.</p>
+  <p>I've spent decades developing as a musician, and I honour that craft deeply. But chanting together provides a different kind of value — the way watching a peak athlete on YouTube is different from going for a walk. Both real, both worth having. One of them requires you to show up with your own body and do it.</p>
+
+  <h2>Examples</h2>
+  <ul class="chant-list">
+    <li>Be just the way you are, I'll be happy to be with you.</li>
+    <li>Trust in life as it is, I welcome it.</li>
+    <li>There is love. You are loved.</li>
+  </ul>
+  <p>Each chant begins with a one-on-one session — someone shares what they're carrying, and together we make it into a song. With their permission, it joins the repertoire — sung during chanting evenings and on Sundays at the Church of Interbeing. What was private becomes communal. What was heavy becomes light enough to carry together.</p>
+
+  <div class="testimonial">
+    <p>"Agapic Chants was a magical experience. It transformed one of my deepest sorrows that previously felt like it had no bottom, into a poem that I was here to express in the world. Singing it together with Nathan helped move the transformation through my entire system. It wasn't just a change in perspective — it reached my body, heart, and soul."</p>
+    <span class="attribution">— Rosa Lewis, mystic and teacher</span>
+  </div>
+
+  <h2>The Chantbook</h2>
+  <p>The goal is a chantbook of 20 songs — recordings, lyrics, chords, and sheet music in one digital object. Pass it to a friend who plays guitar, chant along with a bluetooth speaker, get everyone singing at a family dinner or a gathering of neighbours. Simple enough to use anywhere. Grounded in real lives.</p>
+
+  <a href="chants.html" class="chantbook-link">
+    <span>Preview</span>
+    <strong>Open the Chantbook →</strong>
+  </a>
+
+  <p style="font-size:14px;font-style:italic;color:var(--ink);border-left:2px solid var(--rule);padding-left:16px;margin:32px 0;">Try it yourself: open There Is Love, You Are Loved. Use the track to chant along. Find someone you trust — your children, your partner, your best friend. Sing it together. Tune into the space in your chest.</p>
+
+  <p>This is not a product. It is a practical answer to a real absence — a small act of rebuilding something we have quietly lost.</p>
+
+  <div class="divider"></div>
+
+  <h2>A small circle of founding supporters</h2>
+  <p>I'm looking for a few people who feel the importance of this work and want to help make it real. Your support funds 20 Agapic Chant sessions, studio recordings, and the production of the full chantbook.</p>
+
+  <ul class="offer-list">
+    <li>Your name in the Chantbook as a founding supporter</li>
+    <li>A personal chant written with you — or an invitation to sing the ones we've already made, if you prefer</li>
+    <li>A private chanting evening hosted for you and your community</li>
+    <li>Part of a larger movement at the Church of Interbeing and beyond</li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <h2>About Nathan</h2>
+  <div class="about-row">
+    <img src="nathan.webp" alt="Nathan Vanderpool">
+    <p>I'm a musician and ceremony holder based in Berlin, building the Agapic Chants Chantbook with the Church of Interbeing. My previous projects include <a href="https://rspnd.network/" target="_blank">Respond</a>, supported by the Vervaeke Foundation. I hold space and provide structure. The work happens through you, not to you.</p>
+  </div>
+
+  <div class="cta-block">
+    <p>Ready to talk? I can explain how Agapic Chants get made and distributed and answer any questions you have.</p>
+    <a href="https://calendly.com/nathanvanderpool/check-in" target="_blank" class="cta-btn">Book a Conversation →</a>
+    <div class="contact-line">
+      Nathan Vanderpool · Berlin<br>
+      <a href="mailto:nathanvanderpoolphd@gmail.com">nathanvanderpoolphd@gmail.com</a> ·
+      <a href="https://wa.me/4917654622093" target="_blank">WhatsApp</a> ·
+      <a href="https://t.me/AgapicChants" target="_blank">Telegram</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
