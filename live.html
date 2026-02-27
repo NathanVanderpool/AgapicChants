@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live — Agapic Chants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+:root {
+  --cream: #f4e7d4; --terra: #d2684f; --terra-dark: #b04c35;
+  --ink: #2a1f14; --ink-soft: #5a4535; --rule: rgba(210,104,79,0.2);
+  --nav-height: 60px; --bottom-nav-height: 64px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'Jost', Futura, 'Century Gothic', sans-serif; font-size: 16px; line-height: 1.7; padding-bottom: var(--bottom-nav-height); }
+a { color: var(--terra); text-decoration: none; }
+a:hover { color: var(--terra-dark); }
+.top-nav { display: none; position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--rule); padding: 0 48px; height: var(--nav-height); align-items: center; justify-content: space-between; }
+.top-nav .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.top-nav .nav-logo img { width: 36px; height: 36px; border-radius: 6px; }
+.top-nav .nav-logo span { font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
+.top-nav .nav-links { display: flex; gap: 40px; list-style: none; }
+.top-nav .nav-links a { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
+.top-nav .nav-links a:hover, .top-nav .nav-links a.active { color: var(--terra); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cream); border-top: 1px solid var(--rule); height: var(--bottom-nav-height); display: flex; align-items: stretch; }
+.bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; padding: 8px 4px; }
+.bottom-nav a.active, .bottom-nav a:hover { color: var(--terra); }
+.bottom-nav .nav-icon { font-size: 18px; line-height: 1; }
+.page { max-width: 720px; margin: 0 auto; padding: 48px 24px 48px; }
+p { margin-bottom: 18px; color: var(--ink-soft); }
+
+/* Event card */
+.event-card {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 0 24px;
+  align-items: start;
+}
+.event-card:first-of-type { border-top: 1px solid var(--rule); }
+
+.event-date-block {
+  text-align: center;
+  padding-top: 2px;
+}
+.event-day {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+  display: block;
+}
+.event-month {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--terra);
+  opacity: 0.7;
+  display: block;
+  margin-top: 3px;
+}
+
+.event-body {}
+.event-title {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.event-meta {
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  margin-bottom: 0;
+  letter-spacing: 0.02em;
+}
+.event-tag {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  opacity: 0.6;
+}
+.event-tag.open {
+  border-color: var(--terra);
+  color: var(--terra);
+  opacity: 1;
+}
+
+/* Date range card (for multi-day events) */
+.event-date-range {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+  padding-top: 2px;
+}
+.event-date-range span {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--terra);
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+/* Telegram nudge */
+.telegram-nudge {
+  margin-top: 48px;
+  padding: 24px;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.telegram-nudge p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.telegram-nudge a {
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--terra);
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+  .top-nav { display: flex; }
+  .bottom-nav { display: none; }
+  .page { padding: 48px 48px 80px; }
+  .hero-img { margin: 0 -48px 48px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="live.html" class="nav-logo">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants">
+    <span>Agapic Chants</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="live.html" class="active">Live</a></li>
+    <li><a href="chants.html">Chantbook</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="support.html">Support</a></li>
+  </ul>
+</nav>
+
+<nav class="bottom-nav">
+  <a href="live.html" class="active"><span class="nav-icon">🎤</span>Live</a>
+  <a href="chants.html"><span class="nav-icon">🎵</span>Chants</a>
+  <a href="sessions.html"><span class="nav-icon">🙏</span>Sessions</a>
+  <a href="support.html"><span class="nav-icon">♡</span>Support</a>
+</nav>
+
+<div class="page">
+
+  <div style="text-align:center; padding:40px 0 40px;">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:120px;height:120px;border-radius:24px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 16px;object-fit:cover;">
+    <h1 style="font-size:36px;font-weight:300;margin-bottom:16px;line-height:1.1;">Live</h1>
+    <p style="font-size:15px;color:var(--ink-soft);max-width:440px;margin:0 auto;line-height:1.8;">Where you can come and sing with us.</p>
+  </div>
+
+  <div class="hero-img" style="margin: 0 -24px 48px; overflow:hidden;">
+    <img src="here_beyond_sound.jpg" alt="Agapic Chants at Church of Interbeing" style="width:100%;height:60vh;object-fit:cover;object-position:center;display:block;">
+  </div>
+
+  <div>
+
+    <div class="event-card">
+      <div class="event-date-block">
+        <span class="event-day">1</span>
+        <span class="event-month">Mar</span>
+      </div>
+      <div class="event-body">
+        <div class="event-title">Agapic Chants at Church of Interbeing</div>
+        <p class="event-meta">Sunday · 13:00 · Herrfurthplatz, Berlin</p>
+        <span class="event-tag open">Open</span>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-date-range">
+        Mar 4–17
+        <span>March 2026</span>
+      </div>
+      <div class="event-body">
+        <div class="event-title">Practical Mystics Retreat</div>
+        <p class="event-meta">14 days</p>
+        <span class="event-tag">Sold out</span>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-date-range">
+        Mar 21–<br>Apr 9
+        <span>2026</span>
+      </div>
+      <div class="event-body">
+        <div class="event-title">Bonn Retreat</div>
+        <p class="event-meta">20 days</p>
+        <span class="event-tag">Sold out</span>
+      </div>
+    </div>
+
+  </div>
+
+  <img src="agapic_chants_living_room_01.jpg" alt="Agapic Chants in a Berlin flat" style="width:100%;border-radius:12px;display:block;margin:48px 0 32px;">
+
+  <div class="telegram-nudge">
+    <p>Stay in the loop for future gatherings — join the Telegram channel.</p>
+    <a href="https://t.me/AgapicChants" target="_blank">→ Telegram</a>
+  </div>
+
+</div>
+
+</body>
+</html>
