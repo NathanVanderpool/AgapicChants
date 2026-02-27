@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support — Agapic Chants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+:root {
+  --cream: #f4e7d4; --terra: #d2684f; --terra-dark: #b04c35;
+  --ink: #2a1f14; --ink-soft: #5a4535; --rule: rgba(210,104,79,0.2);
+  --nav-height: 60px; --bottom-nav-height: 64px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'Jost', Futura, 'Century Gothic', sans-serif; font-size: 16px; line-height: 1.7; padding-bottom: var(--bottom-nav-height); }
+a { color: var(--terra); text-decoration: none; }
+a:hover { color: var(--terra-dark); }
+.top-nav { display: none; position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--rule); padding: 0 48px; height: var(--nav-height); align-items: center; justify-content: space-between; }
+.top-nav .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.top-nav .nav-logo img { width: 36px; height: 36px; border-radius: 6px; }
+.top-nav .nav-logo span { font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
+.top-nav .nav-links { display: flex; gap: 40px; list-style: none; }
+.top-nav .nav-links a { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
+.top-nav .nav-links a:hover, .top-nav .nav-links a.active { color: var(--terra); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cream); border-top: 1px solid var(--rule); height: var(--bottom-nav-height); display: flex; align-items: stretch; }
+.bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; padding: 8px 4px; }
+.bottom-nav a.active, .bottom-nav a:hover { color: var(--terra); }
+.bottom-nav .nav-icon { font-size: 18px; line-height: 1; }
+.page { max-width: 720px; margin: 0 auto; padding: 48px 24px 48px; }
+p { margin-bottom: 18px; color: var(--ink-soft); }
+p:last-child { margin-bottom: 0; }
+.label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terra); opacity: 0.7; display: block; margin-bottom: 12px; font-weight: 500; }
+.divider { width: 40px; height: 2px; background: var(--terra); opacity: 0.25; margin: 48px 0; }
+
+/* Donation amounts */
+.amount-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.amount-btn {
+  padding: 12px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--cream);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.amount-btn:hover { border-color: var(--terra); color: var(--terra); }
+.amount-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
+
+.donate-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: var(--terra);
+  color: var(--cream);
+  border-radius: 100px;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: inherit;
+  text-align: center;
+  transition: background 0.2s;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+.donate-btn:hover { background: var(--terra-dark); color: var(--cream); }
+
+/* Founding card */
+.founding-card {
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 32px 28px;
+  margin-top: 8px;
+}
+.founding-card h3 {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.founding-perks {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 28px;
+}
+.founding-perks li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.5;
+}
+.founding-perks li::before { content: '—'; position: absolute; left: 0; color: var(--terra); opacity: 0.5; }
+.founding-perks li:last-child { border-bottom: none; }
+
+.cta-btn {
+  display: inline-block;
+  padding: 14px 32px;
+  background: var(--terra);
+  color: var(--cream);
+  border-radius: 100px;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: inherit;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.cta-btn:hover { background: var(--terra-dark); color: var(--cream); }
+
+/* About */
+.about-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.about-row img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.about-row p { margin-bottom: 0; font-size: 14px; line-height: 1.8; }
+
+/* Testimonial */
+.testimonial {
+  border-left: 3px solid var(--rule);
+  padding: 20px 24px;
+  margin: 40px 0;
+  border-radius: 0 12px 12px 0;
+}
+.testimonial p { font-size: 15px; font-style: italic; color: var(--ink); line-height: 1.8; margin-bottom: 12px; }
+.testimonial .attribution { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); opacity: 0.6; font-style: normal; margin: 0; display: block; }
+
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+  .top-nav { display: flex; }
+  .bottom-nav { display: none; }
+  .page { padding: 48px 48px 80px; }
+}
+@media (max-width: 400px) {
+  .amount-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="live.html" class="nav-logo">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants">
+    <span>Agapic Chants</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="live.html">Live</a></li>
+    <li><a href="chants.html">Chantbook</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="support.html" class="active">Support</a></li>
+  </ul>
+</nav>
+
+<nav class="bottom-nav">
+  <a href="live.html"><span class="nav-icon">🎤</span>Live</a>
+  <a href="chants.html"><span class="nav-icon">🎵</span>Chants</a>
+  <a href="sessions.html"><span class="nav-icon">🙏</span>Sessions</a>
+  <a href="support.html" class="active"><span class="nav-icon">♡</span>Support</a>
+</nav>
+
+<div class="page">
+
+  <div style="text-align:center; padding:40px 0 40px;">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:120px;height:120px;border-radius:24px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 16px;object-fit:cover;">
+    <h1 style="font-size:36px;font-weight:300;margin-bottom:16px;line-height:1.1;">Support</h1>
+    <p style="font-size:15px;color:var(--ink-soft);max-width:440px;margin:0 auto;line-height:1.8;">The chants are free. If they've meant something to you, your support helps make more of them.</p>
+  </div>
+
+  <div style="border-top:1px solid var(--rule);padding-top:40px;">
+    <span class="label">Make a contribution</span>
+    <div class="amount-grid">
+      <button class="amount-btn" onclick="selectAmount(this, 10)">€10</button>
+      <button class="amount-btn" onclick="selectAmount(this, 20)">€20</button>
+      <button class="amount-btn" onclick="selectAmount(this, 50)">€50</button>
+      <button class="amount-btn" onclick="selectAmount(this, 100)">€100</button>
+    </div>
+    <a id="donate-link" href="https://www.paypal.me/nathanvanderpoolphd" target="_blank" class="donate-btn">Donate via PayPal</a>
+    <p style="font-size:11px;color:var(--ink-soft);opacity:0.5;text-align:center;margin-top:12px;">You'll be taken to PayPal. Any amount is welcome.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="testimonial">
+    <p>"When it clicks — when a room full of people is singing together — you can feel it in your body. Something is happening here, right now, and we are all part of it."</p>
+    <span class="attribution">— Hasan Can Tutal, participant</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <span class="label">Chantbook Member — €20/month</span>
+  <div class="founding-card">
+    <h3>Join the Chantbook community</h3>
+    <p style="font-size:14px;margin-bottom:0;">A monthly membership that keeps the work alive and keeps you close to it.</p>
+    <ul class="founding-perks">
+      <li>Free entrance to all Agapic Chants gatherings</li>
+      <li>A new home-recorded chant every month</li>
+      <li>Other free goodies as the chantbook grows</li>
+    </ul>
+    <div id="paypal-button-container-P-4EK259621W748845ANGQYVLY" style="margin-top:8px;"></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="founding-card">
+    <h3>Help build the Chantbook</h3>
+    <p style="font-size:14px;margin-bottom:0;">The goal is a chantbook of 20 songs — recordings, lyrics, chords, and sheet music. Simple enough to use anywhere. Grounded in real lives. A small circle of founding supporters makes that possible.</p>
+    <ul class="founding-perks">
+      <li>Your name in the Chantbook as a founding supporter</li>
+      <li>A personal chant written with you — or an invitation to sing the ones we've already made</li>
+      <li>A private chanting evening hosted for you and your community</li>
+    </ul>
+    <a href="https://calendly.com/nathanvanderpool/check-in" target="_blank" class="cta-btn">Book a conversation →</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <span class="label">About Nathan</span>
+  <div class="about-row">
+    <img src="nathan.webp" alt="Nathan Vanderpool">
+    <p>I'm a musician and ceremony holder based in Berlin. I've spent decades working where sound meets transformation — as a songwriter, a ritual designer, and a contemplative practitioner. Agapic Chants grew from noticing what happens when the conditions are right: people access something already in them that hasn't found form yet. My previous projects include <a href="https://rspnd.network/" target="_blank">Respond</a>, supported by the Vervaeke Foundation.</p>
+  </div>
+
+</div>
+
+<script>
+function selectAmount(btn, amount) {
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('donate-link').href = 'https://www.paypal.me/nathanvanderpoolphd/' + amount;
+}
+
+// Load PayPal SDK dynamically, then render button once ready
+const ppScript = document.createElement('script');
+ppScript.src = 'https://www.paypal.com/sdk/js?client-id=AReO4FHWGg0lFgMh3iFYlRT6PyI4KZvQmfoKhRbpjCU-XulrnQFepUGFaLy6aTmbKuV71M-PQntHcJTh&vault=true&intent=subscription';
+ppScript.setAttribute('data-sdk-integration-source', 'button-factory');
+ppScript.onload = function() {
+  paypal.Buttons({
+    style: {
+      shape: 'pill',
+      color: 'gold',
+      layout: 'horizontal',
+      label: 'subscribe',
+      tagline: false
+    },
+    createSubscription: function(data, actions) {
+      return actions.subscription.create({ plan_id: 'P-4EK259621W748845ANGQYVLY' });
+    },
+    onApprove: function(data, actions) {
+      alert('Thank you! Your Chantbook membership is now active.');
+    }
+  }).render('#paypal-button-container-P-4EK259621W748845ANGQYVLY');
+};
+document.body.appendChild(ppScript);
+</script>
+</body>
+</html>
