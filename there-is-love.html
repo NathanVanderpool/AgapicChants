@@ -340,7 +340,7 @@ function chordSVG(name,instrument) {
   let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;">`;
   s+=`<text x="${W/2}" y="12" text-anchor="middle" font-family="Jost,sans-serif" font-size="10" font-weight="600" fill="#d2684f" letter-spacing="0.04em">${name}</text>`;
   if(data.base===1){s+=`<rect x="${padL}" y="${padT}" width="${gridW}" height="${nutH}" fill="#2a1f14" rx="1"/>`;}
-  else{s+=`<text x="${padL-3}" y="${padT+fy*0.6}" text-anchor="end" font-family="Jost,sans-serif" font-size="7.5" fill="#6b5744">${data.base}</text>`;}
+  else{s+=`<text x="${padL-8}" y="${padT+fy*0.6}" text-anchor="end" font-family="Jost,sans-serif" font-size="7.5" fill="#6b5744">${data.base}</text>`;}
   const gt=data.base===1?padT+nutH:padT;
   for(let f=0;f<=numFrets;f++){const y=gt+f*fy;s+=`<line x1="${padL}" y1="${y}" x2="${padL+gridW}" y2="${y}" stroke="#c8b8a8" stroke-width="${f===0&&data.base!==1?'1':'0.75'}"/>`;}
   for(let i=0;i<numStrings;i++){const x=padL+i*sx;s+=`<line x1="${x}" y1="${gt}" x2="${x}" y2="${gt+gridH}" stroke="#c8b8a8" stroke-width="0.75"/>`;}
