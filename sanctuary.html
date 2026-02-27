@@ -97,8 +97,7 @@ body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--
     src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/agapicchants/agapic-chants-sanctuary-with-anne-and-jake-feat-secret-chord-collective&color=%23d2684f&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"
     style="display:block;margin-bottom:48px;"></iframe>
 
-  <p style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-top:32px;margin-bottom:8px;font-weight:500;">Chant Along</p>
-  <p style="font-size:12px;color:var(--ink-soft);opacity:0.6;margin-bottom:14px;">Playing an instrument?</p>
+  <p style="font-size:12px;color:var(--ink-soft);opacity:0.6;margin-top:32px;margin-bottom:14px;">Playing an instrument?</p>
 
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
     <button class="instrument-btn" id="btn-guitar"  onclick="selectInstrument('guitar',this)">🎸 Guitar</button>
@@ -106,6 +105,7 @@ body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--
     <button class="instrument-btn" id="btn-ukulele" onclick="selectInstrument('ukulele',this)">🪕 Ukulele</button>
     <button class="instrument-btn" id="btn-other"   onclick="selectInstrument('other',this)">🎵 Other</button>
   </div>
+  <p style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-top:20px;margin-bottom:8px;font-weight:500;">Chant Along</p>
   <button id="reset-btn" onclick="resetInstrument()" style="display:none;margin-bottom:24px;background:none;border:none;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--terra);cursor:pointer;padding:0;font-family:inherit;">← Reset instrument</button>
 
   <div id="key-row" style="display:none;margin-top:20px;margin-bottom:0;">
