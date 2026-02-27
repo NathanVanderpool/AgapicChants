@@ -150,8 +150,8 @@ p { margin-bottom: 18px; color: var(--ink-soft); }
   body { padding-bottom: 0; }
   .top-nav { display: flex; }
   .bottom-nav { display: none; }
-  .page { padding: 48px 48px 80px; }
-  .hero-img { margin: 0 -48px 48px; }
+  .page { padding: 0 48px 80px; }
+  .page > div:first-child { margin: 0 -48px 48px; }
 }
 </style>
 </head>
@@ -179,14 +179,14 @@ p { margin-bottom: 18px; color: var(--ink-soft); }
 
 <div class="page">
 
-  <div style="text-align:center; padding:40px 0 40px;">
-    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:120px;height:120px;border-radius:24px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 16px;object-fit:cover;">
-    <h1 style="font-size:36px;font-weight:300;margin-bottom:16px;line-height:1.1;">Live</h1>
-    <p style="font-size:15px;color:var(--ink-soft);max-width:440px;margin:0 auto;line-height:1.8;">Come sing with us.</p>
-  </div>
-
-  <div class="hero-img" style="margin: 0 -24px 48px; overflow:hidden;">
-    <img src="here_beyond_sound.jpg" alt="Agapic Chants at Church of Interbeing" style="width:100%;height:60vh;object-fit:cover;object-position:center;display:block;">
+  <div style="position:relative;margin:0 -24px 48px;overflow:hidden;height:90vh;min-height:400px;">
+    <img src="here_beyond_sound.jpg" alt="Agapic Chants" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(42,31,20,0.15) 0%, rgba(42,31,20,0.55) 100%);"></div>
+    <div style="position:absolute;bottom:48px;left:32px;right:32px;">
+      <p style="font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(244,231,212,0.7);margin-bottom:10px;">Agapic Chants</p>
+      <h1 style="font-size:42px;font-weight:300;color:#f4e7d4;line-height:1.1;margin-bottom:8px;">Live</h1>
+      <p style="font-size:16px;color:rgba(244,231,212,0.8);margin:0;font-weight:300;">Come sing with us.</p>
+    </div>
   </div>
 
   <div class="testimonial">
