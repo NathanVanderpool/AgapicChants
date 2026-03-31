@@ -46,10 +46,14 @@ body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--
 .key-btn { padding: 6px 12px; font-size: 12px; font-family: 'Jost', Futura, sans-serif; letter-spacing: 0.08em; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 10px; }
 .key-btn:hover { border-color: var(--terra); color: var(--terra); }
 .key-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
-.capo-option { padding: 16px; border: 1px solid var(--rule); background: var(--cream); cursor: pointer; text-align: left; font-family: 'Jost', Futura, sans-serif; border-radius: 12px; transition: all 0.15s; }
+.capo-option { position: relative; margin-top: 28px; padding: 16px; border: 1px solid var(--rule); background: var(--cream); cursor: pointer; text-align: left; font-family: 'Jost', Futura, sans-serif; border-radius: 12px; transition: all 0.15s; }
 .capo-option:hover { border-color: var(--terra); background: rgba(210,104,79,0.03); }
 .capo-option.active { border-color: var(--terra); background: rgba(210,104,79,0.06); }
-.capo-option .opt-tag { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); opacity: 0.7; display: block; margin-bottom: 6px; }
+.capo-option .opt-tag { position: absolute; top: 0; left: 14px; transform: translateY(-100%); background: rgba(210,104,79,0.07); border: 1px solid rgba(210,104,79,0.32); border-bottom: 2px solid var(--cream); padding: 4px 11px 5px; border-radius: 4px 4px 0 0; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--terra); font-weight: 500; white-space: nowrap; }
+.capo-option.active .opt-tag { border-color: var(--terra); border-bottom-color: rgba(210,104,79,0.06); background: rgba(210,104,79,0.1); }
+.sub-opt { padding: 7px 14px; font-size: 11px; font-family: 'Jost', Futura, sans-serif; letter-spacing: 0.06em; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 8px; }
+.sub-opt:hover { border-color: var(--terra); color: var(--terra); }
+.sub-opt.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
 .capo-option .opt-title { font-size: 15px; font-weight: 500; color: var(--ink); display: block; margin-bottom: 4px; }
 .capo-option .opt-chords { font-size: 13px; font-weight: 600; color: var(--terra); display: block; margin-bottom: 8px; }
 .capo-option .opt-note { font-size: 12px; color: var(--ink-soft); opacity: 0.75; display: block; line-height: 1.6; }
@@ -167,31 +171,50 @@ body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--
   <div id="play-options-section" style="display:none;margin-bottom:32px;border-top:1px solid var(--rule);padding-top:24px;">
     <div id="step-capo" style="display:none;margin-bottom:20px;">
       <p style="font-size:11px;color:var(--ink-soft);opacity:0.65;margin-bottom:12px;letter-spacing:0.02em;">Pick one — the chords update automatically.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button class="capo-option" onclick="selectCapo('open',this)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;">
+
+        <button class="capo-option" id="card-beginner" onclick="selectCapo('open',this)">
           <span class="opt-tag">Total beginner</span>
           <span class="opt-title">Play in G</span>
           <span class="opt-chords">D · C · G</span>
           <span class="opt-note">The three most common chords on guitar. No capo, no retuning. Slightly different pitch but it sounds beautiful.</span>
         </button>
-        <button class="capo-option" onclick="selectCapo('capo',this)">
-          <span class="opt-tag">Easiest match</span>
-          <span class="opt-title">Capo 1</span>
-          <span class="opt-chords">Play A · G · D</span>
-          <span class="opt-note">Put the capo on the first fret. An A shape gives you Bb, a G shape gives you Ab, a D shape gives you Eb.</span>
+
+        <div class="capo-option" id="card-recording">
+          <span class="opt-tag">Play along with the recording</span>
+          <span class="opt-title">Get the exact pitch</span>
+          <span class="opt-note" style="display:block;margin-bottom:14px;">Two ways to play along with the recording. Pick whichever suits you — both use simple chord shapes once you're set up.</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="sub-opt" id="sub-tunedown" onclick="selectSubOption('tunedown',this)">Tune down a step</button>
+            <button class="sub-opt" id="sub-capo1" onclick="selectSubOption('capo1',this)">Capo on fret 1</button>
+          </div>
+          <div id="sub-detail" style="display:none;margin-top:12px;border-top:1px solid var(--rule);padding-top:12px;">
+            <span class="opt-chords" id="sub-chords" style="display:block;margin-bottom:6px;"></span>
+            <span class="opt-note" id="sub-note"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="step-uke" style="display:none;margin-bottom:20px;">
+      <p style="font-size:11px;color:var(--ink-soft);opacity:0.65;margin-bottom:12px;letter-spacing:0.02em;">Pick one — the chords update automatically.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;">
+
+        <button class="capo-option" id="uke-card-beginner" onclick="selectUke('open',this)">
+          <span class="opt-tag">Total beginner</span>
+          <span class="opt-title">Play in G</span>
+          <span class="opt-chords">G · C · D</span>
+          <span class="opt-note">Three easy open shapes on ukulele. The pitch will be higher than the recording but it sounds beautiful.</span>
         </button>
-        <button class="capo-option" onclick="selectCapo('tune',this)">
-          <span class="opt-tag">No capo needed</span>
-          <span class="opt-title">Standard tuning, open shapes</span>
-          <span class="opt-chords">Play B · A · E open</span>
-          <span class="opt-note">Play B, A and E shapes in standard tuning — this comes out a half step higher than the recording.</span>
+
+        <button class="capo-option" id="uke-card-recording" onclick="selectUke('tunedown',this)">
+          <span class="opt-tag">Play along with the recording</span>
+          <span class="opt-title">Tune down a step</span>
+          <span class="opt-chords">F · Bb · Eb shapes</span>
+          <span class="opt-note">Tune all four strings down a full step — a clip-on tuner makes this easy. Then play F, Bb and Eb shapes and you're in Eb, matching the recording exactly.</span>
         </button>
-        <button class="capo-option" onclick="selectCapo('eb',this)">
-          <span class="opt-tag">As recorded</span>
-          <span class="opt-title">Tune down a whole step</span>
-          <span class="opt-chords">C · Bb · F shapes</span>
-          <span class="opt-note">Tune all six strings down a full step (a tuner will help). Then use familiar open shapes — each one sounds a whole step lower.</span>
-        </button>
+
       </div>
     </div>
   </div>
@@ -264,6 +287,7 @@ function selectInstrument(choice,btn) {
   document.body.classList.add('musician-mode');
   document.getElementById('key-row').style.display='block';
   document.getElementById('step-capo').style.display='none';
+  document.getElementById('step-uke').style.display='none';
   document.getElementById('play-options-section').style.display='none';
   document.getElementById('reset-btn').style.display='block';
   document.getElementById('instrument-reassurance').style.display=choice==='piano'?'none':'block';
@@ -277,10 +301,10 @@ function selectInstrument(choice,btn) {
   document.getElementById('reassurance-body').textContent="Scroll past any chords you don't recognise and pick the option that suits you — all of them work, all of them sound good.";
   if(activeTool==='boxes'&&choice!=='other'){document.getElementById('tool-panel-boxes').style.display='block';renderChordDiagrams();}
   else if(activeTool==='chords'){document.getElementById('tool-panel-chords').style.display='block';}
-  if(choice==='guitar'){document.getElementById('step-capo').style.display='block';document.getElementById('play-options-section').style.display='block';}
-  else if(choice==='piano'){showResult('Play in F major — chords: F · Bbmaj7','Matches the original recording exactly. F is a very natural key on piano.');}
-  else if(choice==='ukulele'){showResult('The easiest key on ukulele is G — tap G in the key selector above.','This gives you G · Cmaj7 — both very playable open shapes. To play along to the recording, tune your uke down a whole step and keep the key set to G.');}
-  else{showResult('Original key: F major — chords: F · Bbmaj7','Use the key selector above to transpose to any key that suits your instrument.');}
+  if(choice==='guitar'){document.getElementById('step-capo').style.display='block';document.getElementById('step-uke').style.display='none';document.getElementById('play-options-section').style.display='block';}
+  else if(choice==='ukulele'){document.getElementById('step-uke').style.display='block';document.getElementById('step-capo').style.display='none';document.getElementById('play-options-section').style.display='block';}
+  else if(choice==='piano'){showResult('Play in Eb — chords: Bb · Ab · Eb','Matches the original recording exactly. Eb is very natural on piano.');}
+  else{showResult('Original key: Eb — chords: Bb · Ab · Eb','Use the key selector above to transpose to any key that suits your instrument.');}
   if(tutorOpen && tutorIdx >= 0) {
     if(choice !== 'other') tutorShowInstrument = true;
     renderTutor();
@@ -289,11 +313,44 @@ function selectInstrument(choice,btn) {
 
 function selectCapo(choice,btn) {
   document.querySelectorAll('.capo-option').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sub-opt').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sub-detail').style.display='none';
   btn.classList.add('active');
-  if(choice==='eb'){showResult('Tune down a whole step — C, F, Bb shapes','Tune all six strings down a full step. A C shape gives you Bb, an F shape gives you Eb, a Bb shape gives you Ab.');setKeyAndOpenChords(5);}
-  else if(choice==='capo'){showResult('Capo 1 — D · G · A shapes','Put a capo on the first fret. A D shape gives you Eb, a G shape gives you Ab, an A shape gives you Bb.');setKeyAndOpenChords(2);}
-  else if(choice==='tune'){showResult('Standard tuning — B, A, E shapes','Play B, A and E open shapes. Comes out a half step higher than the recording.');setKeyAndOpenChords(4);}
-  else{showResult('Play D, C, G — standard tuning, no capo','The three most common chords on guitar. Pick up and play, no setup needed.');setKeyAndOpenChords(7);}
+  if(choice==='open'){showResult('Play D, C, G — standard tuning, no capo','The three most common chords on guitar. Pick up and play, no setup needed.');setKeyAndOpenChords(7);}
+}
+
+function selectSubOption(choice,btn) {
+  document.querySelectorAll('.capo-option').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sub-opt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('card-recording').classList.add('active');
+  const detail=document.getElementById('sub-detail');
+  const chords=document.getElementById('sub-chords');
+  const note=document.getElementById('sub-note');
+  detail.style.display='block';
+  if(choice==='tunedown'){
+    chords.textContent='C · Bb · F shapes';
+    note.textContent="Tune all six strings down a full step — a clip-on tuner makes this easy. Then play C, Bb and F shapes and you're in Eb, matching the recording exactly.";
+    showResult('Tune down a step — C · Bb · F shapes','Tune all six strings down a full step. A C shape gives you Bb, an F shape gives you Eb, a Bb shape gives you Ab.');
+    setKeyAndOpenChords(5);
+  } else {
+    chords.textContent='A · G · D shapes → Bb · Ab · Eb';
+    note.textContent='Capo on the first fret. An A shape gives you Bb, a G shape gives you Ab, a D shape gives you Eb. All easy open shapes.';
+    showResult('Capo 1 — A · G · D shapes','Capo on the first fret. An A shape gives you Bb, a G shape gives you Ab, a D shape gives you Eb.');
+    setKeyAndOpenChords(2);
+  }
+}
+
+function selectUke(choice,btn) {
+  document.querySelectorAll('#step-uke .capo-option').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(choice==='open'){
+    showResult('Play in G — G · C · D','Three easy open shapes on ukulele. The pitch sits higher than the recording but sounds beautiful.');
+    setKeyAndOpenChords(7);
+  } else {
+    showResult('Tune down a step — F · Bb · Eb shapes','Tune all four strings down a full step, then play F, Bb and Eb shapes. They come out in Eb and match the recording exactly.');
+    setKeyAndOpenChords(5);
+  }
 }
 
 function setKeyAndOpenChords(root) {
@@ -312,8 +369,9 @@ function showResult(main,note,personal) {
 }
 
 function resetInstrument() {
-  document.querySelectorAll('.instrument-btn,.capo-option').forEach(b=>b.classList.remove('active'));
-  ['step-capo','play-options-section','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{
+  document.querySelectorAll('.instrument-btn,.capo-option,.sub-opt').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sub-detail').style.display='none';
+  ['step-capo','step-uke','play-options-section','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{
     document.getElementById(id).style.display='none';
   });
   document.getElementById('tool-btn-chords').classList.remove('active');
