@@ -116,9 +116,40 @@ const SYSTEMS=[
   {p:0,yt:1580,yb:2450,xb:[1038,1356,1808,2104,2441,2833],ts:6, te:16},
   {p:0,yt:2630,yb:3430,xb:[429,700,951,1262,1592,1879,2134,2424,2810],ts:16,te:32},
   {p:1,yt:200, yb:1060,xb:[429,1045,1641,2237,2833],     ts:32,te:40},
-  {p:1,yt:1470,yb:2100,xb:[1059,1517,2284,2810],         ts:40,te:93},
+  {p:1,yt:1470,yb:2100,xb:[1059,1517,2284,2810],         ts:40,te:46},
 ];
 const SVG_W=2977.2, TOTAL_DUR=93, PLAYHEAD_FRAC=0.25, SCORE_H=280, PAD=60;
+
+// Each row maps a MIDI time range to the corresponding score time range.
+// Passes 1 and 2 of each section both map to the same score time range —
+// so the score scrolls the same passage twice, once per repeat.
+const MIDI_RANGES=[
+  {ms:0,    me:16,    ss:0,  se:16}, // A pass 1
+  {ms:16,   me:31.25, ss:0,  se:16}, // A pass 2
+  {ms:31.25,me:47.25, ss:16, se:32}, // B pass 1
+  {ms:47.25,me:62.5,  ss:16, se:32}, // B pass 2
+  {ms:62.5, me:78.5,  ss:32, se:46}, // C pass 1
+  {ms:78.5, me:93,    ss:32, se:46}, // C pass 2
+];
+
+function midiToScore(midiT){
+  for(const r of MIDI_RANGES){
+    if(midiT>=r.ms&&midiT<=r.me){
+      return r.ss+(midiT-r.ms)/(r.me-r.ms)*(r.se-r.ss);
+    }
+  }
+  return 46;
+}
+
+// scoreToMidi: always maps to first pass of each section (for click-to-seek)
+function scoreToMidi(scoreT){
+  for(const r of MIDI_RANGES){
+    if(scoreT>=r.ss&&scoreT<=r.se){
+      return r.ms+(scoreT-r.ss)/(r.se-r.ss)*(r.me-r.ms);
+    }
+  }
+  return TOTAL_DUR;
+}
 
 let audioCtx=null, gainNodes=[];
 let isPlaying=false, looping=true;
@@ -140,7 +171,7 @@ loadSvg(0,'Agapic_Chantbook_Sanctuary_(with Anne_and_Jake).svg');
 loadSvg(1,'Agapic_Chantbook_Sanctuary_(with Anne_and_Jake)-2.svg');
 
 function updateScoreMsg(){
-  const sys=sysForTime(songNow());
+  const sys=sysForTime(midiToScore(songNow()));
   document.getElementById('scoreLoadMsg').style.display=imgsLoaded[sys.p]?'none':'flex';
 }
 
@@ -272,7 +303,8 @@ function drawRoll(now){
 }
 
 function updateScore(now){
-  const sys=sysForTime(now);
+  const scoreT=midiToScore(now);
+  const sys=sysForTime(scoreT);
   const wrap=document.getElementById('scoreWrap');
   const W=wrap.offsetWidth;
   const xHead=W*PLAYHEAD_FRAC;
@@ -287,7 +319,7 @@ function updateScore(now){
 
   const sysH=sys.yb-sys.yt+PAD*2;
   const scale=SCORE_H/sysH;
-  const xNote=tToX(now,sys);
+  const xNote=tToX(scoreT,sys);
   const imgLeft=xHead-xNote*scale;
   const imgTop=-(sys.yt-PAD)*scale;
 
@@ -306,12 +338,12 @@ function scoreClick(e){
   const wrap=document.getElementById('scoreWrap');
   const rect=wrap.getBoundingClientRect();
   const x=e.clientX-rect.left;
-  const now=songNow(),sys=sysForTime(now);
+  const now=songNow(),scoreT=midiToScore(now),sys=sysForTime(scoreT);
   const W=wrap.offsetWidth,xHead=W*PLAYHEAD_FRAC;
   const sysH=sys.yb-sys.yt+PAD*2,scale=SCORE_H/sysH;
-  const xNote=tToX(now,sys);
+  const xNote=tToX(scoreT,sys);
   const clickedSvgX=xNote+(x-xHead)/scale;
-  seekTo(xToT(clickedSvgX,sys));
+  seekTo(scoreToMidi(xToT(clickedSvgX,sys)));
   if(!isPlaying)requestAnimationFrame(drawLoop);
 }
 
