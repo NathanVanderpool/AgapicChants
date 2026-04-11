@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanctuary — Learn the Parts</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#f4e7d4;--terra:#d2684f;--terra-dark:#b04c35;
+  --ink:#2a1f14;--ink-soft:#5a4535;--rule:rgba(210,104,79,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font-size:15px;line-height:1.7;}
+.player{max-width:720px;margin:0 auto;padding:40px 24px 60px;}
+.player-title{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);opacity:0.5;margin-bottom:6px;}
+.player-name{font-size:28px;font-weight:300;color:var(--ink);margin-bottom:24px;}
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.voice-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.voice-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;border:1.5px solid;background:none;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500;}
+.voice-btn.muted{opacity:0.3;}
+.view-toggle{display:flex;border:1px solid var(--rule);border-radius:100px;overflow:hidden;}
+.view-btn{padding:6px 14px;border:none;background:none;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;transition:all 0.2s;}
+.view-btn.active{background:var(--terra);color:var(--cream);}
+.roll-wrap{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--rule);margin-bottom:4px;background:#f0e6d3;}
+canvas{display:block;width:100%;}
+canvas#scoreCanvas{display:none;}
+.time-bar{display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.08em;color:var(--ink-soft);opacity:0.45;margin-bottom:18px;padding:0 2px;}
+.lyrics-strip{margin-bottom:22px;display:flex;flex-direction:column;gap:5px;min-height:72px;}
+.lyric-row{display:flex;align-items:baseline;gap:12px;}
+.lyric-voice{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;width:64px;flex-shrink:0;font-weight:500;opacity:0.7;}
+.lyric-text{font-size:18px;font-weight:300;font-style:italic;transition:all 0.15s;opacity:0.5;}
+.lyric-text.active{font-weight:400;font-style:normal;opacity:1;}
+.transport{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.play-btn{width:44px;height:44px;border-radius:50%;background:var(--terra);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;flex-shrink:0;}
+.play-btn:hover{background:var(--terra-dark);}
+.play-btn svg{width:16px;height:16px;fill:var(--cream);margin-left:2px;}
+.play-btn.playing svg{margin-left:0;}
+.loop-btn{padding:7px 13px;border-radius:100px;border:1.5px solid var(--rule);background:none;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;transition:all 0.2s;}
+.loop-btn.on{border-color:var(--terra);color:var(--terra);background:rgba(210,104,79,0.06);}
+.tempo-group{display:flex;align-items:center;gap:9px;flex:1;min-width:150px;}
+.tempo-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);opacity:0.6;white-space:nowrap;}
+input[type=range].tempo-range{flex:1;accent-color:var(--terra);cursor:pointer;}
+.tempo-val{font-size:12px;font-weight:500;color:var(--terra);min-width:28px;text-align:right;}
+.score-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);opacity:0.5;}
+.hint{font-size:11px;color:var(--ink-soft);opacity:0.4;margin-top:18px;letter-spacing:0.02em;}
+</style>
+</head>
+<body>
+<div class="player">
+  <p class="player-title">Learn the parts</p>
+  <h2 class="player-name">Sanctuary</h2>
+
+  <div class="top-row">
+    <div class="voice-btns" id="voiceBtns"></div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="btnRoll" onclick="setView('roll')">Piano roll</button>
+      <button class="view-btn" id="btnScore" onclick="setView('score')">Score</button>
+    </div>
+  </div>
+
+  <div class="roll-wrap" id="rollWrap">
+    <div class="score-loading" id="scoreLoading" style="display:none;">Loading score…</div>
+    <canvas id="rollCanvas" height="120"></canvas>
+    <canvas id="scoreCanvas" height="280"></canvas>
+  </div>
+  <div class="time-bar">
+    <span id="timeCurrent">0:00</span>
+    <span id="timeTotal">1:33</span>
+  </div>
+
+  <div class="lyrics-strip" id="lyricsStrip"></div>
+
+  <div class="transport">
+    <button class="play-btn" id="playBtn" onclick="togglePlay()">
+      <svg id="playIcon" viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15"/></svg>
+    </button>
+    <button class="loop-btn on" id="loopBtn" onclick="toggleLoop()">Loop</button>
+    <div class="tempo-group">
+      <span class="tempo-label">Speed</span>
+      <input type="range" class="tempo-range" id="tempoRange" min="50" max="150" value="100" step="5" oninput="setTempo(this.value)">
+      <span class="tempo-val" id="tempoVal">1×</span>
+    </div>
+  </div>
+  <p class="hint">Score view: the red line shows your current position in the music. Click the score or roll to jump.</p>
+</div>
+
+<script>
+const MIDI_DATA = {"tpb":480,"tempo":500000,"tracks":[{"name":"Soprano","notes":[{"midi":72,"start":30.0,"dur":0.499,"startTick":28800},{"midi":74,"start":62.5,"dur":0.499,"startTick":60000,"lyric":"in "},{"midi":74,"start":63.0,"dur":0.499,"startTick":60480,"lyric":"this "},{"midi":74,"start":63.5,"dur":0.999,"startTick":60960,"lyric":"sa"},{"midi":74,"start":64.5,"dur":0.499,"startTick":61920,"lyric":"nctu"},{"midi":74,"start":65.0,"dur":0.499,"startTick":62400,"lyric":"a"},{"midi":75,"start":65.5,"dur":0.499,"startTick":62880,"lyric":"ry "},{"midi":72,"start":66.5,"dur":0.499,"startTick":63840,"lyric":"you "},{"midi":72,"start":67.0,"dur":0.499,"startTick":64320,"lyric":"re"},{"midi":72,"start":67.5,"dur":0.999,"startTick":64800,"lyric":"main "},{"midi":70,"start":68.5,"dur":0.499,"startTick":65760,"lyric":"a "},{"midi":72,"start":69.0,"dur":0.499,"startTick":66240,"lyric":"my"},{"midi":70,"start":69.5,"dur":0.499,"startTick":66720,"lyric":"st'ry "},{"midi":70,"start":70.5,"dur":0.499,"startTick":67680,"lyric":"no "},{"midi":70,"start":71.0,"dur":0.499,"startTick":68160,"lyric":"e"},{"midi":70,"start":71.5,"dur":0.499,"startTick":68640,"lyric":"scape "},{"midi":70,"start":73.0,"dur":0.499,"startTick":70080,"lyric":"from "},{"midi":67,"start":73.5,"dur":0.249,"startTick":70560,"lyric":"the "},{"midi":65,"start":73.75,"dur":0.249,"startTick":70800},{"midi":70,"start":74.0,"dur":0.499,"startTick":71040,"lyric":"tree "},{"midi":74,"start":74.5,"dur":0.999,"startTick":71520,"lyric":"of "},{"midi":74,"start":75.5,"dur":1.499,"startTick":72480,"lyric":"life "},{"midi":74,"start":78.5,"dur":0.499,"startTick":75360,"lyric":"in "},{"midi":74,"start":79.0,"dur":0.499,"startTick":75840,"lyric":"this "},{"midi":74,"start":79.5,"dur":0.999,"startTick":76320,"lyric":"sa"},{"midi":74,"start":80.5,"dur":0.499,"startTick":77280,"lyric":"nctu"},{"midi":74,"start":81.0,"dur":0.499,"startTick":77760,"lyric":"a"},{"midi":75,"start":81.5,"dur":0.499,"startTick":78240,"lyric":"ry "},{"midi":72,"start":82.5,"dur":0.499,"startTick":79200,"lyric":"you "},{"midi":72,"start":83.0,"dur":0.499,"startTick":79680,"lyric":"re"},{"midi":72,"start":83.5,"dur":0.999,"startTick":80160,"lyric":"main "},{"midi":70,"start":84.5,"dur":0.499,"startTick":81120,"lyric":"a "},{"midi":72,"start":85.0,"dur":0.499,"startTick":81600,"lyric":"my"},{"midi":70,"start":85.5,"dur":0.499,"startTick":82080,"lyric":"st'ry "},{"midi":70,"start":86.5,"dur":0.499,"startTick":83040,"lyric":"no "},{"midi":70,"start":87.0,"dur":0.499,"startTick":83520,"lyric":"e"},{"midi":70,"start":87.5,"dur":0.499,"startTick":84000,"lyric":"scape "},{"midi":70,"start":89.0,"dur":0.499,"startTick":85440,"lyric":"from "},{"midi":67,"start":89.5,"dur":0.249,"startTick":85920,"lyric":"the "},{"midi":65,"start":89.75,"dur":0.249,"startTick":86160},{"midi":70,"start":90.0,"dur":0.499,"startTick":86400,"lyric":"tree "},{"midi":74,"start":90.5,"dur":0.999,"startTick":86880,"lyric":"of "},{"midi":74,"start":91.5,"dur":1.499,"startTick":87840,"lyric":"life "}]},{"name":"Alto","notes":[{"midi":58,"start":0.0,"dur":0.499,"startTick":0,"lyric":"close "},{"midi":58,"start":0.5,"dur":0.249,"startTick":480,"lyric":"e"},{"midi":58,"start":0.75,"dur":0.749,"startTick":720,"lyric":"nough "},{"midi":58,"start":1.5,"dur":0.249,"startTick":1440,"lyric":"to "},{"midi":58,"start":1.75,"dur":0.499,"startTick":1680,"lyric":"hold "},{"midi":58,"start":2.25,"dur":0.499,"startTick":2160,"lyric":"your "},{"midi":58,"start":2.75,"dur":0.749,"startTick":2640,"lyric":"heart, "},{"midi":56,"start":4.0,"dur":0.499,"startTick":3840,"lyric":"far "},{"midi":56,"start":4.5,"dur":0.249,"startTick":4320,"lyric":"e"},{"midi":56,"start":4.75,"dur":0.749,"startTick":4560,"lyric":"nough "},{"midi":58,"start":5.5,"dur":0.249,"startTick":5280,"lyric":"to "},{"midi":56,"start":5.75,"dur":0.499,"startTick":5520,"lyric":"feel "},{"midi":56,"start":6.25,"dur":0.499,"startTick":6000,"lyric":"your "},{"midi":56,"start":6.75,"dur":0.499,"startTick":6480,"lyric":"soul, "},{"midi":56,"start":7.25,"dur":0.499,"startTick":6960,"lyric":"we "},{"midi":53,"start":7.75,"dur":0.749,"startTick":7440,"lyric":"un"},{"midi":55,"start":8.5,"dur":0.499,"startTick":8160,"lyric":"fold "},{"midi":58,"start":10.5,"dur":0.249,"startTick":10080,"lyric":"wi"},{"midi":60,"start":10.75,"dur":0.499,"startTick":10320,"lyric":"thin "},{"midi":58,"start":11.25,"dur":0.499,"startTick":10800,"lyric":"this "},{"midi":65,"start":11.75,"dur":0.499,"startTick":11280,"lyric":"won"},{"midi":70,"start":12.25,"dur":2.249,"startTick":11760,"lyric":"der "},{"midi":58,"start":16.0,"dur":0.499,"startTick":15360,"lyric":"close "},{"midi":58,"start":16.5,"dur":0.249,"startTick":15840,"lyric":"e"},{"midi":58,"start":16.75,"dur":0.749,"startTick":16080,"lyric":"nough "},{"midi":58,"start":17.5,"dur":0.249,"startTick":16800,"lyric":"to "},{"midi":58,"start":17.75,"dur":0.499,"startTick":17040,"lyric":"hold "},{"midi":58,"start":18.25,"dur":0.499,"startTick":17520,"lyric":"your "},{"midi":58,"start":18.75,"dur":0.749,"startTick":18000,"lyric":"heart, "},{"midi":56,"start":20.0,"dur":0.499,"startTick":19200,"lyric":"far "},{"midi":56,"start":20.5,"dur":0.249,"startTick":19680,"lyric":"e"},{"midi":56,"start":20.75,"dur":0.749,"startTick":19920,"lyric":"nough "},{"midi":58,"start":21.5,"dur":0.249,"startTick":20640,"lyric":"to "},{"midi":56,"start":21.75,"dur":0.499,"startTick":20880,"lyric":"feel "},{"midi":56,"start":22.25,"dur":0.499,"startTick":21360,"lyric":"your "},{"midi":56,"start":22.75,"dur":0.499,"startTick":21840,"lyric":"soul, "},{"midi":56,"start":23.25,"dur":0.499,"startTick":22320,"lyric":"we "},{"midi":53,"start":23.75,"dur":0.749,"startTick":22800,"lyric":"un"},{"midi":55,"start":24.5,"dur":0.499,"startTick":23520,"lyric":"fold "},{"midi":58,"start":26.5,"dur":0.249,"startTick":25440,"lyric":"wi"},{"midi":60,"start":26.75,"dur":0.499,"startTick":25680,"lyric":"thin "},{"midi":58,"start":27.25,"dur":0.499,"startTick":26160,"lyric":"this "},{"midi":65,"start":27.75,"dur":0.499,"startTick":26640,"lyric":"won"},{"midi":70,"start":28.25,"dur":1.75,"startTick":27120,"lyric":"der "},{"midi":70,"start":30.0,"dur":0.499,"startTick":28800},{"midi":65,"start":31.25,"dur":0.249,"startTick":30000,"lyric":"and "},{"midi":65,"start":31.5,"dur":0.499,"startTick":30240,"lyric":"I "},{"midi":65,"start":32.0,"dur":0.999,"startTick":30720,"lyric":"see "},{"midi":70,"start":33.0,"dur":0.999,"startTick":31680,"lyric":"you "},{"midi":70,"start":34.0,"dur":0.999,"startTick":32640,"lyric":"see "},{"midi":72,"start":35.0,"dur":0.999,"startTick":33600,"lyric":"me "},{"midi":70,"start":36.0,"dur":0.499,"startTick":34560,"lyric":"see "},{"midi":68,"start":36.5,"dur":0.249,"startTick":35040},{"midi":68,"start":36.75,"dur":1.249,"startTick":35280,"lyric":"it "},{"midi":68,"start":39.0,"dur":0.499,"startTick":37440,"lyric":"o"},{"midi":67,"start":39.5,"dur":0.249,"startTick":37920,"lyric":"pen "},{"midi":63,"start":39.75,"dur":0.749,"startTick":38160,"lyric":"sky "},{"midi":68,"start":42.0,"dur":0.999,"startTick":40320,"lyric":"qui"},{"midi":67,"start":43.0,"dur":0.999,"startTick":41280,"lyric":"et "},{"midi":68,"start":44.0,"dur":0.499,"startTick":42240,"lyric":"thu"},{"midi":70,"start":44.5,"dur":0.499,"startTick":42720,"lyric":"n"},{"midi":70,"start":45.0,"dur":1.499,"startTick":43200,"lyric":"der "},{"midi":65,"start":47.25,"dur":0.249,"startTick":45360,"lyric":"and "},{"midi":65,"start":47.5,"dur":0.499,"startTick":45600,"lyric":"I "},{"midi":65,"start":48.0,"dur":0.999,"startTick":46080,"lyric":"see "},{"midi":70,"start":49.0,"dur":0.999,"startTick":47040,"lyric":"you "},{"midi":70,"start":50.0,"dur":0.999,"startTick":48000,"lyric":"see "},{"midi":72,"start":51.0,"dur":0.999,"startTick":48960,"lyric":"me "},{"midi":70,"start":52.0,"dur":0.499,"startTick":49920,"lyric":"see "},{"midi":68,"start":52.5,"dur":0.249,"startTick":50400},{"midi":68,"start":52.75,"dur":1.249,"startTick":50640,"lyric":"it "},{"midi":68,"start":55.0,"dur":0.499,"startTick":52800,"lyric":"o"},{"midi":67,"start":55.5,"dur":0.249,"startTick":53280,"lyric":"pen "},{"midi":63,"start":55.75,"dur":0.749,"startTick":53520,"lyric":"sky "},{"midi":68,"start":58.0,"dur":0.999,"startTick":55680,"lyric":"qui"},{"midi":67,"start":59.0,"dur":0.999,"startTick":56640,"lyric":"et "},{"midi":68,"start":60.0,"dur":0.499,"startTick":57600,"lyric":"thu"},{"midi":70,"start":60.5,"dur":0.499,"startTick":58080,"lyric":"n"},{"midi":70,"start":61.0,"dur":1.499,"startTick":58560,"lyric":"der "},{"midi":70,"start":62.5,"dur":0.499,"startTick":60000,"lyric":"in "},{"midi":70,"start":63.0,"dur":0.499,"startTick":60480,"lyric":"this "},{"midi":70,"start":63.5,"dur":0.999,"startTick":60960,"lyric":"sa"},{"midi":70,"start":64.5,"dur":0.499,"startTick":61920,"lyric":"nctu"},{"midi":70,"start":65.0,"dur":0.499,"startTick":62400,"lyric":"a"},{"midi":70,"start":65.5,"dur":0.499,"startTick":62880,"lyric":"ry "},{"midi":68,"start":66.5,"dur":0.499,"startTick":63840,"lyric":"you "},{"midi":68,"start":67.0,"dur":0.499,"startTick":64320,"lyric":"re"},{"midi":68,"start":67.5,"dur":0.999,"startTick":64800,"lyric":"main "},{"midi":67,"start":68.5,"dur":0.499,"startTick":65760,"lyric":"a "},{"midi":68,"start":69.0,"dur":0.499,"startTick":66240,"lyric":"my"},{"midi":70,"start":69.5,"dur":0.499,"startTick":66720,"lyric":"st'ry "},{"midi":63,"start":70.5,"dur":0.499,"startTick":67680,"lyric":"no "},{"midi":65,"start":71.0,"dur":0.499,"startTick":68160,"lyric":"e"},{"midi":67,"start":71.5,"dur":0.499,"startTick":68640,"lyric":"scape "},{"midi":70,"start":73.0,"dur":0.499,"startTick":70080,"lyric":"from "},{"midi":67,"start":73.5,"dur":0.249,"startTick":70560,"lyric":"the "},{"midi":65,"start":73.75,"dur":0.249,"startTick":70800},{"midi":65,"start":74.0,"dur":0.499,"startTick":71040,"lyric":"tree "},{"midi":69,"start":74.5,"dur":0.999,"startTick":71520,"lyric":"of "},{"midi":70,"start":75.5,"dur":1.499,"startTick":72480,"lyric":"life "},{"midi":70,"start":78.5,"dur":0.499,"startTick":75360,"lyric":"in "},{"midi":70,"start":79.0,"dur":0.499,"startTick":75840,"lyric":"this "},{"midi":70,"start":79.5,"dur":0.999,"startTick":76320,"lyric":"sa"},{"midi":70,"start":80.5,"dur":0.499,"startTick":77280,"lyric":"nctu"},{"midi":70,"start":81.0,"dur":0.499,"startTick":77760,"lyric":"a"},{"midi":70,"start":81.5,"dur":0.499,"startTick":78240,"lyric":"ry "},{"midi":68,"start":82.5,"dur":0.499,"startTick":79200,"lyric":"you "},{"midi":68,"start":83.0,"dur":0.499,"startTick":79680,"lyric":"re"},{"midi":68,"start":83.5,"dur":0.999,"startTick":80160,"lyric":"main "},{"midi":67,"start":84.5,"dur":0.499,"startTick":81120,"lyric":"a "},{"midi":68,"start":85.0,"dur":0.499,"startTick":81600,"lyric":"my"},{"midi":70,"start":85.5,"dur":0.499,"startTick":82080,"lyric":"st'ry "},{"midi":63,"start":86.5,"dur":0.499,"startTick":83040,"lyric":"no "},{"midi":65,"start":87.0,"dur":0.499,"startTick":83520,"lyric":"e"},{"midi":67,"start":87.5,"dur":0.499,"startTick":84000,"lyric":"scape "},{"midi":70,"start":89.0,"dur":0.499,"startTick":85440,"lyric":"from "},{"midi":67,"start":89.5,"dur":0.249,"startTick":85920,"lyric":"the "},{"midi":65,"start":89.75,"dur":0.249,"startTick":86160},{"midi":65,"start":90.0,"dur":0.499,"startTick":86400,"lyric":"tree "},{"midi":69,"start":90.5,"dur":0.999,"startTick":86880,"lyric":"of "},{"midi":70,"start":91.5,"dur":1.499,"startTick":87840,"lyric":"life "}]},{"name":"Tenor","notes":[{"midi":50,"start":0.0,"dur":0.499,"startTick":0,"lyric":"close "},{"midi":53,"start":0.5,"dur":0.249,"startTick":480,"lyric":"e"},{"midi":53,"start":0.75,"dur":0.749,"startTick":720,"lyric":"nough "},{"midi":50,"start":1.5,"dur":0.249,"startTick":1440,"lyric":"to "},{"midi":53,"start":1.75,"dur":0.499,"startTick":1680,"lyric":"hold "},{"midi":55,"start":2.25,"dur":0.499,"startTick":2160,"lyric":"your "},{"midi":53,"start":2.75,"dur":0.749,"startTick":2640,"lyric":"heart, "},{"midi":51,"start":4.0,"dur":0.499,"startTick":3840,"lyric":"far "},{"midi":51,"start":4.5,"dur":0.249,"startTick":4320,"lyric":"e"},{"midi":51,"start":4.75,"dur":0.749,"startTick":4560,"lyric":"nough "},{"midi":51,"start":5.5,"dur":0.249,"startTick":5280,"lyric":"to "},{"midi":51,"start":5.75,"dur":0.499,"startTick":5520,"lyric":"feel "},{"midi":50,"start":6.25,"dur":0.499,"startTick":6000,"lyric":"your "},{"midi":46,"start":6.75,"dur":0.499,"startTick":6480,"lyric":"soul, "},{"midi":51,"start":7.25,"dur":0.499,"startTick":6960,"lyric":"we "},{"midi":50,"start":7.75,"dur":0.749,"startTick":7440,"lyric":"un"},{"midi":46,"start":8.5,"dur":0.499,"startTick":8160,"lyric":"fold "},{"midi":46,"start":10.5,"dur":0.249,"startTick":10080,"lyric":"wi"},{"midi":48,"start":10.75,"dur":0.499,"startTick":10320,"lyric":"thin "},{"midi":46,"start":11.25,"dur":0.499,"startTick":10800,"lyric":"this "},{"midi":50,"start":11.75,"dur":0.499,"startTick":11280,"lyric":"won"},{"midi":53,"start":12.25,"dur":2.249,"startTick":11760,"lyric":"der "},{"midi":50,"start":16.0,"dur":0.499,"startTick":15360,"lyric":"close "},{"midi":53,"start":16.5,"dur":0.249,"startTick":15840,"lyric":"e"},{"midi":53,"start":16.75,"dur":0.749,"startTick":16080,"lyric":"nough "},{"midi":50,"start":17.5,"dur":0.249,"startTick":16800,"lyric":"to "},{"midi":53,"start":17.75,"dur":0.499,"startTick":17040,"lyric":"hold "},{"midi":55,"start":18.25,"dur":0.499,"startTick":17520,"lyric":"your "},{"midi":53,"start":18.75,"dur":0.749,"startTick":18000,"lyric":"heart, "},{"midi":51,"start":20.0,"dur":0.499,"startTick":19200,"lyric":"far "},{"midi":51,"start":20.5,"dur":0.249,"startTick":19680,"lyric":"e"},{"midi":51,"start":20.75,"dur":0.749,"startTick":19920,"lyric":"nough "},{"midi":51,"start":21.5,"dur":0.249,"startTick":20640,"lyric":"to "},{"midi":51,"start":21.75,"dur":0.499,"startTick":20880,"lyric":"feel "},{"midi":50,"start":22.25,"dur":0.499,"startTick":21360,"lyric":"your "},{"midi":46,"start":22.75,"dur":0.499,"startTick":21840,"lyric":"soul, "},{"midi":51,"start":23.25,"dur":0.499,"startTick":22320,"lyric":"we "},{"midi":50,"start":23.75,"dur":0.749,"startTick":22800,"lyric":"un"},{"midi":46,"start":24.5,"dur":0.499,"startTick":23520,"lyric":"fold "},{"midi":46,"start":26.5,"dur":0.249,"startTick":25440,"lyric":"wi"},{"midi":48,"start":26.75,"dur":0.499,"startTick":25680,"lyric":"thin "},{"midi":46,"start":27.25,"dur":0.499,"startTick":26160,"lyric":"this "},{"midi":50,"start":27.75,"dur":0.499,"startTick":26640,"lyric":"won"},{"midi":53,"start":28.25,"dur":1.75,"startTick":27120,"lyric":"der "},{"midi":53,"start":30.0,"dur":0.499,"startTick":28800},{"midi":62,"start":31.25,"dur":0.249,"startTick":30000,"lyric":"and "},{"midi":62,"start":31.5,"dur":0.499,"startTick":30240,"lyric":"I "},{"midi":62,"start":32.0,"dur":0.999,"startTick":30720,"lyric":"see "},{"midi":62,"start":33.0,"dur":0.999,"startTick":31680,"lyric":"you "},{"midi":62,"start":34.0,"dur":0.999,"startTick":32640,"lyric":"see "},{"midi":62,"start":35.0,"dur":0.999,"startTick":33600,"lyric":"me "},{"midi":62,"start":36.0,"dur":0.499,"startTick":34560,"lyric":"see "},{"midi":63,"start":36.5,"dur":0.249,"startTick":35040},{"midi":63,"start":36.75,"dur":1.249,"startTick":35280,"lyric":"it "},{"midi":56,"start":39.0,"dur":0.499,"startTick":37440,"lyric":"o"},{"midi":55,"start":39.5,"dur":0.249,"startTick":37920,"lyric":"pen "},{"midi":51,"start":39.75,"dur":0.749,"startTick":38160,"lyric":"sky "},{"midi":60,"start":42.0,"dur":0.999,"startTick":40320,"lyric":"qui"},{"midi":62,"start":43.0,"dur":0.999,"startTick":41280,"lyric":"et "},{"midi":63,"start":44.0,"dur":0.499,"startTick":42240,"lyric":"thu"},{"midi":62,"start":44.5,"dur":0.499,"startTick":42720,"lyric":"n"},{"midi":62,"start":45.0,"dur":1.499,"startTick":43200,"lyric":"der "},{"midi":62,"start":47.25,"dur":0.249,"startTick":45360,"lyric":"and "},{"midi":62,"start":47.5,"dur":0.499,"startTick":45600,"lyric":"I "},{"midi":62,"start":48.0,"dur":0.999,"startTick":46080,"lyric":"see "},{"midi":62,"start":49.0,"dur":0.999,"startTick":47040,"lyric":"you "},{"midi":62,"start":50.0,"dur":0.999,"startTick":48000,"lyric":"see "},{"midi":62,"start":51.0,"dur":0.999,"startTick":48960,"lyric":"me "},{"midi":62,"start":52.0,"dur":0.499,"startTick":49920,"lyric":"see "},{"midi":63,"start":52.5,"dur":0.249,"startTick":50400},{"midi":63,"start":52.75,"dur":1.249,"startTick":50640,"lyric":"it "},{"midi":56,"start":55.0,"dur":0.499,"startTick":52800,"lyric":"o"},{"midi":55,"start":55.5,"dur":0.249,"startTick":53280,"lyric":"pen "},{"midi":51,"start":55.75,"dur":0.749,"startTick":53520,"lyric":"sky "},{"midi":60,"start":58.0,"dur":0.999,"startTick":55680,"lyric":"qui"},{"midi":62,"start":59.0,"dur":0.999,"startTick":56640,"lyric":"et "},{"midi":63,"start":60.0,"dur":0.499,"startTick":57600,"lyric":"thu"},{"midi":62,"start":60.5,"dur":0.499,"startTick":58080,"lyric":"n"},{"midi":62,"start":61.0,"dur":1.499,"startTick":58560,"lyric":"der "},{"midi":65,"start":62.5,"dur":0.499,"startTick":60000,"lyric":"in "},{"midi":65,"start":63.0,"dur":0.499,"startTick":60480,"lyric":"this "},{"midi":65,"start":63.5,"dur":0.999,"startTick":60960,"lyric":"sa"},{"midi":65,"start":64.5,"dur":0.499,"startTick":61920,"lyric":"nctu"},{"midi":65,"start":65.0,"dur":0.499,"startTick":62400,"lyric":"a"},{"midi":67,"start":65.5,"dur":0.499,"startTick":62880,"lyric":"ry "},{"midi":63,"start":66.5,"dur":0.499,"startTick":63840,"lyric":"you "},{"midi":63,"start":67.0,"dur":0.499,"startTick":64320,"lyric":"re"},{"midi":63,"start":67.5,"dur":0.999,"startTick":64800,"lyric":"main "},{"midi":63,"start":68.5,"dur":0.499,"startTick":65760,"lyric":"a "},{"midi":63,"start":69.0,"dur":0.499,"startTick":66240,"lyric":"my"},{"midi":63,"start":69.5,"dur":0.499,"startTick":66720,"lyric":"st'ry "},{"midi":63,"start":70.5,"dur":0.499,"startTick":67680,"lyric":"no "},{"midi":63,"start":71.0,"dur":0.499,"startTick":68160,"lyric":"e"},{"midi":63,"start":71.5,"dur":0.499,"startTick":68640,"lyric":"scape "},{"midi":58,"start":73.0,"dur":0.499,"startTick":70080,"lyric":"from "},{"midi":55,"start":73.5,"dur":0.249,"startTick":70560,"lyric":"the "},{"midi":53,"start":73.75,"dur":0.249,"startTick":70800},{"midi":62,"start":74.0,"dur":0.499,"startTick":71040,"lyric":"tree "},{"midi":65,"start":74.5,"dur":0.999,"startTick":71520,"lyric":"of "},{"midi":65,"start":75.5,"dur":1.499,"startTick":72480,"lyric":"life "},{"midi":65,"start":78.5,"dur":0.499,"startTick":75360,"lyric":"in "},{"midi":65,"start":79.0,"dur":0.499,"startTick":75840,"lyric":"this "},{"midi":65,"start":79.5,"dur":0.999,"startTick":76320,"lyric":"sa"},{"midi":65,"start":80.5,"dur":0.499,"startTick":77280,"lyric":"nctu"},{"midi":65,"start":81.0,"dur":0.499,"startTick":77760,"lyric":"a"},{"midi":67,"start":81.5,"dur":0.499,"startTick":78240,"lyric":"ry "},{"midi":63,"start":82.5,"dur":0.499,"startTick":79200,"lyric":"you "},{"midi":63,"start":83.0,"dur":0.499,"startTick":79680,"lyric":"re"},{"midi":63,"start":83.5,"dur":0.999,"startTick":80160,"lyric":"main "},{"midi":63,"start":84.5,"dur":0.499,"startTick":81120,"lyric":"a "},{"midi":63,"start":85.0,"dur":0.499,"startTick":81600,"lyric":"my"},{"midi":63,"start":85.5,"dur":0.499,"startTick":82080,"lyric":"st'ry "},{"midi":63,"start":86.5,"dur":0.499,"startTick":83040,"lyric":"no "},{"midi":63,"start":87.0,"dur":0.499,"startTick":83520,"lyric":"e"},{"midi":63,"start":87.5,"dur":0.499,"startTick":84000,"lyric":"scape "},{"midi":58,"start":89.0,"dur":0.499,"startTick":85440,"lyric":"from "},{"midi":55,"start":89.5,"dur":0.249,"startTick":85920,"lyric":"the "},{"midi":53,"start":89.75,"dur":0.249,"startTick":86160},{"midi":62,"start":90.0,"dur":0.499,"startTick":86400,"lyric":"tree "},{"midi":65,"start":90.5,"dur":0.999,"startTick":86880,"lyric":"of "},{"midi":65,"start":91.5,"dur":1.499,"startTick":87840,"lyric":"life "}]}]}
+;
+
+const VOICES=[
+  {name:'Soprano',color:'#d2684f',text:'#b04c35'},
+  {name:'Alto',   color:'#5a8c6a',text:'#3d6b4e'},
+  {name:'Tenor',  color:'#b8923a',text:'#8a6a22'}
+];
+
+// Systems: page (0/1), y_top, y_bot, barline x positions, time range
+// Each system covers t_start..t_end seconds
+const SYSTEMS=[
+  {p:0,yt:530, yb:1400,xb:[607,1504,2214,2833],         ts:0, te:6 },
+  {p:0,yt:1580,yb:2450,xb:[1038,1356,1808,2104,2441,2833],ts:6, te:16},
+  {p:0,yt:2630,yb:3430,xb:[429,700,951,1262,1592,1879,2134,2424,2810],ts:16,te:32},
+  {p:1,yt:200, yb:1060,xb:[429,1045,1641,2237,2833],     ts:32,te:40},
+  {p:1,yt:1470,yb:2100,xb:[1059,1517,2284,2810],         ts:40,te:93},
+];
+const SVG_W=2977.2, SVG_H=4208.4, TOTAL_DUR=93;
+const PLAYHEAD_FRAC=0.25;
+
+// Load SVG images
+const svgImgs=[new Image(),new Image()];
+let svgLoaded=[false,false];
+svgImgs[0].onload=()=>{svgLoaded[0]=true;};
+svgImgs[1].onload=()=>{svgLoaded[1]=true;};
+svgImgs[0].src='Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_.svg';
+svgImgs[1].src='Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_-2.svg';
+
+let audioCtx=null, gainNodes=[];
+let isPlaying=false, looping=true;
+let audioStart=0, pauseAt=0, tempoScale=1.0;
+let muted=[false,false,false];
+let schedTimer=null, animReq=null;
+let nextIdx=[0,0,0];
+let currentView='roll';
+
+function fmtTime(s){s=Math.max(0,Math.min(TOTAL_DUR,s));return Math.floor(s/60)+':'+(Math.floor(s%60)).toString().padStart(2,'0');}
+function midiFreq(m){return 440*Math.pow(2,(m-69)/12);}
+function songNow(){if(!isPlaying)return pauseAt;return pauseAt+(audioCtx.currentTime-audioStart)*tempoScale;}
+function songToAudio(t){return audioStart+(t-pauseAt)/tempoScale;}
+
+function tToX(t,sys){
+  const bars=sys.xb, n=bars.length-1;
+  const mi=(t-sys.ts)/(sys.te-sys.ts)*n;
+  const m=Math.max(0,Math.min(n-1,Math.floor(mi)));
+  return bars[m]+(mi-m)*(bars[m+1]-bars[m]);
+}
+
+function sysForTime(t){
+  for(const s of SYSTEMS) if(t>=s.ts&&t<=s.te) return s;
+  return SYSTEMS[SYSTEMS.length-1];
+}
+
+function initAudio(){
+  if(audioCtx) return;
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const master=audioCtx.createGain(); master.gain.value=0.55; master.connect(audioCtx.destination);
+  gainNodes=VOICES.map(()=>{const g=audioCtx.createGain();g.gain.value=1;g.connect(master);return g;});
+}
+
+function schedNote(midi,startT,durT,ti){
+  const freq=midiFreq(midi);
+  const env=audioCtx.createGain(); env.connect(gainNodes[ti]);
+  [1,2,3].forEach((h,i)=>{
+    const osc=audioCtx.createOscillator();
+    const hg=audioCtx.createGain(); hg.gain.value=[0.5,0.12,0.04][i];
+    osc.type='sine'; osc.frequency.value=freq*h;
+    if(i>0) osc.detune.value=(Math.random()-0.5)*4;
+    osc.connect(hg); hg.connect(env);
+    osc.start(startT); osc.stop(startT+durT+0.05);
+  });
+  const atk=Math.min(0.04,durT*0.15),rel=Math.min(0.12,durT*0.25);
+  env.gain.setValueAtTime(0,startT);
+  env.gain.linearRampToValueAtTime(0.38,startT+atk);
+  env.gain.setValueAtTime(0.38,startT+durT-rel);
+  env.gain.linearRampToValueAtTime(0,startT+durT);
+}
+
+function runScheduler(){
+  if(!isPlaying||!audioCtx) return;
+  const la=audioCtx.currentTime+0.25;
+  const now=songNow();
+  if(now>=TOTAL_DUR){if(looping){seekTo(0);}else{stopPlayback();}return;}
+  MIDI_DATA.tracks.forEach((track,ti)=>{
+    while(nextIdx[ti]<track.notes.length){
+      const note=track.notes[nextIdx[ti]];
+      const at=songToAudio(note.start);
+      if(at>la) break;
+      if(at>=audioCtx.currentTime-0.01&&!muted[ti]) schedNote(note.midi,at,note.dur/tempoScale,ti);
+      nextIdx[ti]++;
+    }
+  });
+}
+
+function seekTo(t){
+  pauseAt=Math.max(0,Math.min(TOTAL_DUR,t));
+  if(isPlaying){
+    audioStart=audioCtx.currentTime;
+    nextIdx=MIDI_DATA.tracks.map(tr=>Math.max(0,tr.notes.findIndex(n=>n.start>=pauseAt-0.05)));
+  }
+}
+
+function startPlayback(){
+  initAudio();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  audioStart=audioCtx.currentTime;
+  nextIdx=MIDI_DATA.tracks.map(tr=>Math.max(0,tr.notes.findIndex(n=>n.start>=pauseAt-0.05)));
+  isPlaying=true;
+  schedTimer=setInterval(runScheduler,80);
+  animReq=requestAnimationFrame(drawLoop);
+  updatePlayBtn();
+}
+
+function stopPlayback(){
+  pauseAt=songNow(); isPlaying=false;
+  clearInterval(schedTimer); cancelAnimationFrame(animReq);
+  updatePlayBtn();
+}
+
+function togglePlay(){
+  if(!audioCtx) initAudio();
+  if(isPlaying) stopPlayback();
+  else{if(pauseAt>=TOTAL_DUR) pauseAt=0; startPlayback();}
+}
+
+function toggleLoop(){looping=!looping;document.getElementById('loopBtn').classList.toggle('on',looping);}
+
+function setTempo(v){
+  const t=songNow(); tempoScale=v/100;
+  if(isPlaying){pauseAt=t;audioStart=audioCtx.currentTime;}
+  const l=tempoScale===1.0?'1×':tempoScale.toFixed(2).replace(/\.?0+$/,'')+'×';
+  document.getElementById('tempoVal').textContent=l;
+}
+
+function updatePlayBtn(){
+  const btn=document.getElementById('playBtn'),icon=document.getElementById('playIcon');
+  if(isPlaying){btn.classList.add('playing');icon.innerHTML='<rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/>';}
+  else{btn.classList.remove('playing');icon.innerHTML='<polygon points="3,1 15,8 3,15"/>';}
+}
+
+function setView(v){
+  currentView=v;
+  document.getElementById('rollCanvas').style.display=v==='roll'?'block':'none';
+  document.getElementById('scoreCanvas').style.display=v==='score'?'block':'none';
+  document.getElementById('btnRoll').classList.toggle('active',v==='roll');
+  document.getElementById('btnScore').classList.toggle('active',v==='score');
+  if(!isPlaying) requestAnimationFrame(drawLoop);
+}
+
+function drawRoll(canvas,now){
+  const c=canvas.getContext('2d');
+  const W=canvas.offsetWidth; canvas.width=W;
+  const H=120, PPS=W/10, playX=W*PLAYHEAD_FRAC;
+  const MIDI_MIN=46,MIDI_MAX=76,range=MIDI_MAX-MIDI_MIN,rowH=H/range;
+  c.clearRect(0,0,W,H);
+  c.fillStyle='rgba(42,31,20,0.03)'; c.fillRect(0,0,W,H);
+  [0,12,24].forEach(s=>{const y=(range-s)*rowH;c.strokeStyle='rgba(42,31,20,0.07)';c.lineWidth=0.5;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();});
+  MIDI_DATA.tracks.forEach((track,ti)=>{
+    if(muted[ti]) return;
+    const v=VOICES[ti];
+    track.notes.forEach(note=>{
+      const xS=playX+(note.start-now)*PPS, xE=xS+note.dur*PPS;
+      if(xE<0||xS>W) return;
+      const y=(MIDI_MAX-note.midi)*rowH;
+      const isAct=note.start<=now&&note.start+note.dur>now;
+      const isPast=note.start+note.dur<now;
+      c.globalAlpha=isPast?0.22:1.0; c.fillStyle=v.color;
+      const x=Math.max(0,xS),w=Math.min(W,xE)-x;
+      c.beginPath();
+      c.roundRect?c.roundRect(x,y+0.5,Math.max(w,1.5),rowH-1,Math.min(rowH*0.45,2)):c.rect(x,y+0.5,Math.max(w,1.5),rowH-1);
+      c.fill();
+    });
+    c.globalAlpha=1;
+  });
+  c.fillStyle='rgba(42,31,20,0.1)'; c.fillRect(0,0,playX,H);
+  c.strokeStyle='rgba(42,31,20,0.55)'; c.lineWidth=1.5;
+  c.beginPath();c.moveTo(playX,0);c.lineTo(playX,H);c.stroke();
+}
+
+function drawScore(canvas,now){
+  const c=canvas.getContext('2d');
+  const W=canvas.offsetWidth; canvas.width=W;
+  const H=280;
+  c.clearRect(0,0,W,H);
+
+  const sys=sysForTime(now);
+  const img=svgImgs[sys.p];
+  const loading=document.getElementById('scoreLoading');
+
+  if(!svgLoaded[sys.p]){
+    loading.style.display='flex';
+    c.fillStyle='rgba(42,31,20,0.04)'; c.fillRect(0,0,W,H);
+    return;
+  }
+  loading.style.display='none';
+
+  const PAD=60;
+  const yt=sys.yt-PAD, yb=sys.yb+PAD;
+  const sysH=yb-yt;
+  const scale=H/sysH;
+  const xNote=tToX(now,sys);
+  const xHead=W*PLAYHEAD_FRAC;
+  let srcX=xNote-xHead/scale;
+  srcX=Math.max(-50,Math.min(SVG_W-W/scale+50,srcX));
+  const srcW=W/scale;
+
+  c.drawImage(img,srcX,yt,srcW,sysH,0,0,W,H);
+
+  // Shade past region
+  c.fillStyle='rgba(42,31,20,0.08)';
+  c.fillRect(0,0,xHead,H);
+
+  // Playhead line — warm red
+  c.strokeStyle='#d2684f'; c.lineWidth=2;
+  c.beginPath();c.moveTo(xHead,0);c.lineTo(xHead,H);c.stroke();
+
+  // Playhead glow
+  const grd=c.createLinearGradient(xHead-20,0,xHead+8,0);
+  grd.addColorStop(0,'rgba(210,104,79,0)');
+  grd.addColorStop(1,'rgba(210,104,79,0.12)');
+  c.fillStyle=grd; c.fillRect(xHead-20,0,28,H);
+}
+
+function getCurrentLyric(notes,t){
+  let best=null;
+  for(const n of notes){if(!n.lyric)continue;if(n.start<=t&&n.start+n.dur+0.3>t)best=n.lyric.trim();}
+  return best;
+}
+
+function drawLoop(){
+  const now=songNow();
+  if(currentView==='roll') drawRoll(document.getElementById('rollCanvas'),now);
+  else drawScore(document.getElementById('scoreCanvas'),now);
+
+  MIDI_DATA.tracks.forEach((track,ti)=>{
+    const lyric=getCurrentLyric(track.notes,now);
+    const el=document.getElementById('lyric-'+ti);
+    if(el){el.textContent=lyric||'—';el.classList.toggle('active',!!lyric);}
+  });
+  document.getElementById('timeCurrent').textContent=fmtTime(now);
+  animReq=requestAnimationFrame(drawLoop);
+}
+
+function handleCanvasClick(e){
+  const canvas=e.currentTarget;
+  const rect=canvas.getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const W=canvas.offsetWidth;
+
+  if(currentView==='roll'){
+    const PPS=W/10, playX=W*PLAYHEAD_FRAC;
+    seekTo(songNow()+(x-playX)/PPS);
+  } else {
+    // In score view: click position relative to playhead = time offset
+    const sys=sysForTime(songNow());
+    const H=280, PAD=60;
+    const sysH=(sys.yb+PAD)-(sys.yt-PAD);
+    const scale=H/sysH;
+    const now=songNow();
+    const xNote=tToX(now,sys);
+    const xHead=W*PLAYHEAD_FRAC;
+    const clickedSvgX=xNote+(x-xHead)/scale;
+    // Reverse-map SVG x back to time within this system
+    const bars=sys.xb;
+    let t=sys.ts;
+    for(let i=0;i<bars.length-1;i++){
+      if(clickedSvgX>=bars[i]&&clickedSvgX<=bars[i+1]){
+        const frac=(clickedSvgX-bars[i])/(bars[i+1]-bars[i]);
+        const measDur=(sys.te-sys.ts)/(bars.length-1);
+        t=sys.ts+i*measDur+frac*measDur;
+        break;
+      }
+    }
+    seekTo(t);
+  }
+  if(!isPlaying) requestAnimationFrame(drawLoop);
+}
+
+function buildUI(){
+  const vb=document.getElementById('voiceBtns');
+  const ls=document.getElementById('lyricsStrip');
+  VOICES.forEach((v,i)=>{
+    const btn=document.createElement('button');
+    btn.className='voice-btn';
+    btn.style.cssText='border-color:'+v.color+';color:'+v.text;
+    btn.innerHTML='<span style="width:7px;height:7px;border-radius:50%;background:'+v.color+';display:inline-block;flex-shrink:0;"></span>'+v.name;
+    btn.id='vbtn-'+i;
+    btn.onclick=()=>{
+      muted[i]=!muted[i];
+      if(gainNodes[i]) gainNodes[i].gain.value=muted[i]?0:1;
+      btn.classList.toggle('muted',muted[i]);
+    };
+    vb.appendChild(btn);
+    const row=document.createElement('div'); row.className='lyric-row';
+    row.innerHTML='<span class="lyric-voice" style="color:'+v.color+'">'+v.name+'</span>'
+      +'<span class="lyric-text" id="lyric-'+i+'" style="color:'+v.text+'">—</span>';
+    ls.appendChild(row);
+  });
+
+  ['rollCanvas','scoreCanvas'].forEach(id=>{
+    document.getElementById(id).addEventListener('click',handleCanvasClick);
+  });
+}
+
+buildUI();
+requestAnimationFrame(drawLoop);
+</script>
+</body>
+</html>
