@@ -6,10 +6,7 @@
 <title>Sanctuary — Learn the Parts</title>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-:root {
-  --cream:#f4e7d4;--terra:#d2684f;--terra-dark:#b04c35;
-  --ink:#2a1f14;--ink-soft:#5a4535;--rule:rgba(210,104,79,0.2);
-}
+:root{--cream:#f4e7d4;--terra:#d2684f;--terra-dark:#b04c35;--ink:#2a1f14;--ink-soft:#5a4535;--rule:rgba(210,104,79,0.2);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font-size:15px;line-height:1.7;}
 .player{max-width:720px;margin:0 auto;padding:40px 24px 60px;}
@@ -22,9 +19,19 @@ body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font
 .view-toggle{display:flex;border:1px solid var(--rule);border-radius:100px;overflow:hidden;}
 .view-btn{padding:6px 14px;border:none;background:none;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;transition:all 0.2s;}
 .view-btn.active{background:var(--terra);color:var(--cream);}
+
+/* Piano roll */
 .roll-wrap{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--rule);margin-bottom:4px;background:#f0e6d3;}
-canvas{display:block;width:100%;}
-canvas#scoreCanvas{display:none;}
+canvas#rollCanvas{display:block;width:100%;height:120px;}
+
+/* Score view */
+#scoreWrap{display:none;position:relative;overflow:hidden;border-radius:10px;border:1px solid var(--rule);height:280px;background:#faf5ed;cursor:pointer;}
+#scoreImg0,#scoreImg1{position:absolute;display:none;user-select:none;pointer-events:none;}
+#playheadLine{position:absolute;top:0;bottom:0;width:2px;background:var(--terra);pointer-events:none;z-index:3;}
+#playheadGlow{position:absolute;top:0;bottom:0;pointer-events:none;z-index:2;background:linear-gradient(to right,rgba(210,104,79,0),rgba(210,104,79,0.1));}
+#pastShade{position:absolute;top:0;left:0;bottom:0;background:rgba(42,31,20,0.07);pointer-events:none;z-index:2;}
+#scoreLoadMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);opacity:0.45;z-index:4;}
+
 .time-bar{display:flex;justify-content:space-between;font-size:10px;letter-spacing:0.08em;color:var(--ink-soft);opacity:0.45;margin-bottom:18px;padding:0 2px;}
 .lyrics-strip{margin-bottom:22px;display:flex;flex-direction:column;gap:5px;min-height:72px;}
 .lyric-row{display:flex;align-items:baseline;gap:12px;}
@@ -40,10 +47,9 @@ canvas#scoreCanvas{display:none;}
 .loop-btn.on{border-color:var(--terra);color:var(--terra);background:rgba(210,104,79,0.06);}
 .tempo-group{display:flex;align-items:center;gap:9px;flex:1;min-width:150px;}
 .tempo-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);opacity:0.6;white-space:nowrap;}
-input[type=range].tempo-range{flex:1;accent-color:var(--terra);cursor:pointer;}
+input[type=range]{flex:1;accent-color:var(--terra);cursor:pointer;}
 .tempo-val{font-size:12px;font-weight:500;color:var(--terra);min-width:28px;text-align:right;}
-.score-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);opacity:0.5;}
-.hint{font-size:11px;color:var(--ink-soft);opacity:0.4;margin-top:18px;letter-spacing:0.02em;}
+.hint{font-size:11px;color:var(--ink-soft);opacity:0.4;margin-top:18px;}
 </style>
 </head>
 <body>
@@ -59,16 +65,25 @@ input[type=range].tempo-range{flex:1;accent-color:var(--terra);cursor:pointer;}
     </div>
   </div>
 
+  <!-- Piano roll -->
   <div class="roll-wrap" id="rollWrap">
-    <div class="score-loading" id="scoreLoading" style="display:none;">Loading score…</div>
-    <canvas id="rollCanvas" height="120"></canvas>
-    <canvas id="scoreCanvas" height="280"></canvas>
+    <canvas id="rollCanvas"></canvas>
   </div>
+
+  <!-- Score view: img-based, no canvas taint issues -->
+  <div id="scoreWrap" onclick="scoreClick(event)">
+    <div id="scoreLoadMsg">Loading score…</div>
+    <img id="scoreImg0" src="Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_.svg" alt="">
+    <img id="scoreImg1" src="Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_-2.svg" alt="">
+    <div id="pastShade"></div>
+    <div id="playheadGlow"></div>
+    <div id="playheadLine"></div>
+  </div>
+
   <div class="time-bar">
     <span id="timeCurrent">0:00</span>
     <span id="timeTotal">1:33</span>
   </div>
-
   <div class="lyrics-strip" id="lyricsStrip"></div>
 
   <div class="transport">
@@ -78,11 +93,11 @@ input[type=range].tempo-range{flex:1;accent-color:var(--terra);cursor:pointer;}
     <button class="loop-btn on" id="loopBtn" onclick="toggleLoop()">Loop</button>
     <div class="tempo-group">
       <span class="tempo-label">Speed</span>
-      <input type="range" class="tempo-range" id="tempoRange" min="50" max="150" value="100" step="5" oninput="setTempo(this.value)">
+      <input type="range" id="tempoRange" min="50" max="150" value="100" step="5" oninput="setTempo(this.value)">
       <span class="tempo-val" id="tempoVal">1×</span>
     </div>
   </div>
-  <p class="hint">Score view: the red line shows your current position in the music. Click the score or roll to jump.</p>
+  <p class="hint">Click the score or roll to jump to any position. Toggle voices to hear individual parts.</p>
 </div>
 
 <script>
@@ -95,8 +110,7 @@ const VOICES=[
   {name:'Tenor',  color:'#b8923a',text:'#8a6a22'}
 ];
 
-// Systems: page (0/1), y_top, y_bot, barline x positions, time range
-// Each system covers t_start..t_end seconds
+// Systems: page index, y crop top/bottom in SVG coords, barline x positions, time range
 const SYSTEMS=[
   {p:0,yt:530, yb:1400,xb:[607,1504,2214,2833],         ts:0, te:6 },
   {p:0,yt:1580,yb:2450,xb:[1038,1356,1808,2104,2441,2833],ts:6, te:16},
@@ -104,24 +118,27 @@ const SYSTEMS=[
   {p:1,yt:200, yb:1060,xb:[429,1045,1641,2237,2833],     ts:32,te:40},
   {p:1,yt:1470,yb:2100,xb:[1059,1517,2284,2810],         ts:40,te:93},
 ];
-const SVG_W=2977.2, SVG_H=4208.4, TOTAL_DUR=93;
-const PLAYHEAD_FRAC=0.25;
-
-// Load SVG images
-const svgImgs=[new Image(),new Image()];
-let svgLoaded=[false,false];
-svgImgs[0].onload=()=>{svgLoaded[0]=true;};
-svgImgs[1].onload=()=>{svgLoaded[1]=true;};
-svgImgs[0].src='Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_.svg';
-svgImgs[1].src='Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_-2.svg';
+const SVG_W=2977.2, TOTAL_DUR=93, PLAYHEAD_FRAC=0.25, SCORE_H=280, PAD=60;
 
 let audioCtx=null, gainNodes=[];
 let isPlaying=false, looping=true;
 let audioStart=0, pauseAt=0, tempoScale=1.0;
 let muted=[false,false,false];
-let schedTimer=null, animReq=null;
-let nextIdx=[0,0,0];
+let schedTimer=null, animReq=null, nextIdx=[0,0,0];
 let currentView='roll';
+
+// Track which SVG images have loaded
+const imgEls=[document.getElementById('scoreImg0'),document.getElementById('scoreImg1')];
+let imgsLoaded=[false,false];
+imgEls[0].onload=()=>{imgsLoaded[0]=true; if(currentView==='score') updateScoreMsg();};
+imgEls[1].onload=()=>{imgsLoaded[1]=true; if(currentView==='score') updateScoreMsg();};
+imgEls[0].onerror=()=>console.warn('SVG page 1 failed to load');
+imgEls[1].onerror=()=>console.warn('SVG page 2 failed to load');
+
+function updateScoreMsg(){
+  const sys=sysForTime(songNow());
+  document.getElementById('scoreLoadMsg').style.display=imgsLoaded[sys.p]?'none':'flex';
+}
 
 function fmtTime(s){s=Math.max(0,Math.min(TOTAL_DUR,s));return Math.floor(s/60)+':'+(Math.floor(s%60)).toString().padStart(2,'0');}
 function midiFreq(m){return 440*Math.pow(2,(m-69)/12);}
@@ -129,34 +146,41 @@ function songNow(){if(!isPlaying)return pauseAt;return pauseAt+(audioCtx.current
 function songToAudio(t){return audioStart+(t-pauseAt)/tempoScale;}
 
 function tToX(t,sys){
-  const bars=sys.xb, n=bars.length-1;
-  const mi=(t-sys.ts)/(sys.te-sys.ts)*n;
-  const m=Math.max(0,Math.min(n-1,Math.floor(mi)));
+  const bars=sys.xb,n=bars.length-1;
+  const mi=Math.max(0,Math.min(n,(t-sys.ts)/(sys.te-sys.ts)*n));
+  const m=Math.min(n-1,Math.floor(mi));
   return bars[m]+(mi-m)*(bars[m+1]-bars[m]);
 }
-
 function sysForTime(t){
   for(const s of SYSTEMS) if(t>=s.ts&&t<=s.te) return s;
   return SYSTEMS[SYSTEMS.length-1];
 }
+function xToT(svgX,sys){
+  const bars=sys.xb,n=bars.length-1;
+  const dur=sys.te-sys.ts;
+  for(let i=0;i<n;i++){
+    if(svgX>=bars[i]&&svgX<=bars[i+1]){
+      const frac=(svgX-bars[i])/(bars[i+1]-bars[i]);
+      return sys.ts+(i+frac)*dur/n;
+    }
+  }
+  return svgX<bars[0]?sys.ts:sys.te;
+}
 
 function initAudio(){
-  if(audioCtx) return;
+  if(audioCtx)return;
   audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  const master=audioCtx.createGain(); master.gain.value=0.55; master.connect(audioCtx.destination);
+  const master=audioCtx.createGain();master.gain.value=0.55;master.connect(audioCtx.destination);
   gainNodes=VOICES.map(()=>{const g=audioCtx.createGain();g.gain.value=1;g.connect(master);return g;});
 }
 
 function schedNote(midi,startT,durT,ti){
-  const freq=midiFreq(midi);
-  const env=audioCtx.createGain(); env.connect(gainNodes[ti]);
+  const freq=midiFreq(midi),env=audioCtx.createGain();env.connect(gainNodes[ti]);
   [1,2,3].forEach((h,i)=>{
-    const osc=audioCtx.createOscillator();
-    const hg=audioCtx.createGain(); hg.gain.value=[0.5,0.12,0.04][i];
-    osc.type='sine'; osc.frequency.value=freq*h;
-    if(i>0) osc.detune.value=(Math.random()-0.5)*4;
-    osc.connect(hg); hg.connect(env);
-    osc.start(startT); osc.stop(startT+durT+0.05);
+    const osc=audioCtx.createOscillator(),hg=audioCtx.createGain();
+    hg.gain.value=[0.5,0.12,0.04][i];osc.type='sine';osc.frequency.value=freq*h;
+    if(i>0)osc.detune.value=(Math.random()-0.5)*4;
+    osc.connect(hg);hg.connect(env);osc.start(startT);osc.stop(startT+durT+0.05);
   });
   const atk=Math.min(0.04,durT*0.15),rel=Math.min(0.12,durT*0.25);
   env.gain.setValueAtTime(0,startT);
@@ -166,16 +190,14 @@ function schedNote(midi,startT,durT,ti){
 }
 
 function runScheduler(){
-  if(!isPlaying||!audioCtx) return;
-  const la=audioCtx.currentTime+0.25;
-  const now=songNow();
-  if(now>=TOTAL_DUR){if(looping){seekTo(0);}else{stopPlayback();}return;}
+  if(!isPlaying||!audioCtx)return;
+  const la=audioCtx.currentTime+0.25,now=songNow();
+  if(now>=TOTAL_DUR){looping?seekTo(0):stopPlayback();return;}
   MIDI_DATA.tracks.forEach((track,ti)=>{
     while(nextIdx[ti]<track.notes.length){
-      const note=track.notes[nextIdx[ti]];
-      const at=songToAudio(note.start);
-      if(at>la) break;
-      if(at>=audioCtx.currentTime-0.01&&!muted[ti]) schedNote(note.midi,at,note.dur/tempoScale,ti);
+      const note=track.notes[nextIdx[ti]],at=songToAudio(note.start);
+      if(at>la)break;
+      if(at>=audioCtx.currentTime-0.01&&!muted[ti])schedNote(note.midi,at,note.dur/tempoScale,ti);
       nextIdx[ti]++;
     }
   });
@@ -183,43 +205,21 @@ function runScheduler(){
 
 function seekTo(t){
   pauseAt=Math.max(0,Math.min(TOTAL_DUR,t));
-  if(isPlaying){
-    audioStart=audioCtx.currentTime;
-    nextIdx=MIDI_DATA.tracks.map(tr=>Math.max(0,tr.notes.findIndex(n=>n.start>=pauseAt-0.05)));
-  }
+  if(isPlaying){audioStart=audioCtx.currentTime;nextIdx=MIDI_DATA.tracks.map(tr=>Math.max(0,tr.notes.findIndex(n=>n.start>=pauseAt-0.05)));}
 }
 
 function startPlayback(){
-  initAudio();
-  if(audioCtx.state==='suspended') audioCtx.resume();
+  initAudio();if(audioCtx.state==='suspended')audioCtx.resume();
   audioStart=audioCtx.currentTime;
   nextIdx=MIDI_DATA.tracks.map(tr=>Math.max(0,tr.notes.findIndex(n=>n.start>=pauseAt-0.05)));
-  isPlaying=true;
-  schedTimer=setInterval(runScheduler,80);
-  animReq=requestAnimationFrame(drawLoop);
-  updatePlayBtn();
+  isPlaying=true;schedTimer=setInterval(runScheduler,80);
+  animReq=requestAnimationFrame(drawLoop);updatePlayBtn();
 }
 
-function stopPlayback(){
-  pauseAt=songNow(); isPlaying=false;
-  clearInterval(schedTimer); cancelAnimationFrame(animReq);
-  updatePlayBtn();
-}
-
-function togglePlay(){
-  if(!audioCtx) initAudio();
-  if(isPlaying) stopPlayback();
-  else{if(pauseAt>=TOTAL_DUR) pauseAt=0; startPlayback();}
-}
-
+function stopPlayback(){pauseAt=songNow();isPlaying=false;clearInterval(schedTimer);cancelAnimationFrame(animReq);updatePlayBtn();}
+function togglePlay(){if(!audioCtx)initAudio();if(isPlaying)stopPlayback();else{if(pauseAt>=TOTAL_DUR)pauseAt=0;startPlayback();}}
 function toggleLoop(){looping=!looping;document.getElementById('loopBtn').classList.toggle('on',looping);}
-
-function setTempo(v){
-  const t=songNow(); tempoScale=v/100;
-  if(isPlaying){pauseAt=t;audioStart=audioCtx.currentTime;}
-  const l=tempoScale===1.0?'1×':tempoScale.toFixed(2).replace(/\.?0+$/,'')+'×';
-  document.getElementById('tempoVal').textContent=l;
-}
+function setTempo(v){const t=songNow();tempoScale=v/100;if(isPlaying){pauseAt=t;audioStart=audioCtx.currentTime;}document.getElementById('tempoVal').textContent=tempoScale===1.0?'1×':tempoScale.toFixed(2).replace(/\.?0+$/,'')+'×';}
 
 function updatePlayBtn(){
   const btn=document.getElementById('playBtn'),icon=document.getElementById('playIcon');
@@ -229,86 +229,93 @@ function updatePlayBtn(){
 
 function setView(v){
   currentView=v;
-  document.getElementById('rollCanvas').style.display=v==='roll'?'block':'none';
-  document.getElementById('scoreCanvas').style.display=v==='score'?'block':'none';
+  document.getElementById('rollWrap').style.display=v==='roll'?'block':'none';
+  document.getElementById('scoreWrap').style.display=v==='score'?'block':'none';
   document.getElementById('btnRoll').classList.toggle('active',v==='roll');
   document.getElementById('btnScore').classList.toggle('active',v==='score');
-  if(!isPlaying) requestAnimationFrame(drawLoop);
+  if(v==='score')updateScoreMsg();
+  if(!isPlaying)requestAnimationFrame(drawLoop);
 }
 
-function drawRoll(canvas,now){
+function drawRoll(now){
+  const canvas=document.getElementById('rollCanvas');
   const c=canvas.getContext('2d');
-  const W=canvas.offsetWidth; canvas.width=W;
-  const H=120, PPS=W/10, playX=W*PLAYHEAD_FRAC;
+  const W=canvas.offsetWidth;canvas.width=W;canvas.height=120;
+  const H=120,PPS=W/10,playX=W*PLAYHEAD_FRAC;
   const MIDI_MIN=46,MIDI_MAX=76,range=MIDI_MAX-MIDI_MIN,rowH=H/range;
   c.clearRect(0,0,W,H);
-  c.fillStyle='rgba(42,31,20,0.03)'; c.fillRect(0,0,W,H);
+  c.fillStyle='rgba(42,31,20,0.03)';c.fillRect(0,0,W,H);
   [0,12,24].forEach(s=>{const y=(range-s)*rowH;c.strokeStyle='rgba(42,31,20,0.07)';c.lineWidth=0.5;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();});
   MIDI_DATA.tracks.forEach((track,ti)=>{
-    if(muted[ti]) return;
+    if(muted[ti])return;
     const v=VOICES[ti];
     track.notes.forEach(note=>{
-      const xS=playX+(note.start-now)*PPS, xE=xS+note.dur*PPS;
-      if(xE<0||xS>W) return;
+      const xS=playX+(note.start-now)*PPS,xE=xS+note.dur*PPS;
+      if(xE<0||xS>W)return;
       const y=(MIDI_MAX-note.midi)*rowH;
-      const isAct=note.start<=now&&note.start+note.dur>now;
-      const isPast=note.start+note.dur<now;
-      c.globalAlpha=isPast?0.22:1.0; c.fillStyle=v.color;
+      c.globalAlpha=note.start+note.dur<now?0.22:1.0;c.fillStyle=v.color;
       const x=Math.max(0,xS),w=Math.min(W,xE)-x;
       c.beginPath();
-      c.roundRect?c.roundRect(x,y+0.5,Math.max(w,1.5),rowH-1,Math.min(rowH*0.45,2)):c.rect(x,y+0.5,Math.max(w,1.5),rowH-1);
+      if(c.roundRect)c.roundRect(x,y+0.5,Math.max(w,1.5),rowH-1,Math.min(rowH*0.45,2));
+      else c.rect(x,y+0.5,Math.max(w,1.5),rowH-1);
       c.fill();
     });
     c.globalAlpha=1;
   });
-  c.fillStyle='rgba(42,31,20,0.1)'; c.fillRect(0,0,playX,H);
-  c.strokeStyle='rgba(42,31,20,0.55)'; c.lineWidth=1.5;
+  c.fillStyle='rgba(42,31,20,0.08)';c.fillRect(0,0,playX,H);
+  c.strokeStyle='rgba(42,31,20,0.5)';c.lineWidth=1.5;
   c.beginPath();c.moveTo(playX,0);c.lineTo(playX,H);c.stroke();
 }
 
-function drawScore(canvas,now){
-  const c=canvas.getContext('2d');
-  const W=canvas.offsetWidth; canvas.width=W;
-  const H=280;
-  c.clearRect(0,0,W,H);
-
+function updateScore(now){
   const sys=sysForTime(now);
-  const img=svgImgs[sys.p];
-  const loading=document.getElementById('scoreLoading');
-
-  if(!svgLoaded[sys.p]){
-    loading.style.display='flex';
-    c.fillStyle='rgba(42,31,20,0.04)'; c.fillRect(0,0,W,H);
-    return;
-  }
-  loading.style.display='none';
-
-  const PAD=60;
-  const yt=sys.yt-PAD, yb=sys.yb+PAD;
-  const sysH=yb-yt;
-  const scale=H/sysH;
-  const xNote=tToX(now,sys);
+  const wrap=document.getElementById('scoreWrap');
+  const W=wrap.offsetWidth;
   const xHead=W*PLAYHEAD_FRAC;
-  let srcX=xNote-xHead/scale;
-  srcX=Math.max(-50,Math.min(SVG_W-W/scale+50,srcX));
-  const srcW=W/scale;
 
-  c.drawImage(img,srcX,yt,srcW,sysH,0,0,W,H);
+  // Show correct page image
+  imgEls[0].style.display=sys.p===0?'block':'none';
+  imgEls[1].style.display=sys.p===1?'block':'none';
+  const img=imgEls[sys.p];
 
-  // Shade past region
-  c.fillStyle='rgba(42,31,20,0.08)';
-  c.fillRect(0,0,xHead,H);
+  const sysH=sys.yb-sys.yt+PAD*2;
+  const scale=SCORE_H/sysH;
+  const xNote=tToX(now,sys);
+  const imgLeft=xHead-xNote*scale;
+  const imgTop=-(sys.yt-PAD)*scale;
 
-  // Playhead line — warm red
-  c.strokeStyle='#d2684f'; c.lineWidth=2;
-  c.beginPath();c.moveTo(xHead,0);c.lineTo(xHead,H);c.stroke();
+  img.style.width=(SVG_W*scale)+'px';
+  img.style.left=imgLeft+'px';
+  img.style.top=imgTop+'px';
 
-  // Playhead glow
-  const grd=c.createLinearGradient(xHead-20,0,xHead+8,0);
-  grd.addColorStop(0,'rgba(210,104,79,0)');
-  grd.addColorStop(1,'rgba(210,104,79,0.12)');
-  c.fillStyle=grd; c.fillRect(xHead-20,0,28,H);
+  document.getElementById('playheadLine').style.left=xHead+'px';
+  document.getElementById('playheadGlow').style.left=(xHead-24)+'px';
+  document.getElementById('playheadGlow').style.width='28px';
+  document.getElementById('pastShade').style.width=xHead+'px';
+  updateScoreMsg();
 }
+
+function scoreClick(e){
+  const wrap=document.getElementById('scoreWrap');
+  const rect=wrap.getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const now=songNow(),sys=sysForTime(now);
+  const W=wrap.offsetWidth,xHead=W*PLAYHEAD_FRAC;
+  const sysH=sys.yb-sys.yt+PAD*2,scale=SCORE_H/sysH;
+  const xNote=tToX(now,sys);
+  const clickedSvgX=xNote+(x-xHead)/scale;
+  seekTo(xToT(clickedSvgX,sys));
+  if(!isPlaying)requestAnimationFrame(drawLoop);
+}
+
+document.getElementById('rollCanvas').addEventListener('click',e=>{
+  const canvas=e.currentTarget;
+  const rect=canvas.getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const W=canvas.offsetWidth,PPS=W/10,playX=W*PLAYHEAD_FRAC;
+  seekTo(songNow()+(x-playX)/PPS);
+  if(!isPlaying)requestAnimationFrame(drawLoop);
+});
 
 function getCurrentLyric(notes,t){
   let best=null;
@@ -318,9 +325,8 @@ function getCurrentLyric(notes,t){
 
 function drawLoop(){
   const now=songNow();
-  if(currentView==='roll') drawRoll(document.getElementById('rollCanvas'),now);
-  else drawScore(document.getElementById('scoreCanvas'),now);
-
+  if(currentView==='roll') drawRoll(now);
+  else updateScore(now);
   MIDI_DATA.tracks.forEach((track,ti)=>{
     const lyric=getCurrentLyric(track.notes,now);
     const el=document.getElementById('lyric-'+ti);
@@ -330,68 +336,21 @@ function drawLoop(){
   animReq=requestAnimationFrame(drawLoop);
 }
 
-function handleCanvasClick(e){
-  const canvas=e.currentTarget;
-  const rect=canvas.getBoundingClientRect();
-  const x=e.clientX-rect.left;
-  const W=canvas.offsetWidth;
+// Build voice buttons and lyric rows
+const vb=document.getElementById('voiceBtns');
+const ls=document.getElementById('lyricsStrip');
+VOICES.forEach((v,i)=>{
+  const btn=document.createElement('button');
+  btn.className='voice-btn';
+  btn.style.cssText='border-color:'+v.color+';color:'+v.text;
+  btn.innerHTML='<span style="width:7px;height:7px;border-radius:50%;background:'+v.color+';display:inline-block;flex-shrink:0"></span>'+v.name;
+  btn.onclick=()=>{muted[i]=!muted[i];if(gainNodes[i])gainNodes[i].gain.value=muted[i]?0:1;btn.classList.toggle('muted',muted[i]);};
+  vb.appendChild(btn);
+  const row=document.createElement('div');row.className='lyric-row';
+  row.innerHTML='<span class="lyric-voice" style="color:'+v.color+'">'+v.name+'</span>'+'<span class="lyric-text" id="lyric-'+i+'" style="color:'+v.text+'">—</span>';
+  ls.appendChild(row);
+});
 
-  if(currentView==='roll'){
-    const PPS=W/10, playX=W*PLAYHEAD_FRAC;
-    seekTo(songNow()+(x-playX)/PPS);
-  } else {
-    // In score view: click position relative to playhead = time offset
-    const sys=sysForTime(songNow());
-    const H=280, PAD=60;
-    const sysH=(sys.yb+PAD)-(sys.yt-PAD);
-    const scale=H/sysH;
-    const now=songNow();
-    const xNote=tToX(now,sys);
-    const xHead=W*PLAYHEAD_FRAC;
-    const clickedSvgX=xNote+(x-xHead)/scale;
-    // Reverse-map SVG x back to time within this system
-    const bars=sys.xb;
-    let t=sys.ts;
-    for(let i=0;i<bars.length-1;i++){
-      if(clickedSvgX>=bars[i]&&clickedSvgX<=bars[i+1]){
-        const frac=(clickedSvgX-bars[i])/(bars[i+1]-bars[i]);
-        const measDur=(sys.te-sys.ts)/(bars.length-1);
-        t=sys.ts+i*measDur+frac*measDur;
-        break;
-      }
-    }
-    seekTo(t);
-  }
-  if(!isPlaying) requestAnimationFrame(drawLoop);
-}
-
-function buildUI(){
-  const vb=document.getElementById('voiceBtns');
-  const ls=document.getElementById('lyricsStrip');
-  VOICES.forEach((v,i)=>{
-    const btn=document.createElement('button');
-    btn.className='voice-btn';
-    btn.style.cssText='border-color:'+v.color+';color:'+v.text;
-    btn.innerHTML='<span style="width:7px;height:7px;border-radius:50%;background:'+v.color+';display:inline-block;flex-shrink:0;"></span>'+v.name;
-    btn.id='vbtn-'+i;
-    btn.onclick=()=>{
-      muted[i]=!muted[i];
-      if(gainNodes[i]) gainNodes[i].gain.value=muted[i]?0:1;
-      btn.classList.toggle('muted',muted[i]);
-    };
-    vb.appendChild(btn);
-    const row=document.createElement('div'); row.className='lyric-row';
-    row.innerHTML='<span class="lyric-voice" style="color:'+v.color+'">'+v.name+'</span>'
-      +'<span class="lyric-text" id="lyric-'+i+'" style="color:'+v.text+'">—</span>';
-    ls.appendChild(row);
-  });
-
-  ['rollCanvas','scoreCanvas'].forEach(id=>{
-    document.getElementById(id).addEventListener('click',handleCanvasClick);
-  });
-}
-
-buildUI();
 requestAnimationFrame(drawLoop);
 </script>
 </body>
