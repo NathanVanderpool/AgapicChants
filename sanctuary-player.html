@@ -73,8 +73,8 @@ input[type=range]{flex:1;accent-color:var(--terra);cursor:pointer;}
   <!-- Score view: img-based, no canvas taint issues -->
   <div id="scoreWrap" onclick="scoreClick(event)">
     <div id="scoreLoadMsg">Loading score…</div>
-    <img id="scoreImg0" src="Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_.svg" alt="">
-    <img id="scoreImg1" src="Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_-2.svg" alt="">
+    <img id="scoreImg0" alt="">
+    <img id="scoreImg1" alt="">
     <div id="pastShade"></div>
     <div id="playheadGlow"></div>
     <div id="playheadLine"></div>
@@ -127,13 +127,17 @@ let muted=[false,false,false];
 let schedTimer=null, animReq=null, nextIdx=[0,0,0];
 let currentView='roll';
 
-// Track which SVG images have loaded
 const imgEls=[document.getElementById('scoreImg0'),document.getElementById('scoreImg1')];
 let imgsLoaded=[false,false];
-imgEls[0].onload=()=>{imgsLoaded[0]=true; if(currentView==='score') updateScoreMsg();};
-imgEls[1].onload=()=>{imgsLoaded[1]=true; if(currentView==='score') updateScoreMsg();};
-imgEls[0].onerror=()=>console.warn('SVG page 1 failed to load');
-imgEls[1].onerror=()=>console.warn('SVG page 2 failed to load');
+
+// Set onload BEFORE src so the handler is always registered first
+function loadSvg(idx, src) {
+  imgEls[idx].onload = () => { imgsLoaded[idx]=true; if(currentView==='score') updateScoreMsg(); };
+  imgEls[idx].onerror = () => { console.warn('Could not load SVG '+idx+': '+src+' — make sure the SVG files are in the same folder as this HTML file.'); };
+  imgEls[idx].src = src;
+}
+loadSvg(0,'Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_.svg');
+loadSvg(1,'Agapic_Chantbook_Sanctuary__with_Anne_and_Jake_-2.svg');
 
 function updateScoreMsg(){
   const sys=sysForTime(songNow());
@@ -277,6 +281,9 @@ function updateScore(now){
   imgEls[0].style.display=sys.p===0?'block':'none';
   imgEls[1].style.display=sys.p===1?'block':'none';
   const img=imgEls[sys.p];
+
+  // Fallback: browser may have loaded from cache before onload was set
+  if(!imgsLoaded[sys.p] && img.complete && img.naturalWidth>0) imgsLoaded[sys.p]=true;
 
   const sysH=sys.yb-sys.yt+PAD*2;
   const scale=SCORE_H/sysH;
