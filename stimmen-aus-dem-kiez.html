@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stimmen aus dem Kiez — Agapic Chants</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2EAE0;
+    --ink: #2C1F18;
+    --terracotta: #B84E34;
+    --warm-mid: #8C6A50;
+    --light-rule: rgba(44,31,24,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.75;
+    font-size: 18px;
+  }
+
+  /* ── LANGUAGE TOGGLE ── */
+  .lang-toggle {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 100;
+    display: flex;
+    border: 1px solid rgba(44,31,24,0.25);
+    background: rgba(242,234,224,0.88);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .lang-btn {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--warm-mid);
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .lang-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .lang-btn:not(.active):hover { color: var(--terracotta); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 560px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: brightness(0.72) saturate(0.85);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(44,31,24,0.05) 0%,
+      rgba(44,31,24,0.0) 40%,
+      rgba(44,31,24,0.55) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 8vw 7vh;
+    max-width: 820px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(242,234,224,0.75);
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.2s ease forwards;
+    display: block;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 7vw, 5.2rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.1;
+    color: #F2EAE0;
+    letter-spacing: 0.01em;
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.4s ease forwards;
+  }
+
+  .hero-sub {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(242,234,224,0.7);
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s ease forwards;
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 760px; margin: 0 auto; padding: 0 6vw; }
+  section { padding: 72px 0; }
+  section + section { border-top: 1px solid var(--light-rule); }
+
+  /* ── TYPOGRAPHY ── */
+  .label {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    display: block;
+    margin-bottom: 28px;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.25;
+    margin-bottom: 28px;
+  }
+
+  p { margin-bottom: 1.3em; }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 500; }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    border-left: 2px solid var(--terracotta);
+    padding: 6px 0 6px 28px;
+    margin: 44px 0;
+    font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--warm-mid);
+  }
+
+  /* ── IMAGE BREAK ── */
+  .img-break { width: 100%; overflow: hidden; height: 420px; }
+  .img-break img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 40%;
+    filter: brightness(0.88) saturate(0.82);
+    display: block;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .about-photo {
+    width: 180px; height: 220px;
+    object-fit: cover; object-position: center top;
+    filter: grayscale(30%) brightness(0.95);
+  }
+
+  /* ── STRUCTURE LIST ── */
+  .structure-list { list-style: none; padding: 0; margin: 24px 0 0; }
+  .structure-list li {
+    padding: 16px 0 16px 20px;
+    border-bottom: 1px solid var(--light-rule);
+    position: relative;
+    font-size: 17px;
+  }
+  .structure-list li::before {
+    content: '—'; position: absolute; left: 0; color: var(--terracotta);
+  }
+
+  /* ── FUNDING BOX ── */
+  .funding-box {
+    border: 1px solid var(--light-rule);
+    padding: 40px 44px;
+    margin-top: 36px;
+    text-align: center;
+  }
+  .funding-amount {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-style: italic; font-weight: 300;
+    color: var(--terracotta);
+    display: block; margin-bottom: 12px;
+  }
+  .funding-label {
+    font-family: 'Lato', sans-serif;
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--warm-mid);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--light-rule);
+    padding: 48px 6vw;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--warm-mid);
+  }
+  footer a { color: var(--warm-mid); text-decoration: none; }
+  footer a:hover { color: var(--terracotta); }
+
+  /* ── LANGUAGE SWITCHING ── */
+  [data-lang] { display: none; }
+  .lang-de [data-lang="de"],
+  .lang-en [data-lang="en"] { display: block; }
+  span[data-lang] { display: none; }
+  .lang-de span[data-lang="de"],
+  .lang-en span[data-lang="en"] { display: inline; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .about-photo { width: 140px; height: 170px; }
+    .funding-box { padding: 28px 24px; }
+    .lang-toggle { top: 12px; right: 12px; }
+  }
+</style>
+</head>
+<body class="lang-de">
+
+<!-- LANGUAGE TOGGLE -->
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('de')" id="btn-de">DE</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-img" src="agapic_chants_church_01.jpg" alt="Agapic Chants at Genezarethkirche">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">
+      <span data-lang="de">Ein Projektvorschlag · Agapic Chants × Startbahn / Church of Interbeing</span>
+      <span data-lang="en">A Proposal · Agapic Chants × Startbahn / Church of Interbeing</span>
+    </span>
+    <h1>Stimmen aus<br>dem Kiez</h1>
+    <span class="hero-sub">
+      <span data-lang="de">Eine Gemeinschafts-Residenz zur Liedentwicklung · Genezarethkirche, Berlin</span>
+      <span data-lang="en">A Community Song-Making Residency · Genezarethkirche, Berlin</span>
+    </span>
+  </div>
+</div>
+
+<!-- THE CHALLENGE -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <span class="label">Die Herausforderung</span>
+      <h2>Ein Gebäude im Herzen des Kiezes.<br>Ein Kiez, der selten eintritt.</h2>
+      <p>Der Schillerkiez ist Heimat von rund 22.000 Menschen unterschiedlichster Herkunft — Kreative, Alteingesessene, Zugezogene aus Dutzenden Ländern, junge Familien und Menschen ohne religiöse Bindung. Es ist ein durch und durch kosmopolitisches Viertel. Und doch haben viele seiner Bewohner:innen keine Beziehung zur Genezarethkirche, obwohl sie täglich an ihr vorbeigehen.</p>
+      <p>Das Gebäude, das den Herrfurthplatz — das eigentliche Herzstück des Kiezes — prägt, bleibt für die meisten Menschen hier ein Ort, den sie nie betreten haben.</p>
+      <div class="pull-quote">
+        Das ist keine Gleichgültigkeit. Es ist Distanz. Die Kirche hat noch keine Sprache gefunden, die zu dem spricht, wie die Menschen in diesem Kiez wirklich leben.
+      </div>
+    </div>
+    <div data-lang="en">
+      <span class="label">The Challenge</span>
+      <h2>A building at the center of the neighborhood.<br>A neighborhood that rarely enters.</h2>
+      <p>The Schillerkiez is home to around 22,000 people of vastly different origins — creative professionals, long-term residents, newcomers from dozens of countries, young families, and people without religious affiliation. It is a genuinely cosmopolitan neighborhood. And yet many of its residents have no relationship with the Genezarethkirche, even as they walk past it every day.</p>
+      <p>The building that anchors Herrfurthplatz — the literal heart of the Kiez — remains, for most people who live here, a place they have never entered.</p>
+      <div class="pull-quote">
+        This is not indifference. It is distance. The church has not yet found a language that speaks to how people in this neighborhood actually live.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROPOSAL -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <span class="label">Das Vorhaben</span>
+      <h2>Lieder, die aus Leben entstehen.<br>Gesungen innerhalb dieser Mauern.</h2>
+      <p><em>Stimmen aus dem Kiez</em> ist eine sechsmonatige Residenz zur Liedentwicklung, die dieser Distanz direkt begegnet. Im Laufe der Residenz werden zehn originale Gesänge gemeinsam mit einzelnen Bewohner:innen des Schillerkiezes entstehen — aus ihren eigenen Geschichten, Erfahrungen und der Textur ihres Alltags.</p>
+      <p>Jeder Gesang entsteht in einer individuellen Einzelsitzung mit einer Kiez-Bewohnerin oder einem Kiez-Bewohner, in der der Praktiker tief zuhört, was ihnen am meisten bedeutet: Verlust und Liebe, Zugehörigkeit, Arbeit, die Stadt, der Körper, das Schwer-Sagbare. Das wird zum Material für Musik.</p>
+      <p>Die entstandenen Lieder handeln nicht von Religion. Sie handeln vom Leben. Aber sie sind heilig — in dem Sinne, dass sie menschliche Erfahrung als würdig von Aufmerksamkeit, Fürsorge und gemeinsamer Stimme behandeln. Sie werden gemeinsam gesungen, im Kirchengebäude, und sie gehören den Menschen, die sie gemacht haben.</p>
+    </div>
+    <div data-lang="en">
+      <span class="label">The Proposal</span>
+      <h2>Songs made from lives.<br>Sung inside these walls.</h2>
+      <p><em>Stimmen aus dem Kiez</em> is a six-month song-making residency that addresses this distance directly. Over the course of the residency, ten original chants will be composed collaboratively with individual residents of the Schillerkiez — drawing on their own stories, experiences, and the texture of their daily lives.</p>
+      <p>Each chant emerges from a dedicated one-on-one session with a community member, in which the practitioner listens deeply to what matters most to them: loss and love, belonging, work, the city, the body, what is hard to say. These become the material for music.</p>
+      <p>The resulting songs are not about religion. They are about life. But they are sacred — in the sense that they treat human experience as worthy of care, attention, and collective voice. They are sung together, in the church building, and they belong to the people who made them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE BREAK -->
+<div class="img-break">
+  <img src="here_beyond_sound.jpg" alt="Agapic Chants — Here Beyond Sound">
+</div>
+
+<!-- THE METHOD -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <span class="label">Die Methode</span>
+      <h2>Agapic Chants</h2>
+      <p>Die Residenz baut auf <em>Agapic Chants</em> auf, einer Praxis, die Nathan Vanderpool über mehr als ein Jahrzehnt an der Schnittstelle von Musik, Gemeinschaft und säkularem Ritual entwickelt hat. Die Methode ist präzise: Der Praktiker trifft sich mit einer Person, erfragt die Geschichten und Bilder, die in ihrem Leben am meisten Gewicht tragen, und verwandelt diese in einfache, singbare, harmonisch reiche Gesänge. Die Gesänge werden dann an die Gemeinschaft zurückgegeben — einfach genug für alle zum Singen, bedeutsam genug zum Tragen.</p>
+      <p>Agapic Chants wird bereits regelmäßig in der Genezarethkirche durch die Church of Interbeing praktiziert, wo es gezeigt hat, wie real Zusammenhalt unter Menschen entstehen kann, die keinen gemeinsamen Glauben oder Hintergrund teilen. <em>Stimmen aus dem Kiez</em> trägt diese Arbeit nach außen — in den Kiez hinein — und bringt das Entstandene zurück in das Gebäude.</p>
+    </div>
+    <div data-lang="en">
+      <span class="label">The Method</span>
+      <h2>Agapic Chants</h2>
+      <p>The residency is built around <em>Agapic Chants</em>, a practice developed by Nathan Vanderpool over more than a decade of work at the intersection of music, community, and secular ritual. The method is precise: the practitioner meets with an individual, elicits the stories and images that carry the most weight in their life, and transforms these into simple, singable, harmonically rich chants. The chants are then returned to the community — easy enough for anyone to sing, meaningful enough to carry.</p>
+      <p>Agapic Chants is already practiced regularly at the Genezarethkirche through the Church of Interbeing, where it has demonstrated its capacity to create real cohesion among people who share no common creed or background. <em>Stimmen aus dem Kiez</em> extends this work outward — into the neighborhood itself — and brings what emerges back into the building.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <div class="pull-quote" style="border-left: none; padding-left: 0; text-align: center; color: var(--ink); font-size: clamp(1.3rem, 2.8vw, 1.7rem);">
+        „Wenn es klickt — wenn ein ganzer Raum voller Menschen zusammen singt — spürt man es im Körper. Hier passiert gerade etwas, jetzt, und wir sind alle ein Teil davon."
+        <span style="display: block; margin-top: 18px; font-family: 'Lato', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-style: normal; color: var(--terracotta);">— Hasan Can Tutal, Teilnehmer</span>
+      </div>
+    </div>
+    <div data-lang="en">
+      <div class="pull-quote" style="border-left: none; padding-left: 0; text-align: center; color: var(--ink); font-size: clamp(1.3rem, 2.8vw, 1.7rem);">
+        "When it clicks — when a room full of people is singing together — you can feel it in your body. Something is happening here, right now, and we are all part of it."
+        <span style="display: block; margin-top: 18px; font-family: 'Lato', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-style: normal; color: var(--terracotta);">— Hasan Can Tutal, participant</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE BRIDGE -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <span class="label">Warum das funktioniert</span>
+      <h2>Die Schwelle ist der Punkt.</h2>
+      <p>Kirchen stehen in pluralistischen städtischen Vierteln vor einer strukturellen Herausforderung: Die Formen von Gemeinschaft, die sie traditionell anbieten, setzen vorherigen Glauben als Eintrittsbedingung voraus. <em>Stimmen aus dem Kiez</em> kehrt das um. Es beginnt mit dem, was Menschen bereits tragen — ihr eigenes Leben — und schafft einen Grund, das Gebäude zu betreten, der nichts weiter verlangt als die Bereitschaft, gehört zu werden.</p>
+      <p>Der Prozess selbst ist die Brücke. Wenn jemandes Geschichte zu einem Gesang wird, ist diese Person eingebunden. Sie möchte ihn gesungen hören. Sie erzählt es weiter. Die regelmäßigen Gesangsabende der Church of Interbeing werden zum natürlichen nächsten Schritt — ein Ort, zu dem man eine Freundin mitbringt, etwas zu hören, das einem selbst gehört. Jede Einzelsitzung im Kiez zieht einen Faden zurück ins Kirchengebäude. Und entscheidend: Für viele Teilnehmende wird es das erste Mal sein, dass sie überhaupt eintreten.</p>
+      <div class="pull-quote">
+        Eine der tiefsten Herausforderungen für eine Kirche in einem Kiez wie dem Schillerkiez ist schlicht die Schwelle — der physische Akt, ein Gebäude zu betreten, das sich noch nicht als das eigene anfühlt.
+      </div>
+      <p><em>Stimmen aus dem Kiez</em> ist darauf ausgelegt, genau diese Schwelle zu senken — durch die persönlichste Einladung, die denkbar ist: deine Stimme, dein Leben, dein Lied — in diesen Mauern.</p>
+      <p>Das Vorhaben entspricht dem, was die evangelische Kirche unter einem <em>Dritten Ort</em> versteht: ein niedrigschwelliges, innovatives Format, das kirchliche und nichtkirchliche Akteur:innen auf Augenhöhe verbindet, neue Zielgruppen anspricht und spirituelle Erfahrung für Menschen erlebbar macht, die mit traditionellen Gemeindestrukturen keinen Berührungspunkt haben. <em>Stimmen aus dem Kiez</em> ist kein Ergänzungsangebot zur Ortsgemeinde — es ist eine eigenständige Form, wie Kirche heute im Kiez präsent sein kann.</p>
+    </div>
+    <div data-lang="en">
+      <span class="label">Why This Works</span>
+      <h2>The threshold is the point.</h2>
+      <p>Churches face a structural challenge in pluralist urban neighborhoods: the forms of community they traditionally offer require prior belief as a condition of entry. <em>Stimmen aus dem Kiez</em> inverts this. It begins with what people already carry — their own lives — and creates a reason to enter the building that requires nothing more than a willingness to be heard.</p>
+      <p>The process itself is the bridge. When someone's story becomes a chant, they are invested. They want to hear it sung. They tell others. The Church of Interbeing's regular chanting sessions become a natural next step — a place to bring a friend, to hear something that belongs to you. Each individual session in the neighborhood creates a thread that leads back to the church building. And crucially, for many participants, this will be the first time they have ever stepped inside.</p>
+      <div class="pull-quote">
+        One of the deepest challenges for a church in a neighborhood like the Schillerkiez is simply the threshold — the physical act of entering a building that does not yet feel like it belongs to you.
+      </div>
+      <p><em>Stimmen aus dem Kiez</em> is designed specifically to lower that threshold, through the most personal invitation possible: your voice, your life, your song — inside these walls.</p>
+      <p>The project corresponds to what the Evangelical Church calls a <em>Dritter Ort</em> — a low-threshold, innovative format that connects church and non-church actors as equals, addresses new target groups, and makes spiritual experience accessible to people with no point of contact with traditional parish structures. <em>Stimmen aus dem Kiez</em> is not a supplementary offering to the congregation — it is a distinct form of how the church can be present in the neighborhood today.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING EVENT -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <span class="label">Das Abschlussevent</span>
+      <h2>Eine Kiez-Zusammenkunft,<br>in der Kirche.</h2>
+      <p>Die Residenz gipfelt in einem großen gemeinschaftlichen Gesangsabend in der Genezarethkirche, bei dem alle zehn Gesänge gemeinsam gesungen werden. Jede teilnehmende Person wird eingeladen, Menschen aus ihrem eigenen Netzwerk mitzubringen — Freund:innen, Nachbar:innen, Familie. Für viele dieser Gäste wird es das erste Mal sein, dass sie das Gebäude betreten.</p>
+      <p>Dieses Abschlussevent ist der direkteste Ausdruck des Vorhabens. Es ist kein Konzert, keine Aufführung. Es ist eine Kiez-Zusammenkunft, die in der Kirche stattfindet — ermöglicht durch die Beziehungen, die im Laufe der sechsmonatigen Arbeit entstanden sind.</p>
+      <p>Jede der zehn Einzelsitzungen entfaltet einen Multiplikatoreffekt: Wir erwarten, dass jede teilnehmende Person mindestens fünf weitere Menschen mitbringt oder einlädt — das ergibt ein Zielpublikum von über 60 Menschen, die die Genezarethkirche möglicherweise zum ersten Mal betreten. Zum Vergleich: Die Church of Interbeing zieht bereits wöchentlich 70–100 Menschen in das Gebäude. <em>Stimmen aus dem Kiez</em> hat das Potential, diese Gemeinschaft mit einem neuen Kreis von Kiez-Bewohner:innen zu verbinden — und darüber hinaus, da viele von ihnen zu den bestehenden Veranstaltungen zurückkehren können.</p>
+    </div>
+    <div data-lang="en">
+      <span class="label">The Closing Event</span>
+      <h2>A neighborhood gathering,<br>inside the church.</h2>
+      <p>The residency culminates in a large community chanting evening at the Genezarethkirche, in which all ten chants are sung together. Every participant will be invited to bring people from their own network — friends, neighbors, family. For many of these guests, it will be their first time in the building.</p>
+      <p>This closing event is the residency's most direct expression of its purpose. It is not a concert or a performance. It is a neighborhood gathering, held inside the church, made possible by the relationships built throughout the six months of work.</p>
+      <p>Each of the ten individual sessions creates a multiplier effect: we expect each participant to bring or invite at least five others — giving a target audience of over 60 people entering the Genezarethkirche, many for the first time. For context, the Church of Interbeing already draws 70–100 people into the building each week. <em>Stimmen aus dem Kiez</em> has the potential to connect that existing community with a new circle of Kiez residents — many of whom may return for future events.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT STRUCTURE -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <span class="label">Projektstruktur</span>
+      <h2>Sechs Monate.<br>Zehn Gesänge. Eine Zusammenkunft.</h2>
+      <ul class="structure-list">
+        <li>Individuelle Zuhörsitzungen mit zehn Bewohner:innen des Schillerkiezes</li>
+        <li>Komposition von Gesängen, die direkt aus diesen Gesprächen entstehen</li>
+        <li>Regelmäßige Gemeinschafts-Gesangsabende in der Genezarethkirche im Rahmen der Church of Interbeing</li>
+        <li>Ein abschließendes Gemeinschaftstreffen, bei dem alle zehn Gesänge gemeinsam gesungen werden</li>
+        <li>Ein vollständiges <a href="https://agapicchants.com/chant.html" target="_blank" rel="noopener" style="color:var(--terracotta);text-underline-offset:3px;">Liederbuch</a>, das der Gemeinschaft kostenlos zugänglich gemacht wird</li>
+      </ul>
+    </div>
+    <div data-lang="en">
+      <span class="label">Project Structure</span>
+      <h2>Six months.<br>Ten chants. One gathering.</h2>
+      <ul class="structure-list">
+        <li>Individual listening sessions with ten residents of the Schillerkiez</li>
+        <li>Composition of chants drawing directly on these conversations</li>
+        <li>Regular community singing sessions at the Genezarethkirche through Church of Interbeing events</li>
+        <li>A closing community gathering in which all ten chants are sung together</li>
+        <li>A completed <a href="https://agapicchants.com/chant.html" target="_blank" rel="noopener" style="color:var(--terracotta);text-underline-offset:3px;">Songbook</a> made freely available to the community</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section>
+  <div class="container">
+    <div class="about-grid">
+      <img class="about-photo" src="nathan.webp" alt="Nathan Vanderpool">
+      <div>
+        <div data-lang="de">
+          <span class="label">Der Praktiker</span>
+          <h2>Nathan Vanderpool</h2>
+          <p>Nathan Vanderpool hat einen Doktortitel in Soziologie der Lancaster University, wo seine Forschung sich auf kollektive Erfahrung, Ritual und Sinnstiftung in zeitgenössischen säkularen Kontexten konzentrierte. Er macht seit über dreißig Jahren Musik — in den Bereichen Kunstmusik, Volksmusik und partizipativer Performance.</p>
+          <p>Er ist Gründer und künstlerischer Leiter von Agapic Chants und ein zentraler Mitarbeiter der Church of Interbeing. Seine Arbeit wurde international präsentiert. Er lebt im Schillerkiez — er kennt diesen Kiez, weil er in ihm zuhause ist.</p>
+          <p>Seine soziologische Ausbildung ist für dieses Projekt unmittelbar relevant: Er bringt nicht nur musikalisches Handwerk mit, sondern ein strukturelles Verständnis davon, wie Gemeinschaft entsteht, was Menschen daran hindert, Schwellen zu überschreiten, und welche Arten gemeinsamer Erfahrung dieses Vertrauen wieder aufbauen können.</p>
+        </div>
+        <div data-lang="en">
+          <span class="label">The Practitioner</span>
+          <h2>Nathan Vanderpool</h2>
+          <p>Nathan Vanderpool holds a PhD in Sociology from Lancaster University, where his research focused on collective experience, ritual, and meaning-making in contemporary secular contexts. He has been making music for over thirty years, working across art music, folk traditions, and participatory performance.</p>
+          <p>He is the founder and artistic director of Agapic Chants and a core collaborator at the Church of Interbeing. His work has been presented internationally. He is based in the Schillerkiez — he knows this neighborhood because he lives in it.</p>
+          <p>His sociological training is directly relevant to this project: he brings not only musical craft but a structural understanding of how community is formed, what prevents people from crossing thresholds, and what kinds of shared experience can rebuild that trust.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDING -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <span class="label">Förderung</span>
+      <h2>Gesamtantrag</h2>
+      <p>Wir suchen Unterstützung für die Arbeitszeit des Praktikers über sechs Monate individueller Sitzungen, Komposition, regelmäßiger Gemeinschaftsgesangsabende und des Abschlusstreffens — sowie für die Dokumentation des entstandenen Liederbuchs.</p>
+      <div class="funding-box">
+        <span class="funding-amount">5.000 €</span>
+        <span class="funding-label">Gesamter Förderantrag</span>
+      </div>
+    </div>
+    <div data-lang="en">
+      <span class="label">Funding</span>
+      <h2>Total request</h2>
+      <p>We are seeking support to cover the practitioner's time across six months of individual sessions, composition, regular community singing events, and the closing gathering — as well as documentation of the resulting Songbook.</p>
+      <div class="funding-box">
+        <span class="funding-amount">€5,000</span>
+        <span class="funding-label">Total funding request</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section>
+  <div class="container">
+    <div data-lang="de">
+      <h2 style="font-size: clamp(1.5rem, 3vw, 2.1rem);">Die Genezarethkirche steht im Mittelpunkt des Schillerkiezes. <em>Stimmen aus dem Kiez</em> ist ein Vorschlag, diese Zentralität greifbar zu machen — nicht symbolisch, sondern praktisch.</h2>
+      <p style="margin-top: 28px;">Das Projekt begegnet den Menschen dort, wo sie sind, hört zu, was sie tragen, und schafft einen Grund, durch die Tür zu gehen. Wenn die Menschen dieses Kiezes ihre eigenen Stimmen in diesem Gebäude singen hören, schließt sich die Distanz.</p>
+      <p><em>Dafür ist dieses Projekt da.</em></p>
+    </div>
+    <div data-lang="en">
+      <h2 style="font-size: clamp(1.5rem, 3vw, 2.1rem);">The Genezarethkirche stands at the center of the Schillerkiez. <em>Stimmen aus dem Kiez</em> is a proposal to make that centrality meaningful — not symbolically, but practically.</h2>
+      <p style="margin-top: 28px;">The project meets people where they are, listens to what they carry, and creates a reason to walk through the door. When the people of this neighborhood hear their own voices singing inside that building, the distance closes.</p>
+      <p><em>That is what this project is for.</em></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <a href="https://agapicchants.com">agapicchants.com</a>
+    &ensp;·&ensp;
+    <span data-lang="de">In Kooperation mit Startbahn / Church of Interbeing</span>
+    <span data-lang="en">Proposed in partnership with Startbahn / Church of Interbeing</span>
+    &ensp;·&ensp;
+    Genezarethkirche, Berlin-Neukölln
+  </div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.documentElement.lang = lang;
+    document.getElementById('btn-de').classList.toggle('active', lang === 'de');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  }
+</script>
+
+</body>
+</html>
