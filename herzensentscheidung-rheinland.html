@@ -64,7 +64,7 @@
   .player:focus-visible{ outline:2px solid var(--coral); outline-offset:3px; }
   .player .overlay{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    background:rgba(52,48,42,.10); transition:background .2s ease;
+    background:rgba(52,48,42,.10); transition:background .2s ease, opacity .2s ease;
   }
   .player:hover .overlay{ background:rgba(52,48,42,.20); }
   .player .btn{
@@ -79,7 +79,8 @@
   .player .icon-pause{ display:none; }
   .player.playing .icon-play{ display:none; }
   .player.playing .icon-pause{ display:block; }
-  .player.playing .overlay{ background:rgba(52,48,42,.06); }
+  .player.playing .overlay{ background:rgba(52,48,42,0); opacity:.28; }
+  .player.playing:hover .overlay{ opacity:1; background:rgba(52,48,42,.10); }
 
   .caption{
     font-family:'EB Garamond',serif; font-style:italic;
@@ -117,6 +118,12 @@
   .credit .line .ch{ color:var(--coral); }
   .credit .line.dim{ color:var(--muted); }
 
+  .coda{ margin:50px 0 0; text-align:center; }
+  .coda figcaption{
+    font-family:'EB Garamond',serif; font-style:italic; font-size:13.5px;
+    color:var(--muted); margin:0 0 14px; letter-spacing:.01em;
+  }
+  .coda img{ display:inline-block; height:460px; max-width:100%; width:auto; border-radius:4px; vertical-align:top; }
   .footer{ font-size:11.5px; color:var(--faint); letter-spacing:.02em; margin-top:30px; }
   .footer .ch{ color:var(--coral); }
 
@@ -191,6 +198,11 @@
         <div class="line dim">nathanvanderpoolphd@gmail.com &middot; Bonn</div>
       </div>
     </div>
+
+    <figure class="coda">
+      <figcaption>Herzensentscheidung kann auch einen größeren Raum füllen</figcaption>
+      <img src="here_beyond_sound.jpg" alt="Heart Choices in a church, people resting on a large circular carpet under coloured light">
+    </figure>
 
     <div class="footer">Teil des Agapic-Chants-Projekts &middot; <span class="ch">agapicchants.com</span></div>
 
