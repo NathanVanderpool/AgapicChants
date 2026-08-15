@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heart Choices &middot; Agapic Chants</title>
+<style>
+  @font-face{ font-family:'Cormorant'; src:url('fonts/CormorantGaramond.ttf'); font-weight:300 700; font-style:normal; font-display:swap; }
+  @font-face{ font-family:'Cormorant'; src:url('fonts/CormorantGaramond-Italic.ttf'); font-weight:300 700; font-style:italic; font-display:swap; }
+  @font-face{ font-family:'EB Garamond'; src:url('fonts/EBGaramond.ttf'); font-weight:400 700; font-style:normal; font-display:swap; }
+  @font-face{ font-family:'EB Garamond'; src:url('fonts/EBGaramond-Italic.ttf'); font-weight:400 700; font-style:italic; font-display:swap; }
+
+  :root{
+    --cream:#f2e6d4;
+    --backdrop:#e4d8c2;
+    --coral:#cf6038;
+    --ink:#34302a;
+    --body:#4f463d;
+    --muted:#8f8477;
+    --faint:#a89d8d;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:var(--cream); -webkit-font-smoothing:antialiased; }
+  body{ position:relative; min-height:100vh; font-family:'EB Garamond',serif; color:var(--body); }
+
+  /* handmade-paper texture: procedural, no image, fills the page, fixed on scroll */
+  .paper{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
+  .paper-mottle{ mix-blend-mode:multiply;  opacity:.09; }
+  .paper-grain { mix-blend-mode:soft-light; opacity:.45; }
+
+  .content{
+    position:relative; z-index:1;
+    max-width:860px; margin:0 auto;
+    padding:64px 40px 54px;
+    text-align:center;
+  }
+
+  .logo{ width:82px; height:auto; display:block; margin:0 auto 24px; }
+
+  .eyebrow{
+    text-transform:uppercase; letter-spacing:.34em;
+    font-size:13px; color:var(--coral);
+    margin-bottom:8px; padding-left:.34em;
+  }
+
+  h1{
+    font-family:'Cormorant',serif; font-weight:500; color:var(--ink);
+    font-size:54px; line-height:1.02; letter-spacing:.01em; margin-bottom:12px;
+  }
+
+  .subtitle{
+    font-family:'Cormorant',serif; font-style:italic; font-weight:500;
+    color:var(--muted); font-size:22px; line-height:1.34; margin-bottom:30px;
+  }
+
+  /* ---- the player ---- */
+  .player{
+    position:relative; display:block; margin:38px auto 0;
+    width:58%; max-width:360px; padding:0; border:0; background:none;
+    cursor:pointer; border-radius:5px; overflow:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .player img{ display:block; width:100%; height:auto; border-radius:5px; }
+  .player:focus-visible{ outline:2px solid var(--coral); outline-offset:3px; }
+  .player .overlay{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(52,48,42,.10); transition:background .2s ease;
+  }
+  .player:hover .overlay{ background:rgba(52,48,42,.20); }
+  .player .btn{
+    width:52px; height:52px; border-radius:50%;
+    background:rgba(207,96,56,.90);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 10px rgba(52,48,42,.28);
+    transition:transform .15s ease, background .2s ease;
+  }
+  .player:hover .btn{ transform:scale(1.06); background:rgba(207,96,56,1); }
+  .player .btn svg{ display:block; }
+  .player .icon-pause{ display:none; }
+  .player.playing .icon-play{ display:none; }
+  .player.playing .icon-pause{ display:block; }
+  .player.playing .overlay{ background:rgba(52,48,42,.06); }
+
+  .caption{
+    font-family:'EB Garamond',serif; font-style:italic;
+    font-size:13.5px; color:var(--muted); margin:12px 0 26px;
+    letter-spacing:.01em;
+  }
+  .caption .cap-link{ color:var(--coral); text-decoration:underline; text-underline-offset:2px; }
+
+  p.body{
+    font-family:'EB Garamond',serif; font-size:16.5px; line-height:1.66;
+    color:var(--body); text-align:left; max-width:none; margin:0;
+  }
+  p.body i{ font-style:italic; }
+
+  .ornament{ display:block; margin:20px auto; }
+
+  .closing{
+    font-family:'Cormorant',serif; font-style:italic; font-weight:500;
+    color:var(--muted); font-size:19px; line-height:1.38; margin-top:28px;
+  }
+
+  .divider{ display:block; margin:24px auto 26px; }
+
+  .credit{ display:flex; align-items:center; justify-content:center; gap:18px; text-align:left; }
+  .headshot{ width:58px; height:58px; border-radius:50%; object-fit:cover; flex:0 0 auto; }
+  .credit .role{
+    text-transform:uppercase; letter-spacing:.30em; font-size:11px;
+    color:var(--coral); margin-bottom:5px; padding-left:.30em;
+  }
+  .credit .name{
+    font-family:'Cormorant',serif; font-weight:500; font-size:23px;
+    color:var(--ink); line-height:1.1; margin-bottom:4px;
+  }
+  .credit .line{ font-size:12.5px; line-height:1.5; color:var(--body); }
+  .credit .line .ch{ color:var(--coral); }
+  .credit .line.dim{ color:var(--muted); }
+
+  .footer{ font-size:11.5px; color:var(--faint); letter-spacing:.02em; margin-top:30px; }
+  .footer .ch{ color:var(--coral); }
+
+  @media (max-width:560px){
+    .content{ padding:40px 20px 34px; }
+    h1{ font-size:38px; }
+    .subtitle{ font-size:17px; }
+    .player{ width:78%; }
+    p.body{ font-size:15px; }
+    .credit{ gap:14px; }
+    .credit .name{ font-size:20px; }
+  }
+</style>
+</head>
+<body>
+  <svg class="paper paper-mottle" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <filter id="pm"><feTurbulence type="fractalNoise" baseFrequency="0.010" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" fill="none" filter="url(#pm)"/>
+  </svg>
+  <svg class="paper paper-grain" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <filter id="pg"><feTurbulence type="fractalNoise" baseFrequency="0.80" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" fill="none" filter="url(#pg)"/>
+  </svg>
+
+  <main class="content">
+
+    <img class="logo" src="AgapicChantsLogo.jpg" alt="Agapic Chants">
+
+    <div class="eyebrow">An Invitation</div>
+    <h1>Heart&nbsp;Choices</h1>
+    <div class="subtitle">Life is full of hard choices.<br>This one's for the heart.</div>
+
+    <p class="body">You probably have a big heart. You feel deeply, and you care about how wide the gap is between how things are and how they should be. A heart that big is a gift, and it can burn us out if we don't also nourish ourselves. This evening is an invitation to sit together, to look at what matters to us, and to find our way back to connection and direction.</p>
+
+    <div class="player" id="player" role="button" tabindex="0" aria-label="Play or pause a chant">
+      <img src="agapic_chants_living_room_01.jpg" alt="People singing together in a circle">
+      <span class="overlay">
+        <span class="btn">
+          <svg class="icon-play" width="18" height="20" viewBox="0 0 18 20" aria-hidden="true">
+            <path d="M1 1 L17 10 L1 19 Z" fill="#f6ecdd"/>
+          </svg>
+          <svg class="icon-pause" width="16" height="18" viewBox="0 0 16 18" aria-hidden="true">
+            <rect x="1" y="1" width="4.5" height="16" rx="1.4" fill="#f6ecdd"/>
+            <rect x="10.5" y="1" width="4.5" height="16" rx="1.4" fill="#f6ecdd"/>
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div class="caption"><span id="capstate">Click the image to hear a chant</span>, and <a class="cap-link" href="https://agapicchants.com/sanctuary.html" target="_blank" rel="noopener">here</a> to learn to play it.</div>
+
+    <p class="body">We begin with singing &mdash; simple songs, nothing to prepare, no performance, just voices finding each other until the room grows still. Then we settle, and look honestly and kindly at our lives. <i>What matters to me? Where could I live a little more from love?</i> There's nothing to fix and nothing you have to do afterward. We simply look.</p>
+
+    <svg class="ornament" width="34" height="19" viewBox="0 -3 34 19" aria-hidden="true">
+      <path d="M4 13 A13 13 0 0 1 30 13" fill="none" stroke="#cf6038" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="17" cy="10.5" r="2.4" fill="#cf6038"/>
+    </svg>
+
+    <p class="body">We sing a little more, and then there's an open round. If something moves you, you can say out loud what you'd like to choose &mdash; anything, however small. The room says thank you and breathes out, because it's a real relief when someone chooses to live from love. And if you'd rather stay quiet, that's good too. Then one last round of singing, tea, and time to simply be together.</p>
+
+    <div class="closing">No experience needed.<br>Just come as you are.</div>
+
+    <svg class="divider" width="58" height="14" viewBox="0 0 58 14" aria-hidden="true">
+      <path d="M4 2 L4 12 L54 12 L54 2" fill="none" stroke="#cf6038" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+    <div class="credit">
+      <img class="headshot" src="nathan.webp" alt="Nathan Vanderpool">
+      <div class="who">
+        <div class="role">Guided by</div>
+        <div class="name">Nathan Vanderpool</div>
+        <div class="line"><span class="ch">WhatsApp &middot; Telegram &middot; Signal</span>&nbsp;&nbsp;+49&nbsp;176&nbsp;54622093</div>
+        <div class="line dim">nathanvanderpoolphd@gmail.com &middot; Berlin &middot; Bonn</div>
+      </div>
+    </div>
+
+    <div class="footer">Part of the Agapic Chants project &middot; <span class="ch">agapicchants.com</span></div>
+
+  </main>
+
+  <audio id="chant" src="audio/sanctuary.mp3" preload="none"></audio>
+
+  <script>
+    (function(){
+      var player  = document.getElementById('player');
+      var audio   = document.getElementById('chant');
+      var capstate = document.getElementById('capstate');
+      var CAP_DEFAULT = "Click the image to hear a chant";
+      var CAP_PLAYING = "Playing — click to pause";
+
+      function toggle(){
+        if (audio.paused) {
+          audio.play().catch(function(){ /* file not present yet, or blocked */ });
+        } else {
+          audio.pause();
+        }
+      }
+      player.addEventListener('click', toggle);
+      player.addEventListener('keydown', function(e){
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+      });
+      audio.addEventListener('play', function(){
+        player.classList.add('playing');
+        capstate.textContent = CAP_PLAYING;
+      });
+      audio.addEventListener('pause', function(){
+        player.classList.remove('playing');
+        capstate.textContent = CAP_DEFAULT;
+      });
+      audio.addEventListener('ended', function(){
+        player.classList.remove('playing');
+        capstate.textContent = CAP_DEFAULT;
+        audio.currentTime = 0;   // next click restarts from the beginning
+      });
+    })();
+  </script>
+</body>
+</html>
