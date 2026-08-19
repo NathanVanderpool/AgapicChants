@@ -113,15 +113,22 @@
       border: 0;
     }
 
-    /* Footer */
-    .sign {
+    /* Fallback link if the embed is blocked */
+    .fallback {
       text-align: center;
-      margin-top: 40px;
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-style: italic;
-      font-size: 22px;
+      margin-top: 20px;
+      font-size: 16px;
       color: var(--ink-soft);
     }
+
+    .fallback a {
+      color: var(--coral);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(207, 96, 56, 0.35);
+      padding-bottom: 1px;
+    }
+
+    .fallback a:hover { border-bottom-color: var(--coral); }
 
     @media (max-width: 520px) {
       body { font-size: 18px; }
@@ -136,11 +143,6 @@
   </div>
 
   <div class="wrap">
-    <div class="intro">
-      <h1>Music and ritual</h1>
-      <hr class="rule" />
-    </div>
-
     <div class="form-card">
       <iframe
         class="airtable-embed"
@@ -151,6 +153,8 @@
         height="533"
       ></iframe>
     </div>
+
+    <p class="fallback">Form not loading? <a href="https://airtable.com/embed/appIhsyHzVsNDtbJG/pagSePJRCTdVUx2Lr/form" target="_blank" rel="noopener">Open it in a new tab →</a></p>
   </div>
 </body>
 </html>
