@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retreats · Agapic Chants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+html{-webkit-font-smoothing:antialiased}
+body{margin:0;background:#f6efe1;color:#2f2419;font-family:'EB Garamond',Georgia,serif}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:#cf6038;text-decoration:none}
+a:hover{color:#a8451f}
+a.card:hover{border-color:#cf6038!important;background:#fdfaf3!important}
+a.btn:hover{background:#a8451f!important;border-color:#a8451f!important;color:#fbf6ec!important}
+button.play:hover{background:#a8451f!important;border-color:#a8451f!important}
+button.txt:hover{color:#a8451f!important}
+button.faq-q:hover{color:#a8451f!important}
+a.banner:hover{background:#231f1b!important;color:#efe6d6!important}
+</style>
+</head>
+<body>
+<div style="min-height:100vh">
+
+<header style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 40px 0;max-width:1180px;margin:0 auto">
+<a href="index.html" style="display:flex;align-items:center;gap:12px;color:#2f2419"><img src="images/AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:52px;height:52px;border-radius:50%;object-fit:cover;mix-blend-mode:multiply"><span style="font-family:'Cormorant Garamond',serif;font-size:19px;letter-spacing:.08em;text-transform:uppercase;color:#3c2f21">Agapic Chants</span></a>
+<span style="display:flex;align-items:center;gap:8px;font-size:15px;color:#6f5f4a"><span style="color:#3c2f21;border-bottom:1px solid #cf6038;padding-bottom:2px">English</span><span>·</span><a href="#" style="color:#6f5f4a">Deutsch</a></span>
+</header>
+
+<section style="max-width:1180px;margin:0 auto;padding:44px 40px 0">
+<a href="make-a-chant.html" style="font-size:16px;color:#6f5f4a">← Make a chant</a>
+</section>
+
+<section style="max-width:1180px;margin:0 auto;padding:26px 40px 0;display:flex;flex-wrap:wrap;gap:56px;align-items:center">
+<div style="flex:1 1 380px;display:flex;flex-direction:column;gap:28px">
+<h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(38px,4.4vw,58px);line-height:1.12;letter-spacing:-.01em;color:#2f2419;text-wrap:pretty">Retreats</h1>
+<p style="margin:0;font-size:20px;line-height:1.6;color:#4a3b2b;max-width:34em;text-wrap:pretty">Now and then, a group does this work together over several days. Same work as a session, more time, collaborating with other teachers, and we make chants as a group.</p>
+
+<div style="display:flex;align-items:flex-start;gap:18px;padding:18px 22px;background:#fbf6ec;border:1px solid #e4d7c0;border-radius:2px">
+<button onclick="togglePlay()" style="width:58px;height:58px;flex:none;border-radius:50%;border:1px solid #cf6038;background:#cf6038;color:#fbf6ec;font-size:19px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit"  class="play"><span id="glyph">▶</span></button>
+<div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+<div style="font-size:19px;color:#3c2f21">Listen to <strong style="font-weight:600">Be Just the Way You Are</strong></div>
+<div style="font-size:15px;color:#6f5f4a;line-height:1.4">A chant that came out of a retreat.</div>
+</div>
+<audio id="chant" src="audio/be-just-the-way-you-are.mp3" preload="none" onended="onChantEnded()" onerror="onChantEnded()"></audio>
+</div>
+<div style="font-size:16px;color:#6f5f4a">Want to sing this one yourself? <a href="https://chantbook.com" target="_blank" rel="noopener">Open the Chantbook →</a></div>
+</div>
+
+<figure style="margin:0;flex:1 1 380px">
+<img src="images/retreatpics.png" alt="Sitting together at sunrise, a fallen tree in the woods, and a fly on paper" style="width:100%;object-fit:contain;display:block;border-radius:2px">
+</figure>
+</section>
+
+<section style="margin-top:96px;padding:72px 40px 80px;background:#efe4d0">
+<div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:34px">
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#7d6a51">How a Retreat Goes</h2>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:1px solid #c9b48f">
+<div style="font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#96754c">Mornings</div>
+<div style="font-family:'Cormorant Garamond',serif;font-size:29px;line-height:1.15">We sing, and we sit</div>
+<p style="margin:0;font-size:18px;line-height:1.55;color:#5c4b38">Days open with singing and quiet. Nothing to prepare, and no experience needed.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:1px solid #c9b48f">
+<div style="font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#96754c">The work</div>
+<div style="font-family:'Cormorant Garamond',serif;font-size:29px;line-height:1.15">We untie knots together</div>
+<p style="margin:0;font-size:18px;line-height:1.55;color:#5c4b38">The same accompaniment as a session, in a group — with other teachers bringing their own practices alongside mine.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:1px solid #c9b48f">
+<div style="font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#96754c">By the end</div>
+<div style="font-family:'Cormorant Garamond',serif;font-size:29px;line-height:1.15">There are chants</div>
+<p style="margin:0;font-size:18px;line-height:1.55;color:#5c4b38">What comes up becomes something the group can sing, and you take it home with you.</p>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+<a href="#ask" style="padding:16px 36px;background:#cf6038;border:1px solid #cf6038;border-radius:2px;color:#fbf6ec;font-family:'Cormorant Garamond',serif;font-size:23px;line-height:1.1;letter-spacing:.01em;transition:background .18s ease,border-color .18s ease"  class="btn">Let's talk</a>
+<span style="font-size:17px;color:#6f5f4a">Nothing scheduled right now — get on the list.</span>
+</div>
+</div>
+</section>
+
+<section style="max-width:1180px;margin:0 auto;padding:88px 40px 0">
+<a href="https://nathanvanderpool.github.io/CleaningUpPower/" target="_blank" rel="noopener" style="display:block;max-width:1000px;padding:44px 44px 40px;background:#1c1a17;border:1px solid #2e2a24;border-radius:2px;color:#efe6d6;transition:background .2s ease"  class="banner">
+<div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+<div style="flex:1 1 340px;display:flex;flex-direction:column;gap:16px">
+<div style="font-size:14px;letter-spacing:.24em;text-transform:uppercase;color:#c9a24a">Most recently · Berlin 2026</div>
+<div style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(32px,3.4vw,44px);line-height:1.1;color:#f4ecdd">Cleaning Up <em style="font-style:italic;color:#c9a24a">Power</em></div>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#cdc2ae;text-wrap:pretty">A men's retreat, and an inquiry rather than a teaching: what is power, what blocks it in us, how has it been used and misused against us. Dialogue, Jungian practice, meditation, and chanting, over three days with three facilitators.</p>
+</div>
+<div style="flex:0 1 240px;display:flex;flex-direction:column;gap:12px;font-size:17px;color:#cdc2ae">
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#8d8271">When</span>August 7–9</div>
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#8d8271">Where</span>Berlin Südstern</div>
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#8d8271">Cost</span>€200</div>
+<span style="margin-top:6px;font-family:'Cormorant Garamond',serif;font-size:22px;color:#c9a24a">Read about it →</span>
+</div>
+</div>
+</a>
+</section>
+
+<section style="max-width:1180px;margin:0 auto;padding:72px 40px 0">
+<div style="max-width:1000px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:44px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:23px;line-height:1.45;color:#3c2f21;text-wrap:pretty">I came to this retreat with skepticism, and was not particularly excited about meeting other men or hearing their stories. Everything was welcome: my skepticism and distrust had a place too, and that allowed for meaningful openings to unfold within me.</p>
+<div style="display:flex;align-items:center;gap:14px">
+<img src="images/Simon.jpg" alt="Simon" style="width:56px;height:56px;flex:none;object-fit:cover;object-position:50% 22%;border-radius:50%;background:#e9dcc4">
+<div style="font-size:16px;color:#6f5f4a">Simon</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:23px;line-height:1.45;color:#3c2f21;text-wrap:pretty">The bond that was formed between strangers, men less and less so, humans evermore, in such a short time span was astounding and touching.</p>
+<div style="display:flex;align-items:center;gap:14px">
+<img src="images/Benedikt.jpg" alt="Benedikt" style="width:56px;height:56px;flex:none;object-fit:cover;object-position:56% 26%;border-radius:50%;background:#e9dcc4">
+<div style="font-size:16px;color:#6f5f4a">Benedikt</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="ask" style="padding:88px 40px 0;scroll-margin-top:24px">
+<div style="max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:24px">
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:34px;line-height:1.2;color:#2f2419">Get on the list for the next one</h2>
+<div style="display:flex;flex-direction:row-reverse;flex-wrap:wrap;gap:44px;align-items:flex-start">
+<p style="margin:0;flex:1 1 260px;max-width:26em;font-size:19px;line-height:1.6;color:#4a3b2b;text-wrap:pretty">Nothing is scheduled right now. Tell me you're interested and I'll write when the next one is set. If you'd rather start smaller, a <a href="make-a-chant.html">session</a> is the shorter version of the same thing.</p>
+<div style="flex:1 1 400px;min-width:300px;display:flex;flex-direction:column;gap:12px">
+<iframe src="https://airtable.com/embed/appIhsyHzVsNDtbJG/pagj32QnAXCh0Vlip/form" title="Ask about a retreat" width="100%" height="533" style="background:transparent;border:1px solid #e4d7c0;border-radius:2px;display:block"></iframe>
+<div style="font-size:16px;color:#7f6d55;line-height:1.5">Form not loading? <a href="https://airtable.com/appIhsyHzVsNDtbJG/pagj32QnAXCh0Vlip/form" target="_blank" rel="noopener">Open it in a new tab →</a></div>
+<div style="font-size:16px;color:#7f6d55;line-height:1.5">Or write directly: <a href="https://wa.me/4917654622093">WhatsApp</a>, <a href="https://t.me/AgapicChants">Telegram</a>, or <a href="mailto:nathanvanderpoolphd@gmail.com">email</a>.</div>
+</div>
+</div>
+</div>
+</section>
+
+<section style="max-width:1180px;margin:0 auto;padding:88px 40px 0">
+<div style="max-width:820px;display:flex;flex-direction:column;gap:22px">
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:34px;line-height:1.2;color:#2f2419">About Nathan</h2>
+<div style="display:flex;gap:30px;align-items:center;flex-wrap:wrap">
+<p style="margin:0;flex:1;min-width:280px;font-size:19px;line-height:1.62;color:#4a3b2b;text-wrap:pretty">I've been writing songs since I was 13, and I've spent the years since split between <a href="https://nathanvanderpool.com" target="_blank" rel="noopener">music</a> and a quieter track: a doctorate in the sociology of religion, time in monasteries, and training in how people work through what's hard. I make songs with people, and then we sing them.</p>
+<img src="images/nathan.webp" alt="Nathan Vanderpool" style="width:170px;height:170px;flex:none;object-fit:cover;object-position:50% 22%;border-radius:50%;background:#e9dcc4">
+</div>
+</div>
+</section>
+
+<section style="padding:104px 40px 84px;margin-top:96px;background:#efe4d0">
+<div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:64px">
+<p style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(30px,3.6vw,48px);line-height:1.25;color:#2f2419;max-width:22em;text-wrap:pretty">Even across the darkness, we can hear each other sing.</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:36px;font-size:17px;color:#5c4b38">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#7d6a51">Get in touch</div>
+<a href="https://t.me/AgapicChants">Telegram</a>
+<a href="https://wa.me/4917654622093">WhatsApp</a>
+<a href="mailto:nathanvanderpoolphd@gmail.com">nathanvanderpoolphd@gmail.com</a>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#7d6a51">The other ways in</div>
+<a href="make-a-chant.html">Make a chant</a>
+<a href="host-a-chant.html">Host a chant</a>
+<a href="index.html">Back to the start</a>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#7d6a51">The chants are free</div>
+<p style="margin:0;line-height:1.55;color:#5c4b38">If they've meant something to you, <a href="https://www.paypal.me/nathanvanderpoolphd">your support helps make more of them</a>.</p>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+<script>
+(function(){
+  var audio = document.getElementById('chant');
+  var glyph = document.getElementById('glyph');
+  function reset(){ if(glyph) glyph.textContent = '\u25B6'; }
+  window.togglePlay = function(){
+    if(!audio) return;
+    if(audio.paused){
+      Promise.resolve(audio.play()).then(function(){ glyph.textContent = '\u2759\u2759'; }).catch(reset);
+    } else { audio.pause(); reset(); }
+  };
+  window.onChantEnded = reset;
+  var lyrics = document.getElementById('lyrics');
+  var lyricsLabel = document.getElementById('lyricsLabel');
+  window.toggleLyrics = function(){
+    if(!lyrics) return;
+    var open = lyrics.style.display !== 'none';
+    lyrics.style.display = open ? 'none' : 'block';
+    if(lyricsLabel) lyricsLabel.textContent = open ? 'Lyrics' : 'Hide';
+  };
+  var openFaq = 0;
+  window.toggleFaq = function(i){
+    openFaq = (openFaq === i) ? null : i;
+    for(var n=0;n<5;n++){
+      var body = document.getElementById('faq'+n);
+      var icon = document.getElementById('icon'+n);
+      if(!body) continue;
+      var on = (openFaq === n);
+      body.style.display = on ? 'block' : 'none';
+      if(icon) icon.textContent = on ? '\u2212' : '+';
+    }
+  };
+})();
+</script>
+</body>
+</html>
