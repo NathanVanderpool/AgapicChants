@@ -15,7 +15,14 @@ a{color:#cf6038;text-decoration:none}
 a:hover{color:#a8451f}
 a.card:hover{border-color:#cf6038!important;background:#fdfaf3!important}
 a.btn:hover{background:#a8451f!important;border-color:#a8451f!important;color:#fbf6ec!important}
-button.play:hover{background:#a8451f!important;border-color:#a8451f!important}
+button.play:hover{filter:brightness(1.07)}
+button.play:active{transform:translateY(1px);box-shadow:inset 0 2px 4px rgba(47,36,25,.4)!important}
+input.scrub{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer;margin:0}
+input.scrub:focus{outline:none}
+input.scrub::-webkit-slider-runnable-track{height:7px;border-radius:99px;background:linear-gradient(#e3d5bc,#f3ead9);border:1px solid #d3c2a4;box-shadow:inset 0 1px 3px rgba(47,36,25,.3)}
+input.scrub::-moz-range-track{height:7px;border-radius:99px;background:linear-gradient(#e3d5bc,#f3ead9);border:1px solid #d3c2a4;box-shadow:inset 0 1px 3px rgba(47,36,25,.3)}
+input.scrub::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-5px;border-radius:50%;background:linear-gradient(#e07f55,#cf6038 55%,#ab4a26);border:1px solid #a8451f;box-shadow:0 2px 4px rgba(47,36,25,.32),inset 0 1px 1px rgba(255,255,255,.5)}
+input.scrub::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(#e07f55,#cf6038 55%,#ab4a26);border:1px solid #a8451f;box-shadow:0 2px 4px rgba(47,36,25,.32),inset 0 1px 1px rgba(255,255,255,.5)}
 button.txt:hover{color:#a8451f!important}
 button.faq-q:hover{color:#a8451f!important}
 a.banner:hover{background:#231f1b!important;color:#efe6d6!important}
@@ -38,12 +45,17 @@ a.banner:hover{background:#231f1b!important;color:#efe6d6!important}
 <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(38px,4.4vw,58px);line-height:1.12;letter-spacing:-.01em;color:#2f2419;text-wrap:pretty">Make a chant</h1>
 <p style="margin:0;font-size:20px;line-height:1.6;color:#4a3b2b;max-width:34em;text-wrap:pretty">We sit down together, and whatever you're carrying becomes something you can sing. It takes a conversation and an afternoon.</p>
 
-<div style="display:flex;align-items:flex-start;gap:18px;padding:18px 22px;background:#fbf6ec;border:1px solid #e4d7c0;border-radius:2px">
-<button onclick="togglePlay()" style="width:58px;height:58px;flex:none;border-radius:50%;border:1px solid #cf6038;background:#cf6038;color:#fbf6ec;font-size:19px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit"  class="play"><span id="glyph">▶</span></button>
+<div style="display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fbf6ec;border:1px solid #e4d7c0;border-radius:2px">
+<img src="images/art-there-is-the-body.jpg" alt="" style="width:96px;height:96px;flex:none;object-fit:cover;border-radius:2px;box-shadow:0 2px 5px rgba(47,36,25,.22)">
+<button onclick="togglePlay()" aria-label="Play or pause" style="width:58px;height:58px;flex:none;border-radius:50%;border:1px solid #a8451f;background:linear-gradient(#e07f55,#cf6038 55%,#ab4a26);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 3px 6px rgba(47,36,25,.32),inset 0 1px 1px rgba(255,255,255,.45);transition:filter .15s ease" class="play"><span id="icoPlay" style="width:0;height:0;border-left:16px solid #fbf6ec;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px"></span><span id="icoPause" style="display:none;gap:5px"><span style="display:block;width:5px;height:18px;background:#fbf6ec;border-radius:1px"></span><span style="display:block;width:5px;height:18px;background:#fbf6ec;border-radius:1px"></span></span></button>
 <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
 <div style="font-size:19px;color:#3c2f21">Listen to <strong style="font-weight:600">There Is the Body</strong></div>
 <div style="font-size:17px;color:#5c4b38;font-style:italic">with Gabriel</div>
-<div style="font-size:15px;color:#6f5f4a;line-height:1.4">A chant that came out of one afternoon like this.</div>
+<div style="display:flex;align-items:center;gap:10px;margin-top:2px">
+<span id="tCur" style="font-size:13px;color:#6f5f4a;font-variant-numeric:tabular-nums;min-width:32px">0:00</span>
+<input id="scrub" class="scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek" oninput="seekChant(this.value)" style="flex:1 1 110px;min-width:90px">
+<span id="tDur" style="font-size:13px;color:#6f5f4a;font-variant-numeric:tabular-nums;min-width:32px">0:00</span>
+</div>
 </div>
 <audio id="chant" src="audio/Agapic_Chants_-_There_Is_the_Body.mp3" preload="none" onended="onChantEnded()" onerror="onChantEnded()"></audio>
 </div>
@@ -192,6 +204,18 @@ a.banner:hover{background:#231f1b!important;color:#efe6d6!important}
 
 
 
+<section style="max-width:1180px;margin:0 auto;padding:88px 40px 0">
+<div style="max-width:820px;display:flex;flex-direction:column;gap:22px">
+<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:34px;line-height:1.2;color:#2f2419">About Nathan</h2>
+<div style="display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap">
+<p style="margin:0;flex:1;min-width:280px;font-size:19px;line-height:1.62;color:#4a3b2b;text-wrap:pretty">I've been writing songs since I was 13, and I've spent the years since split between <a href="https://nathanvanderpool.com" target="_blank" rel="noopener">music</a> and a quieter track: a doctorate in the sociology of religion, time in monasteries, and training in how people work through what's hard. I make songs with people, and then we sing them.</p>
+<img src="images/nathan.webp" alt="Nathan Vanderpool" style="width:170px;height:253px;flex:none;object-fit:contain;border-radius:2px;background:#e9dcc4">
+</div>
+</div>
+</section>
+
+
+
 <section style="margin-top:72px;padding:64px 40px 72px;background:#efe4d0">
 <div style="max-width:1000px;margin:0 auto;display:flex;gap:40px;align-items:center;flex-wrap:wrap">
 <img src="images/river.jpg" alt="River Kenna" style="width:190px;height:190px;flex:none;object-fit:cover;object-position:50% 30%;border-radius:50%;background:#e9dcc4">
@@ -201,18 +225,6 @@ a.banner:hover{background:#231f1b!important;color:#efe6d6!important}
 <div style="font-size:16px;color:#6f5f4a">River Kenna</div>
 <div style="font-size:17px;color:#5c4b38;line-height:1.5"><a href="https://www.innerwilds.blog/p/what-changed-my-life" target="_blank" rel="noopener">Read more about River's experience →</a></div>
 </div>
-</div>
-</div>
-</section>
-
-
-
-<section style="max-width:1180px;margin:0 auto;padding:88px 40px 0">
-<div style="max-width:820px;display:flex;flex-direction:column;gap:22px">
-<h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:34px;line-height:1.2;color:#2f2419">About Nathan</h2>
-<div style="display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap">
-<p style="margin:0;flex:1;min-width:280px;font-size:19px;line-height:1.62;color:#4a3b2b;text-wrap:pretty">I've been writing songs since I was 13, and I've spent the years since split between <a href="https://nathanvanderpool.com" target="_blank" rel="noopener">music</a> and a quieter track: a doctorate in the sociology of religion, time in monasteries, and training in how people work through what's hard. I make songs with people, and then we sing them.</p>
-<img src="images/nathan.webp" alt="Nathan Vanderpool" style="width:170px;height:253px;flex:none;object-fit:contain;border-radius:2px;background:#e9dcc4">
 </div>
 </div>
 </section>
@@ -254,15 +266,32 @@ a.banner:hover{background:#231f1b!important;color:#efe6d6!important}
 <script>
 (function(){
   var audio = document.getElementById('chant');
-  var glyph = document.getElementById('glyph');
-  function reset(){ if(glyph) glyph.textContent = '\u25B6'; }
+  var icoPlay = document.getElementById('icoPlay');
+  var icoPause = document.getElementById('icoPause');
+  var scrub = document.getElementById('scrub');
+  var tCur = document.getElementById('tCur');
+  var tDur = document.getElementById('tDur');
+  function icons(playing){
+    if(icoPlay) icoPlay.style.display = playing ? 'none' : 'block';
+    if(icoPause) icoPause.style.display = playing ? 'flex' : 'none';
+  }
+  function fmt(t){ if(!isFinite(t)||t<0) t=0; var m=Math.floor(t/60), s=Math.floor(t%60); return m+':'+(s<10?'0':'')+s; }
+  function reset(){ icons(false); }
   window.togglePlay = function(){
     if(!audio) return;
     if(audio.paused){
-      Promise.resolve(audio.play()).then(function(){ glyph.textContent = '\u2759\u2759'; }).catch(reset);
+      Promise.resolve(audio.play()).then(function(){ icons(true); }).catch(reset);
     } else { audio.pause(); reset(); }
   };
-  window.onChantEnded = reset;
+  window.onChantEnded = function(){ reset(); if(scrub) scrub.value = 0; if(tCur) tCur.textContent = '0:00'; };
+  window.seekChant = function(v){ if(audio && audio.duration){ audio.currentTime = (v/1000)*audio.duration; if(tCur) tCur.textContent = fmt(audio.currentTime); } };
+  if(audio){
+    audio.addEventListener('timeupdate', function(){
+      if(tCur) tCur.textContent = fmt(audio.currentTime);
+      if(scrub && audio.duration) scrub.value = Math.round((audio.currentTime/audio.duration)*1000);
+    });
+    audio.addEventListener('loadedmetadata', function(){ if(tDur) tDur.textContent = fmt(audio.duration); });
+  }
   var lyrics = document.getElementById('lyrics');
   var lyricsLabel = document.getElementById('lyricsLabel');
   window.toggleLyrics = function(){
