@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herzensentscheidung · Agapic Chants</title>
+<meta name="description" content="Ein Abend fürs gemeinsame Singen, zur Ruhe kommen und die Entscheidungen, die uns am Herzen liegen. Teil des Agapic-Chants-Projekts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f2e6d4; --cream-2:#ece0cc; --coral:#d1613f;
+    --ink:#3d3129; --ink-soft:#6a5a4d;
+    --serif:'EB Garamond',Georgia,serif;
+    --display:'Cormorant',Georgia,serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream); color:var(--ink);
+    font-family:var(--serif); font-size:19px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px; margin:0 auto; padding:0 24px;}
+
+  /* header */
+  header{text-align:center; padding:72px 24px 8px;}
+  .mark{width:78px; height:auto; display:block; margin:0 auto 22px;}
+  .eyebrow{
+    font-size:13px; letter-spacing:.34em; text-transform:uppercase;
+    color:var(--coral); font-weight:500; padding-left:.34em; margin-bottom:14px;
+  }
+  h1{
+    font-family:var(--display); font-weight:500; font-size:clamp(42px,9vw,68px);
+    line-height:1; color:var(--ink); letter-spacing:.005em;
+  }
+  .tagline{
+    font-family:var(--display); font-style:italic; font-size:clamp(20px,4.4vw,25px);
+    line-height:1.32; color:var(--ink-soft); margin-top:18px;
+    max-width:30ch; margin-left:auto; margin-right:auto;
+  }
+
+  /* fermata/spacebar separator */
+  .sep{display:block; margin:40px auto; width:46px; height:auto;}
+
+  section{padding:6px 0;}
+  section p + p{margin-top:16px;}
+  .lead p{font-size:20.5px;}
+  h2{
+    font-family:var(--display); font-weight:500; font-size:27px;
+    color:var(--coral); margin-bottom:12px; letter-spacing:.01em;
+  }
+  em{font-style:italic;}
+  .ask{font-family:var(--display); font-style:italic; font-size:22px;
+    color:var(--ink); line-height:1.4;}
+
+  /* photo */
+  figure{margin:44px 0 8px;}
+  figure img{width:100%; height:auto; display:block; border-radius:10px;}
+  figcaption{font-family:var(--display); font-style:italic; font-size:16px;
+    color:var(--ink-soft); text-align:center; margin-top:10px;}
+
+  /* practical card */
+  .practical{
+    background:var(--cream-2); border-radius:14px;
+    padding:30px 30px; margin:16px 0 8px; text-align:center;
+  }
+  .practical .come{font-family:var(--display); font-style:italic;
+    font-size:23px; color:var(--ink); line-height:1.3;}
+  .practical .termine{margin-top:16px; font-size:16px; color:var(--ink-soft);
+    letter-spacing:.02em;}
+  .practical .termine strong{color:var(--ink); font-weight:500;}
+
+  /* contact */
+  .contact{text-align:center; margin-top:14px;}
+  .contact .name{font-family:var(--display); font-size:23px; color:var(--ink);
+    display:block; margin-bottom:6px;}
+  .contact a{color:var(--coral); text-decoration:none; border-bottom:1px solid rgba(209,97,63,.3);}
+  .contact a:hover{border-bottom-color:var(--coral);}
+  .contact .line{font-size:16.5px; color:var(--ink-soft); line-height:1.8;}
+
+  footer{text-align:center; padding:48px 24px 60px; margin-top:40px;}
+  footer .fmark{width:40px; height:auto; display:block; margin:0 auto 18px; opacity:.9;}
+  footer .f{font-size:13px; letter-spacing:.1em; color:var(--ink-soft);}
+  footer .f a{color:var(--coral); text-decoration:none;}
+
+  @media (max-width:500px){
+    body{font-size:18px;}
+    header{padding:52px 20px 6px;}
+    .practical{padding:26px 22px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <!-- Agapic Chants mark: fermata (hold) + space bar = "holding space" -->
+    <svg class="mark" viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-label="Agapic Chants">
+      <path d="M20 72 A40 40 0 0 1 100 72 Z" fill="#d1613f"/>
+      <circle cx="60" cy="64" r="13.5" fill="#f2e6d4"/>
+      <circle cx="60" cy="64" r="5" fill="#d1613f"/>
+      <path d="M30 88 L30 99 L90 99 L90 88" fill="none" stroke="#d1613f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="eyebrow">Agapic&nbsp;Chants</div>
+    <h1>Herzensentscheidung</h1>
+    <p class="tagline">Das Leben stellt uns vor viele harte Entscheidungen. Dieser Abend ist für die des Herzens.</p>
+  </header>
+
+  <!-- separator -->
+  <svg class="sep" viewBox="0 0 44 20" xmlns="http://www.w3.org/2000/svg"><path d="M8 16 A14 14 0 0 1 36 16" fill="none" stroke="#d1613f" stroke-width="2.4" stroke-linecap="round"/><circle cx="22" cy="14.5" r="2.3" fill="#d1613f"/></svg>
+
+  <section class="lead">
+    <p>Wahrscheinlich hast du ein großes Herz. Du fühlst tief, und es kümmert dich, wie groß der Abstand ist zwischen dem, wie die Dinge sind, und dem, wie sie sein sollten. Ein so großes Herz ist ein Geschenk, und es kann uns ausbrennen, wenn wir uns nicht auch selbst nähren. Dieser Abend ist eine Einladung, zusammenzusitzen, gemeinsam auf das zu schauen, was uns wichtig ist, und wieder Verbindung und Ausrichtung zu finden.</p>
+  </section>
+
+  <section>
+    <h2>Worum es geht</h2>
+    <p>Im Alltag treffen wir ständig Entscheidungen – manche sind vernünftig, manche schwierig und manche kommen einfach aus dem Bauch heraus.</p>
+    <p>An diesem Abend geht es um die Entscheidungen, die uns wirklich am Herzen liegen: <em>Was ist mir wichtig? Wo möchte ich etwas verändern? Und wo möchte ich vielleicht wieder mehr danach leben, was sich für mich richtig anfühlt?</em></p>
+  </section>
+
+  <figure>
+    <img src="herzensentscheidung-kreis.jpg" alt="Menschen sitzen im Kreis und singen gemeinsam bei warmem Licht">
+    <figcaption>Ein Abend im Kreis – Singen, Stille und offene Worte.</figcaption>
+  </figure>
+
+  <section>
+    <h2>Der Abend</h2>
+    <p>Wir beginnen mit gemeinsamem Singen – einfache Lieder, ohne Vorkenntnisse und ohne Anspruch auf Perfektion. Danach nehmen wir uns Zeit, zur Ruhe zu kommen und den eigenen Gedanken und Wünschen Raum zu geben.</p>
+    <p>Zum Abschluss können wir das, was uns während des Abends bewegt hat, in einer offenen Runde laut aussprechen und unsere Herzensentscheidung mit der Gruppe teilen. Zuhören ist natürlich genauso willkommen.</p>
+    <p>Danach singen wir noch einmal gemeinsam und lassen den Abend bei Tee und Zeit zum Austausch ausklingen.</p>
+  </section>
+
+  <svg class="sep" viewBox="0 0 44 12" xmlns="http://www.w3.org/2000/svg"><path d="M9 3 L9 9 L35 9 L35 3" fill="none" stroke="#d1613f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+  <section>
+    <h2>Die Musik</h2>
+    <p>Die Lieder stammen aus dem Agapic-Chants-Projekt: schlichte, tragende Melodien, die im Raum wachsen und Menschen für einen Abend miteinander verbinden. Du musst nichts können und nichts vorbereiten.</p>
+    <p>Wenn du vorher reinhören magst, findest du die Lieder auf <a href="https://chantbook.org" style="color:var(--coral);text-decoration:none;border-bottom:1px solid rgba(209,97,63,.3);">chantbook.org</a>.</p>
+  </section>
+
+  <div class="practical">
+    <p class="come">Keine Vorkenntnisse nötig.<br>Komm einfach, wie du bist.</p>
+    <p class="termine"><strong>Termine &amp; Orte</strong><br>Die Abende finden an wechselnden Orten statt – aktuell u.&nbsp;a. in Köln und im Werra-Thal. Den nächsten Termin erfährst du gern auf Anfrage.</p>
+  </div>
+
+  <section class="contact">
+    <span class="name">Begleitet von Nathan Vanderpool</span>
+    <p class="line">
+      WhatsApp · Telegram · Signal: +49&nbsp;176&nbsp;54622093<br>
+      <a href="mailto:nathanvanderpoolphd@gmail.com">nathanvanderpoolphd@gmail.com</a>
+    </p>
+  </section>
+
+</div>
+
+<footer>
+  <svg class="fmark" viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M20 72 A40 40 0 0 1 100 72 Z" fill="#d1613f"/>
+    <circle cx="60" cy="64" r="13.5" fill="#f2e6d4"/>
+    <circle cx="60" cy="64" r="5" fill="#d1613f"/>
+    <path d="M30 88 L30 99 L90 99 L90 88" fill="none" stroke="#d1613f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="f">Teil des Agapic-Chants-Projekts · <a href="https://agapicchants.com">agapicchants.com</a> · <a href="https://chantbook.org">chantbook.org</a></div>
+</footer>
+
+</body>
+</html>
