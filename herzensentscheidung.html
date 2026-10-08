@@ -26,7 +26,7 @@
 
   /* header */
   header{text-align:center; padding:72px 24px 8px;}
-  .mark{width:78px; height:auto; display:block; margin:0 auto 22px;}
+  .mark{width:96px; height:auto; display:block; margin:0 auto 20px;}
   .eyebrow{
     font-size:13px; letter-spacing:.34em; text-transform:uppercase;
     color:var(--coral); font-weight:500; padding-left:.34em; margin-bottom:14px;
@@ -72,6 +72,17 @@
     letter-spacing:.02em;}
   .practical .termine strong{color:var(--ink); font-weight:500;}
 
+  .termine-sec h2{text-align:center;}
+  ul.tour{list-style:none; max-width:430px; margin:6px auto 0;}
+  ul.tour li{display:flex; gap:14px; align-items:baseline;
+    padding:12px 4px; border-bottom:1px solid rgba(209,97,63,.18);}
+  ul.tour li:last-child{border-bottom:none;}
+  ul.tour .d{flex:0 0 52px; color:var(--coral); font-weight:500; font-variant-numeric:tabular-nums;}
+  ul.tour .pl{color:var(--ink); line-height:1.4;}
+  ul.tour .pl strong{font-weight:500;}
+  ul.tour .pl .v{color:var(--ink-soft);}
+  ul.tour .pl .lang{color:var(--coral); font-style:italic;}
+
   /* contact */
   .contact{text-align:center; margin-top:14px;}
   .contact .name{font-family:var(--display); font-size:23px; color:var(--ink);
@@ -81,7 +92,7 @@
   .contact .line{font-size:16.5px; color:var(--ink-soft); line-height:1.8;}
 
   footer{text-align:center; padding:48px 24px 60px; margin-top:40px;}
-  footer .fmark{width:40px; height:auto; display:block; margin:0 auto 18px; opacity:.9;}
+  footer .fmark{width:46px; height:auto; display:block; margin:0 auto 18px; opacity:.92;}
   footer .f{font-size:13px; letter-spacing:.1em; color:var(--ink-soft);}
   footer .f a{color:var(--coral); text-decoration:none;}
 
@@ -96,14 +107,7 @@
 <div class="wrap">
 
   <header>
-    <!-- Agapic Chants mark: fermata (hold) + space bar = "holding space" -->
-    <svg class="mark" viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-label="Agapic Chants">
-      <path d="M20 72 A40 40 0 0 1 100 72 Z" fill="#d1613f"/>
-      <circle cx="60" cy="64" r="13.5" fill="#f2e6d4"/>
-      <circle cx="60" cy="64" r="5" fill="#d1613f"/>
-      <path d="M30 88 L30 99 L90 99 L90 88" fill="none" stroke="#d1613f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <div class="eyebrow">Agapic&nbsp;Chants</div>
+    <img class="mark" src="agapic-chants-logo.png" alt="Agapic Chants">
     <h1>Herzensentscheidung</h1>
     <p class="tagline">Das Leben stellt uns vor viele harte Entscheidungen. Dieser Abend ist für die des Herzens.</p>
   </header>
@@ -141,9 +145,20 @@
     <p>Wenn du vorher reinhören magst, findest du die Lieder auf <a href="https://chantbook.org" style="color:var(--coral);text-decoration:none;border-bottom:1px solid rgba(209,97,63,.3);">chantbook.org</a>.</p>
   </section>
 
+  <section class="termine-sec">
+    <h2>Termine</h2>
+    <ul class="tour">
+      <li><span class="d">22.10.</span><span class="pl"><strong>Köln</strong> · <span class="v">Kulturraum 405</span></span></li>
+      <li><span class="d">27.11.</span><span class="pl"><strong>Stockholm</strong> · <span class="v">Emerge Lakefront</span> <span class="lang">· auf Englisch</span></span></li>
+      <li><span class="d">30.11.</span><span class="pl"><strong>Karlsruhe</strong> · <span class="v">Atelier Nora Endlicher</span></span></li>
+      <li><span class="d">04.12.</span><span class="pl"><strong>Freiburg</strong> · <span class="v">Ort folgt</span></span></li>
+      <li><span class="d">12.12.</span><span class="pl"><strong>Waldkappel</strong> · <span class="v">Ort folgt</span></span></li>
+    </ul>
+  </section>
+
   <div class="practical">
     <p class="come">Keine Vorkenntnisse nötig.<br>Komm einfach, wie du bist.</p>
-    <p class="termine"><strong>Termine &amp; Orte</strong><br>Die Abende finden an wechselnden Orten statt – aktuell u.&nbsp;a. in Köln und im Werra-Thal. Den nächsten Termin erfährst du gern auf Anfrage.</p>
+    <p class="termine">Schreib mir gern, wenn du zu einem der Abende kommen magst.</p>
   </div>
 
   <section class="contact">
@@ -157,12 +172,7 @@
 </div>
 
 <footer>
-  <svg class="fmark" viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M20 72 A40 40 0 0 1 100 72 Z" fill="#d1613f"/>
-    <circle cx="60" cy="64" r="13.5" fill="#f2e6d4"/>
-    <circle cx="60" cy="64" r="5" fill="#d1613f"/>
-    <path d="M30 88 L30 99 L90 99 L90 88" fill="none" stroke="#d1613f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
+  <img class="fmark" src="agapic-chants-logo.png" alt="Agapic Chants">
   <div class="f">Teil des Agapic-Chants-Projekts · <a href="https://agapicchants.com">agapicchants.com</a> · <a href="https://chantbook.org">chantbook.org</a></div>
 </footer>
 
