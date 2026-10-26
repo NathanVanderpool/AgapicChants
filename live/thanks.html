@@ -15,6 +15,8 @@
   .ticket{margin-top:20px;background:var(--cream);color:var(--ink);border-radius:18px;overflow:hidden}
   .ticket .top{padding:18px 20px;border-bottom:2px dashed rgba(176,76,53,.35);text-align:center}
   .ticket .top b{font-size:22px;font-weight:500}
+  .ticket .top img{width:88px;height:88px;display:block;margin:0 auto 8px}
+  .seat .no{display:block;margin-top:6px;font-size:16px;font-weight:600;letter-spacing:.08em;color:var(--terra-dark)}
   .seat{padding:18px 20px 4px;text-align:center}
   .seat small{display:block;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark)}
   .seat b{display:block;font-size:30px;font-weight:500;line-height:1.15}
@@ -41,8 +43,8 @@
   <p id="lead"></p>
 
   <div class="ticket" id="ticket" hidden>
-    <div class="top"><b id="tTitle"></b></div>
-    <div class="seat"><small id="lSeat"></small><b id="tName"></b></div>
+    <div class="top"><img src="/images/agapic-chants-logo.png" alt="Agapic Chants"><b id="tTitle"></b></div>
+    <div class="seat"><small id="lSeat"></small><b id="tName"></b><span class="no" id="tNo" hidden></span></div>
     <div class="grid">
       <div><span id="lDate"></span><b id="tDate"></b></div>
       <div><span id="lTime"></span><b id="tTime"></b></div>
@@ -141,6 +143,7 @@
   }
   $('tTitle').textContent = ev.title;
   $('lSeat').textContent = L.seat; $('tName').textContent = tk.name;
+  if (tk.ticket) { $('tNo').textContent = 'Ticket ' + tk.ticket; $('tNo').hidden = false; }
   $('lDate').textContent = L.date; $('tDate').textContent = fmt(ev.date);
   $('lTime').textContent = L.time; $('tTime').textContent = L.timeVal(ev.doors || ev.start, ev.start);
   $('lPlace').textContent = L.place; $('tPlace').textContent = [ev.venue, ev.city].filter(Boolean).join(', ');
