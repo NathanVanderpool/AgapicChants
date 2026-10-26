@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Evenings · Agapic Chants</title>
+<link rel="stylesheet" href="/fonts/jost.css">
+<style>
+  :root{--cream:#f4e7d4;--card:#fbf3e8;--terra:#d2684f;--terra-dark:#b04c35;--terra-deeper:#8f3a27;--ink:#2a1f14;--ink-soft:#5a4535;--rule:rgba(210,104,79,0.2);--field:rgba(176,76,53,0.35)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:Jost,Futura,'Century Gothic',sans-serif;font-size:17px;line-height:1.5}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 56px}
+  nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  nav a{padding:8px 14px;border-radius:999px;text-decoration:none;color:var(--ink);border:1.5px solid var(--field);font-size:15px}
+  nav a[aria-current]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  h1{margin:16px 0 6px;font-weight:500;font-size:32px;line-height:1.1}
+  h2{margin:28px 0 10px;font-weight:500;font-size:22px}
+  label{display:flex;flex-direction:column;gap:6px;font-size:15px;font-weight:500;margin-top:12px;min-width:0}
+  input,textarea,select{border:1.5px solid var(--field);border-radius:12px;padding:0 12px;font:inherit;font-weight:400;background:var(--card);color:var(--ink);width:100%}
+  input,select{height:46px} textarea{padding:10px 12px;min-height:80px;resize:vertical}
+  input[type=checkbox]{width:22px;height:22px;padding:0}
+  input:focus,textarea:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+  .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0 12px}
+  .check{flex-direction:row;align-items:center;gap:10px}
+  button{height:48px;border-radius:12px;font:inherit;font-weight:500;cursor:pointer;padding:0 16px}
+  .primary{background:var(--terra-dark);color:#fff;border:none;width:100%;margin-top:18px} .primary:hover{background:var(--terra-deeper)}
+  .secondary{background:transparent;color:var(--ink);border:1.5px solid var(--field)}
+  .small{height:40px;font-size:15px;padding:0 12px}
+  .ev{margin-top:12px;padding:16px;background:var(--card);border:1px solid var(--rule);border-radius:14px}
+  .ev h3{margin:0;font-weight:500;font-size:19px}
+  .meta{font-size:15px;color:var(--ink-soft);margin-top:2px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .tag{font-size:13px;padding:3px 10px;border-radius:999px;background:#efe0cc}
+  .tag.live{background:var(--terra-dark);color:#fff}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .box{margin-top:14px;padding:14px 16px;background:var(--card);border:1px solid var(--rule);border-radius:12px;font-size:15px}
+  .msg{margin-top:14px;padding:12px 14px;border-radius:12px;display:none}
+  .msg.err{background:#f6d6cc;color:#5c1f12} .msg.ok{background:#dfe9d6;color:#24361a}
+  .hint{font-size:14px;color:var(--ink-soft);margin:6px 0 0}
+  fieldset{border:none;padding:0;margin:20px 0 0} legend{font-weight:500;font-size:18px;padding:0}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav><a href="/live/admin.html" aria-current="page">Evenings</a><a href="/live/session-update.html">Clinic update</a></nav>
+  <h1>Evenings</h1>
+
+  <section id="login">
+    <label>Password <input type="password" id="key" autocomplete="current-password"></label>
+    <button class="primary" id="loginBtn" type="button">Open</button>
+  </section>
+
+  <section id="main" hidden>
+    <div class="box" id="alertBox"></div>
+    <button class="primary" id="newBtn" type="button">+ New evening</button>
+    <div id="msg" class="msg" role="status"></div>
+
+    <form id="form" hidden novalidate>
+      <h2 id="formTitle">New evening</h2>
+      <fieldset><legend>The basics</legend>
+        <label>Title <input id="f_title" required placeholder="Agapic Chants Evening in Köln"></label>
+        <div class="row">
+          <label>Language of the page <select id="f_lang"><option value="de">German</option><option value="en">English</option></select></label>
+          <label>Co-host (optional) <input id="f_cohost" placeholder="Nora"></label>
+        </div>
+      </fieldset>
+      <fieldset><legend>When</legend>
+        <div class="row">
+          <label>Date <input id="f_date" type="date" required></label>
+          <label>Doors <input id="f_doors" type="time"></label>
+          <label>Start <input id="f_start" type="time" required></label>
+          <label>End <input id="f_end" type="time"></label>
+        </div>
+      </fieldset>
+      <fieldset><legend>Where</legend>
+        <label>Venue <input id="f_venue" required placeholder="Quäker-Haus"></label>
+        <label>Street and number <input id="f_address"></label>
+        <div class="row">
+          <label>Postal code <input id="f_postcode" inputmode="numeric"></label>
+          <label>City <input id="f_city" required></label>
+        </div>
+        <label>Maps link (optional) <input id="f_mapsUrl" placeholder="https://maps.app.goo.gl/…"></label>
+      </fieldset>
+      <fieldset><legend>Words for guests</legend>
+        <label>Short description (English) <textarea id="f_blurb"></textarea></label>
+        <label>Short description (German) <textarea id="f_blurbDe"></textarea></label>
+        <label>Note on the ticket (English) <textarea id="f_note" placeholder="We'll start with a simple song everyone can learn in a minute."></textarea></label>
+        <label>Note on the ticket (German) <textarea id="f_noteDe" placeholder="Wir fangen mit einem einfachen Lied an, das alle in einer Minute lernen."></textarea></label>
+        <p class="hint">German-speaking guests see the German version; if you leave it empty, they see the English one.</p>
+      </fieldset>
+      <fieldset><legend>Seats and amounts</legend>
+        <div class="row">
+          <label>Seats (0 = no limit) <input id="f_capacity" type="number" min="0" value="20"></label>
+          <label>Max per booking <input id="f_maxSpotsPerOrder" type="number" min="1" value="4"></label>
+          <label>Recommended € <input id="f_recommended" type="number" min="0" value="25"></label>
+        </div>
+        <label>Amount buttons in € (comma-separated) <input id="f_tiers" value="15, 25, 50"></label>
+        <p class="hint">"€0" and a whole session (€200) are always shown as well.</p>
+      </fieldset>
+      <label class="check" style="margin-top:20px"><input type="checkbox" id="f_published"> Published (people can see it and book)</label>
+      <button class="primary" type="submit" id="saveBtn">Save evening</button>
+      <button class="secondary" type="button" id="cancelBtn" style="width:100%;margin-top:10px">Cancel</button>
+    </form>
+
+    <h2>All evenings</h2>
+    <div id="list"></div>
+
+    <h2>Delete someone’s data</h2>
+    <p class="hint" style="margin-top:0">If someone asks you to delete their data, enter their email. Free reservations are deleted; payments keep only the amount (Stripe keeps its own payment record). Old data is also cleaned up by itself 180 days after each evening.</p>
+    <label>Their email <input type="email" id="forgetEmail" autocomplete="off"></label>
+    <button class="secondary" type="button" id="forgetBtn" style="width:100%;margin-top:10px">Find their data</button>
+    <div class="box" id="forgetBox" hidden></div>
+  </section>
+</div>
+
+<script>
+(async function () {
+  const $ = (id) => document.getElementById(id);
+  const site = await fetch('/events.json', { cache: 'no-store' }).then((r) => r.json());
+  let key = '';
+  try { key = sessionStorage.getItem('acKey') || ''; } catch (e) {}
+  let editingId = null;
+  const FIELDS = ['title', 'lang', 'cohost', 'date', 'doors', 'start', 'end', 'venue', 'address', 'postcode', 'city', 'mapsUrl', 'blurb', 'blurbDe', 'note', 'noteDe', 'capacity', 'maxSpotsPerOrder', 'recommended', 'tiers'];
+
+  const show = (text, ok) => { const m = $('msg'); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); m.style.display = 'block'; m.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  const api = async (path, body) => {
+    const r = await fetch(site.apiBase + path, {
+      method: body ? 'POST' : 'GET',
+      headers: { authorization: 'Bearer ' + key, 'content-type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Something went wrong.');
+    return data;
+  };
+  const fmt = (d) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+  function fill(ev) {
+    for (const f of FIELDS) $('f_' + f).value = f === 'tiers' ? (ev.tiers || [15, 25, 50]).join(', ') : (ev[f] ?? '');
+    if (!ev.lang) $('f_lang').value = 'de';
+    $('f_published').checked = !!ev.published;
+  }
+  function openForm(ev, id, title) {
+    editingId = id; fill(ev);
+    $('formTitle').textContent = title; $('form').hidden = false; $('msg').style.display = 'none';
+    $('form').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  async function copy(text, btn) {
+    try { await navigator.clipboard.writeText(text); const o = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = o; }, 1500); }
+    catch (e) { prompt('Copy this link:', text); }
+  }
+
+  async function load() {
+    const data = await api('/api/admin/events');
+    try { sessionStorage.setItem('acKey', key); } catch (e) {}
+    $('login').hidden = true; $('main').hidden = false;
+
+    const ab = $('alertBox'); ab.textContent = '';
+    ab.append(el('span', '', data.alerts ? 'WhatsApp alerts are on. If something fails, you’ll get a message on your phone.' : 'WhatsApp alerts aren’t set up yet, so problems only go to your email. The README explains the two-minute setup.'));
+    const tb = el('button', 'secondary small', 'Send a test alert'); tb.type = 'button'; tb.style.marginTop = '10px'; tb.style.display = 'block';
+    tb.addEventListener('click', async () => {
+      try { const r = await api('/api/admin/test-alert', {}); show(r.whatsapp ? 'Test sent. Check WhatsApp.' : 'The WhatsApp message didn’t go through. A test email went to you instead.', r.whatsapp); }
+      catch (e) { show(e.message); }
+    });
+    ab.append(tb);
+
+    const list = $('list'); list.textContent = '';
+    if (!data.events.length) list.append(el('p', '', 'No evenings yet. Tap “New evening” to add the first one.'));
+    const today = new Date().toISOString().slice(0, 10);
+    for (const ev of data.events) {
+      const card = el('div', 'ev');
+      card.append(el('h3', '', ev.title));
+      card.append(el('div', 'meta', `${fmt(ev.date)} · ${ev.start} · ${ev.venue}, ${ev.city}${ev.cohost ? ' · with ' + ev.cohost : ''}`));
+      const tags = el('div', 'tags');
+      tags.append(el('span', 'tag' + (ev.published ? ' live' : ''), ev.published ? 'Published' : 'Draft'));
+      tags.append(el('span', 'tag', ev.capacity ? `${ev.spotsTaken} of ${ev.capacity} seats taken` : `${ev.spotsTaken} seats taken`));
+      if (ev.waitlist) tags.append(el('span', 'tag', `${ev.waitlist} on the waitlist`));
+      tags.append(el('span', 'tag', ev.lang === 'en' ? 'English' : 'German'));
+      if (ev.reminded) tags.append(el('span', 'tag', 'Reminder sent'));
+      if (ev.thanked) tags.append(el('span', 'tag', 'Thank-you sent'));
+      if (ev.date < today) tags.append(el('span', 'tag', 'Past'));
+      card.append(tags);
+      const acts = el('div', 'acts');
+      const b = (label, fn) => { const x = el('button', 'secondary small', label); x.type = 'button'; x.addEventListener('click', () => fn(x)); acts.append(x); };
+      b('Edit', () => openForm(ev, ev.id, 'Edit evening'));
+      b('Duplicate', () => openForm({ ...ev, date: '', published: false }, null, 'New evening (copy)'));
+      b('Copy link (German)', (x) => copy(ev.shareDe, x));
+      b('Copy link (English)', (x) => copy(ev.shareEn, x));
+      if (ev.editable && !ev.spotsTaken) b('Delete', async () => {
+        if (!confirm(`Delete “${ev.title}”?`)) return;
+        try { await api('/api/admin/delete-event', { id: ev.id }); await load(); show('Deleted.', true); } catch (e) { show(e.message); }
+      });
+      card.append(acts);
+      list.append(card);
+    }
+  }
+
+  $('loginBtn').addEventListener('click', async () => { key = $('key').value; try { await load(); } catch (e) { show(e.message); $('msg').style.display = 'block'; } });
+  if (key) load().catch(() => { $('login').hidden = false; });
+
+  $('newBtn').addEventListener('click', () => openForm({ lang: 'de', capacity: 20, maxSpotsPerOrder: 4, recommended: 25, tiers: [15, 25, 50], doors: '18:30', start: '19:00', end: '21:30' }, null, 'New evening'));
+  $('cancelBtn').addEventListener('click', () => { $('form').hidden = true; });
+
+  $('forgetBtn').addEventListener('click', async () => {
+    const email = $('forgetEmail').value.trim();
+    const box = $('forgetBox'); box.textContent = ''; box.hidden = true;
+    try {
+      const f = await api('/api/admin/forget', { email });
+      box.hidden = false;
+      if (!f.found && !f.waitlists) { box.textContent = 'Nothing stored for this email.'; return; }
+      box.append(el('p', '', `Found ${f.found} ticket${f.found === 1 ? '' : 's'}${f.paid ? ` (${f.paid} paid)` : ''}${f.waitlists ? ` and ${f.waitlists} waitlist place${f.waitlists === 1 ? '' : 's'}` : ''}.`));
+      const go = el('button', 'primary', 'Delete it now'); go.type = 'button'; go.style.marginTop = '8px';
+      go.addEventListener('click', async () => {
+        if (!confirm(`Delete everything stored for ${email}? This can’t be undone.`)) return;
+        try {
+          const r = await api('/api/admin/forget', { email, confirm: true });
+          box.textContent = `Done. ${r.deleted} deleted, ${r.anonymized} payment${r.anonymized === 1 ? '' : 's'} kept without name or email, removed from ${r.waitlists} waitlist${r.waitlists === 1 ? '' : 's'}. You can reply to them that it’s done.`;
+          $('forgetEmail').value = '';
+        } catch (x) { show(x.message); }
+      });
+      box.append(go);
+    } catch (x) { show(x.message); }
+  });
+
+  $('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const event = { published: $('f_published').checked };
+    for (const f of FIELDS) event[f] = $('f_' + f).value;
+    if (editingId) event.id = editingId;
+    $('saveBtn').disabled = true;
+    try {
+      const r = await api('/api/admin/save-event', { event });
+      $('form').hidden = true;
+      await load();
+      show(r.event.published ? `Saved and published. Use “Copy link” to share it.` : 'Saved as a draft. Tick “Published” when you’re ready for people to book.', true);
+    } catch (x) { show(x.message); }
+    $('saveBtn').disabled = false;
+  });
+})();
+</script>
+</body>
+</html>

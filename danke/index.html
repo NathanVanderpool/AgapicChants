@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ein paar Worte · Agapic Chants</title>
+<link rel="stylesheet" href="/fonts/jost.css">
+<style>
+  :root{--cream:#f4e7d4;--card:#fbf3e8;--terra:#d2684f;--terra-dark:#b04c35;--terra-deeper:#8f3a27;--ink:#2a1f14;--ink-soft:#5a4535;--rule:rgba(210,104,79,0.2);--field:rgba(176,76,53,0.35)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:Jost,Futura,'Century Gothic',sans-serif;font-size:18px;line-height:1.55}
+  a{color:var(--terra-dark)} a:hover{color:var(--terra-deeper)}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 56px}
+  header{display:flex;justify-content:space-between;align-items:center}
+  header img{width:60px;height:60px;display:block}
+  .lang{height:44px;padding:0 14px;border-radius:10px;border:1.5px solid var(--field);background:transparent;font:inherit;font-size:16px;color:var(--ink);cursor:pointer}
+  h1{margin:24px 0 12px;font-weight:500;font-size:clamp(28px,7vw,36px);line-height:1.1}
+  p{margin:0 0 14px}
+  label{display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:500;margin-top:16px}
+  textarea,input[type=text]{border:1.5px solid var(--field);border-radius:12px;font:inherit;font-weight:400;background:var(--card);color:var(--ink)}
+  textarea{padding:12px 14px;min-height:170px;resize:vertical}
+  input[type=text]{height:50px;padding:0 14px}
+  .consent{flex-direction:row;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--rule);border-radius:12px;font-weight:400;font-size:16px}
+  .consent input{width:24px;height:24px;margin:2px 0 0;flex-shrink:0}
+  textarea:focus,input:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+  .send{margin-top:20px;width:100%;height:58px;border:none;border-radius:14px;background:var(--terra-dark);color:#fff;font:inherit;font-size:19px;font-weight:500;cursor:pointer}
+  .send:hover{background:var(--terra-deeper)} .send[disabled]{opacity:.6;cursor:wait}
+  .small{font-size:15px;color:var(--ink-soft);margin-top:12px}
+  .error{margin-top:14px;padding:12px 14px;border-radius:12px;background:#f6d6cc;color:#5c1f12;display:none}
+  .trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .after{margin-top:44px;padding-top:16px;border-top:1px solid rgba(210,104,79,.25);font-size:16px;color:var(--ink-soft)}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="/images/agapic-chants-logo.png" alt="Agapic Chants">
+    <button class="lang" id="langBtn" type="button">English</button>
+  </header>
+
+  <main id="formView">
+    <h1 data-t="title"></h1>
+    <p data-t="intro"></p>
+    <form id="form" novalidate>
+      <label><span data-t="wordsLabel"></span><textarea id="text" maxlength="1500" required></textarea></label>
+      <label><span data-t="sigLabel"></span><input type="text" id="sig" maxlength="80" autocomplete="off"></label>
+      <div class="trap" aria-hidden="true"><label>Website <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+      <label class="consent"><input type="checkbox" id="consent"><span data-t="consent"></span></label>
+      <div class="error" id="error" role="alert"></div>
+      <button class="send" id="send" type="submit" data-t="send"></button>
+      <p class="small" data-t="privacy"></p>
+    </form>
+  </main>
+
+  <main id="doneView" hidden>
+    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true" style="margin-top:24px"><circle cx="28" cy="28" r="27" stroke="#d2684f" stroke-width="2"/><path d="M17 29l7 7 15-16" stroke="#b04c35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h1 data-t="doneTitle"></h1>
+    <p data-t="doneText"></p>
+    <p>Nathan</p>
+    <div class="after"><span data-t="afterA"></span> <a id="giveLink" href="/live/give.html" data-t="afterLink"></a><span data-t="afterB"></span></div>
+  </main>
+</div>
+<footer style="max-width:560px;margin:0 auto;padding:0 16px 40px;font-size:15px;display:flex;gap:16px"><a href="/impressum.html" style="color:#5a4535">Impressum</a><a href="/datenschutz.html" style="color:#5a4535">Datenschutz</a></footer>
+
+<script>
+(function () {
+  const T = {
+    de: {
+      title: 'Ein paar Worte für die Menschen, die diese Stunden möglich gemacht haben',
+      intro: 'Das Singen und die Gespräche während Ihrer Infusion wurden von Menschen bezahlt, die bei einem meiner Abende waren. Sie kennen Sie nicht, und Sie kennen sie nicht. Wenn Sie ihnen etwas sagen möchten, schreiben Sie es hier. Ich lese es und gebe es in einer E-Mail an sie weiter.',
+      wordsLabel: 'Ihre Worte',
+      sigLabel: 'Wie soll ich unterschreiben? (freiwillig)',
+      sigPlaceholder: 'Eine, die dabei war',
+      consent: 'Ich bin einverstanden, dass Nathan diese Worte ohne meinen Namen in einer E-Mail an die Menschen weitergibt, deren Spenden diese Stunden bezahlt haben. Er darf Details entfernen, an denen man mich erkennen könnte.',
+      send: 'Worte senden',
+      privacy: 'Kein Name, keine E-Mail-Adresse, keine Anmeldung. Gespeichert werden nur Ihre Worte, bis ich sie weitergegeben habe.',
+      needText: 'Bitte schreiben Sie ein paar Worte.',
+      needConsent: 'Bitte setzen Sie das Häkchen beim Einverständnis, damit ich Ihre Worte weitergeben darf.',
+      failed: 'Das hat leider nicht geklappt. Bitte versuchen Sie es gleich noch einmal.',
+      doneTitle: 'Danke. Ich gebe Ihre Worte weiter.',
+      doneText: 'Es war mir eine Ehre, bei Ihnen zu sein. Ich wünsche Ihnen von Herzen alles Gute.',
+      afterA: 'Wenn Sie das irgendwann selbst weitergeben möchten,',
+      afterLink: 'finden Sie hier, wie',
+      afterB: '. Und wenn nicht, ist es genau so gemeint: als Geschenk.',
+      other: 'English',
+    },
+    en: {
+      title: 'A few words for the people who made this time possible',
+      intro: 'The songs and conversation during your infusion were paid for by people who came to one of my evenings. They don’t know you, and you don’t know them. If you’d like to say something to them, write it here. I’ll read it and pass it on to them in an email.',
+      wordsLabel: 'Your words',
+      sigLabel: 'How should I sign it? (optional)',
+      sigPlaceholder: 'Someone who was there',
+      consent: 'I agree that Nathan may share these words, without my name, in an email to the people whose gifts paid for this time with you. He may remove details that could identify me.',
+      send: 'Send my words',
+      privacy: 'No name, no email address, no sign-up. Only your words are kept, and only until I’ve passed them on.',
+      needText: 'Please write a few words.',
+      needConsent: 'Please tick the consent box so I’m allowed to pass your words on.',
+      failed: 'Something went wrong. Please try again in a moment.',
+      doneTitle: 'Thank you. I’ll pass your words on.',
+      doneText: 'It was an honor to be with you. I wish you all the very best.',
+      afterA: 'If you’d ever like to pass this on yourself,',
+      afterLink: 'here’s how',
+      afterB: '. And if not, that’s exactly how it was meant: as a gift.',
+      other: 'Deutsch',
+    },
+  };
+  const $ = (id) => document.getElementById(id);
+  let lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'de';
+
+  function render() {
+    const t = T[lang];
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t[el.dataset.t]; });
+    $('sig').placeholder = t.sigPlaceholder;
+    $('langBtn').textContent = t.other;
+    $('giveLink').href = '/live/give.html' + (lang === 'de' ? '?lang=de' : '');
+    document.title = (lang === 'de' ? 'Ein paar Worte' : 'A few words') + ' · Agapic Chants';
+  }
+  $('langBtn').addEventListener('click', () => { lang = lang === 'de' ? 'en' : 'de'; render(); });
+  render();
+
+  $('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const t = T[lang], err = $('error');
+    err.style.display = 'none';
+    const show = (m) => { err.textContent = m; err.style.display = 'block'; };
+    if ($('text').value.trim().length < 2) return show(t.needText);
+    if (!$('consent').checked) return show(t.needConsent);
+    $('send').disabled = true;
+    try {
+      const cfg = await fetch('/events.json', { cache: 'no-store' }).then((r) => r.json());
+      const res = await fetch(cfg.apiBase + '/api/message', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ text: $('text').value, signature: $('sig').value, consent: true, lang, website: $('website').value }),
+      });
+      if (!res.ok) { const d = await res.json().catch(() => ({})); throw new Error(d.error || t.failed); }
+      $('formView').hidden = true; $('doneView').hidden = false; window.scrollTo(0, 0);
+    } catch (x) { show(x.message || t.failed); $('send').disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>

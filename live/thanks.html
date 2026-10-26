@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Agapic Chants</title>
+<link rel="stylesheet" href="/fonts/jost.css">
+<style>
+  :root{--cream:#f4e7d4;--card:#fbf3e8;--terra:#d2684f;--terra-dark:#b04c35;--ink:#2a1f14;--ink-soft:#5a4535;--rule:rgba(210,104,79,0.2)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--cream);font-family:Jost,Futura,'Century Gothic',sans-serif;font-size:17px;line-height:1.5}
+  .wrap{max-width:560px;margin:0 auto;padding:32px 16px 32px}
+  h1{margin:16px 0 10px;font-weight:500;font-size:clamp(30px,8vw,40px);line-height:1.05}
+  .ticket{margin-top:20px;background:var(--cream);color:var(--ink);border-radius:18px;overflow:hidden}
+  .ticket .top{padding:18px 20px;border-bottom:2px dashed rgba(176,76,53,.35);text-align:center}
+  .ticket .top b{font-size:22px;font-weight:500}
+  .seat{padding:18px 20px 4px;text-align:center}
+  .seat small{display:block;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark)}
+  .seat b{display:block;font-size:30px;font-weight:500;line-height:1.15}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px 20px 20px;font-size:15px}
+  .grid span{display:block;color:var(--ink-soft)} .grid b{font-weight:600}
+  .box{margin-top:18px;padding:18px;border-radius:16px}
+  .cal{background:var(--cream);color:var(--ink)}
+  .btn{display:flex;align-items:center;justify-content:center;height:50px;border-radius:12px;text-decoration:none;margin-top:10px;font:inherit;font-weight:500;width:100%;cursor:pointer}
+  .btn.primary{background:var(--terra-dark);color:#fff;border:none}
+  .btn.secondary{border:2px solid rgba(176,76,53,.35);color:var(--ink);background:transparent}
+  .share{border:1px solid var(--ink-soft)}
+  .share .btn{background:var(--terra);color:var(--ink);border:none;font-weight:600}
+  .share .btn.ghost{background:transparent;color:var(--cream);border:2px solid var(--terra)}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+  footer{max-width:560px;margin:0 auto;padding:8px 16px 40px;font-size:14px;display:flex;gap:16px}
+  footer a{color:#e2cdb3}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><circle cx="28" cy="28" r="27" stroke="#d2684f" stroke-width="2"/><path d="M17 29l7 7 15-16" stroke="#d2684f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <h1 id="head"></h1>
+  <p id="lead"></p>
+
+  <div class="ticket" id="ticket" hidden>
+    <div class="top"><b id="tTitle"></b></div>
+    <div class="seat"><small id="lSeat"></small><b id="tName"></b></div>
+    <div class="grid">
+      <div><span id="lDate"></span><b id="tDate"></b></div>
+      <div><span id="lTime"></span><b id="tTime"></b></div>
+      <div><span id="lPlace"></span><b id="tPlace"></b></div>
+      <div><span id="lSpots"></span><b id="tSpots"></b></div>
+    </div>
+  </div>
+
+  <div class="box cal" id="cal" hidden>
+    <b style="font-weight:500" id="lCal"></b>
+    <a class="btn primary" id="ics" href="#">Apple / Outlook (.ics)</a>
+    <a class="btn secondary" id="gcal" href="#" target="_blank" rel="noopener">Google Calendar</a>
+  </div>
+
+  <div class="box share" id="shareBox" hidden>
+    <b style="font-weight:500" id="lBring"></b>
+    <p style="margin:6px 0 0;font-size:16px" id="lBringP"></p>
+    <button class="btn" id="share" type="button"></button>
+    <a class="btn ghost" id="gift" href="#"></a>
+    <p style="margin:8px 0 0;font-size:14px;color:#e2cdb3" id="lGiftP"></p>
+  </div>
+</div>
+<footer><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a></footer>
+
+<script>
+(async function () {
+  const $ = (id) => document.getElementById(id);
+  const T = {
+    en: {
+      locale: 'en-GB', inHead: 'You’re in.', seeYou: (d) => `You’re in. See you on ${d}.`,
+      leadFree: 'Your ticket is on its way to your inbox. If it isn’t there in a few minutes, check your spam folder.',
+      leadPaid: 'Your ticket is on its way to your inbox. Thank you for paying it forward. Your gift goes straight toward songs and company for women at the Wolfgarten clinic.',
+      giftHead: (n) => `Done. ${n} has a seat.`, giftLead: 'Their ticket is on its way to their inbox, along with your note. Thank you for bringing someone.',
+      giveHead: 'Thank you.', giveLead: 'Your gift goes straight into songs and company for women at the Wolfgarten clinic. I’ll write to you when the session happens.',
+      seat: 'A seat for', date: 'Date', time: 'Time', place: 'Place', spots: 'Spots', timeVal: (d, s) => `Doors ${d} · ${s}`,
+      cal: 'Put it in your calendar so it doesn’t slip', bring: 'Bring someone',
+      bringP: 'Know someone who could use an evening like this? They’re welcome on the same terms you are: free if money’s tight, or they can pay it forward.',
+      share: 'Send them the invitation', gift: 'Save them a seat', giftP: 'I’ll send them their own ticket, with a note from you if you like.',
+      shareText: (title, d) => `I’m going to ${title} on ${d}. Want to come? It’s free if money’s tight, because people who came before have already covered it.`,
+      copied: 'Link copied', copy: 'Copy this link:',
+    },
+    de: {
+      locale: 'de-DE', inHead: 'Du bist dabei.', seeYou: (d) => `Du bist dabei. Bis zum ${d}.`,
+      leadFree: 'Dein Ticket ist auf dem Weg in dein Postfach. Wenn es in ein paar Minuten nicht da ist, schau im Spam-Ordner nach.',
+      leadPaid: 'Dein Ticket ist auf dem Weg in dein Postfach. Danke fürs Weitergeben. Dein Geschenk geht direkt in die Begleitung von Frauen in der Wolfgarten-Klinik.',
+      giftHead: (n) => `Erledigt. ${n} hat einen Platz.`, giftLead: 'Das Ticket ist auf dem Weg ins Postfach, zusammen mit deinen Worten. Danke, dass du jemanden mitbringst.',
+      giveHead: 'Danke.', giveLead: 'Ihr Geschenk geht direkt in die Begleitung von Frauen in der Wolfgarten-Klinik. Ich schreibe Ihnen, wenn die Session stattgefunden hat.',
+      seat: 'Ein Platz für', date: 'Datum', time: 'Uhrzeit', place: 'Ort', spots: 'Plätze', timeVal: (d, s) => `Einlass ${d} · ${s}`,
+      cal: 'Trag es dir in den Kalender ein, damit es nicht untergeht', bring: 'Bring jemanden mit',
+      bringP: 'Kennst du jemanden, dem so ein Abend guttun würde? Für sie gilt dasselbe wie für dich: frei, wenn das Geld knapp ist, oder sie geben es weiter.',
+      share: 'Einladung schicken', gift: 'Einen Platz freihalten', giftP: 'Ich schicke der Person ein eigenes Ticket, wenn du magst mit ein paar Worten von dir.',
+      shareText: (title, d) => `Ich gehe am ${d} zu ${title}. Kommst du mit? Wenn das Geld knapp ist, ist es frei, denn die Menschen, die vorher da waren, haben es schon bezahlt.`,
+      copied: 'Link kopiert', copy: 'Diesen Link kopieren:',
+    },
+  };
+  const q = new URLSearchParams(location.search);
+  const site = await fetch('/events.json', { cache: 'no-store' }).then((r) => r.json());
+  let cfg = site;
+  try {
+    const live = await fetch(site.apiBase + '/api/config').then((r) => { if (!r.ok) throw new Error(); return r.json(); });
+    cfg = { ...site, ...live, apiBase: site.apiBase };
+  } catch (e) {}
+  const stamp = (d, tm) => d.replace(/-/g, '') + 'T' + tm.replace(':', '') + '00';
+
+  let tk = null, paid = false;
+  if (q.get('session_id')) {
+    try { const r = await fetch(cfg.apiBase + '/api/session?id=' + encodeURIComponent(q.get('session_id'))); if (r.ok) tk = await r.json(); } catch (e) {}
+    paid = true;
+  } else if (q.get('free')) {
+    try {
+      const s = JSON.parse(sessionStorage.getItem('acTicket') || 'null');
+      if (s) tk = { eventId: s.e, name: s.n, spots: Number(s.s) || 1, ticket: s.t, gift: !!s.g };
+    } catch (e) {}
+  }
+  const ev = tk && tk.eventId ? (cfg.events || []).find((e) => e.id === tk.eventId) : null;
+  const lang = ['de', 'en'].includes(q.get('lang')) ? q.get('lang') : (tk && tk.lang) || (ev && ev.lang) || 'en';
+  const L = T[lang];
+  document.documentElement.lang = lang;
+  const fmt = (d, o) => new Date(d + 'T12:00:00Z').toLocaleDateString(L.locale, o || { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+  $('head').textContent = L.inHead;
+  $('lead').textContent = L.leadFree;
+
+  if (tk && tk.kind === 'give') {
+    const G = T[tk.lang === 'de' ? 'de' : 'en'];
+    document.documentElement.lang = tk.lang === 'de' ? 'de' : 'en';
+    $('head').textContent = G.giveHead; $('lead').textContent = G.giveLead;
+    return;
+  }
+  if (!ev) return;
+
+  if (tk.gift) { $('head').textContent = L.giftHead(tk.name); $('lead').textContent = L.giftLead; }
+  else {
+    $('head').textContent = L.seeYou(fmt(ev.date, { day: 'numeric', month: 'long', timeZone: 'UTC' }));
+    if (paid) $('lead').textContent = L.leadPaid;
+  }
+  $('tTitle').textContent = ev.title;
+  $('lSeat').textContent = L.seat; $('tName').textContent = tk.name;
+  $('lDate').textContent = L.date; $('tDate').textContent = fmt(ev.date);
+  $('lTime').textContent = L.time; $('tTime').textContent = L.timeVal(ev.doors || ev.start, ev.start);
+  $('lPlace').textContent = L.place; $('tPlace').textContent = [ev.venue, ev.city].filter(Boolean).join(', ');
+  $('lSpots').textContent = L.spots; $('tSpots').textContent = String(tk.spots);
+  $('lCal').textContent = L.cal; $('lBring').textContent = L.bring; $('lBringP').textContent = L.bringP;
+  $('share').textContent = L.share; $('gift').textContent = L.gift; $('lGiftP').textContent = L.giftP;
+  $('ticket').hidden = $('cal').hidden = $('shareBox').hidden = false;
+
+  $('ics').href = cfg.apiBase + '/api/ics?e=' + encodeURIComponent(ev.id) + '&lang=' + lang;
+  $('gcal').href = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
+    action: 'TEMPLATE', text: ev.title, ctz: 'Europe/Berlin',
+    dates: stamp(ev.date, ev.start) + '/' + stamp(ev.date, ev.end || ev.start),
+    location: [ev.venue, ev.address, ev.city].filter(Boolean).join(', '),
+  });
+
+  const link = `${cfg.apiBase}/e/${encodeURIComponent(ev.id)}?lang=${lang}`;
+  $('gift').href = location.origin + '/live/event.html?e=' + encodeURIComponent(ev.id) + '&lang=' + lang + '&gift=1';
+  $('share').addEventListener('click', async () => {
+    const text = L.shareText(ev.title, fmt(ev.date, { day: 'numeric', month: 'long', timeZone: 'UTC' }));
+    if (navigator.share) { try { await navigator.share({ title: ev.title, text, url: link }); } catch (e) {} return; }
+    try { await navigator.clipboard.writeText(text + ' ' + link); $('share').textContent = L.copied; } catch (e) { prompt(L.copy, link); }
+  });
+})();
+</script>
+</body>
+</html>

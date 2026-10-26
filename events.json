@@ -1,0 +1,10 @@
+{
+  "apiBase": "https://agapic-tickets.agapic.workers.dev",
+  "contactEmail": "nathanvanderpoolphd@gmail.com",
+  "sessionCost": 200,
+  "sessionMinutes": 210,
+  "clinicUrl": "https://wolfgarten-radiologie.de/",
+  "sessionsFundedBefore": 0,
+  "events": [],
+  "_note": "Evenings are added and edited on /live/admin.html. You only need to change this file for the settings above."
+}
