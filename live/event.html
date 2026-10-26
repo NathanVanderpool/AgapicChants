@@ -254,8 +254,8 @@
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-i]').forEach((el) => { el.textContent = t()[el.dataset.i]; });
     $('langBtn').textContent = t().other;
-    const vl = lang === 'de' ? 'de' : 'en', vid = $('explainer'), src = `/video/how-it-works-${vl}.mp4?v=2`;
-    if (vid.getAttribute('src') !== src) { vid.pause(); vid.setAttribute('poster', `/video/how-it-works-${vl}.jpg?v=2`); vid.setAttribute('src', src); }
+    const vl = lang === 'de' ? 'de' : 'en', vid = $('explainer'), src = `/video/how-it-works-${vl}.mp4?v=3`;
+    if (vid.getAttribute('src') !== src) { vid.pause(); vid.setAttribute('poster', `/video/how-it-works-${vl}.jpg?v=3`); vid.setAttribute('src', src); }
     $('giveLink').href = '/live/give.html' + (lang === 'de' ? '?lang=de' : '');
   }
 
