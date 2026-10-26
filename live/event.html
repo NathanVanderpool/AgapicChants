@@ -120,10 +120,6 @@
           <label><span data-i="fromEmail"></span> <input type="email" id="fromEmail" autocomplete="email"></label>
           <label><span data-i="giftNote"></span> <textarea id="note" maxlength="300" rows="3"></textarea></label>
         </div>
-        <div class="optin" id="optinBox">
-          <label class="check"><input type="checkbox" id="optIn"><span><span data-i="optin"></span><span class="paidOnly" data-i="optinPaid"></span>.</span></label>
-          <label class="city"><span data-i="city"></span> <input type="text" id="city" autocomplete="postal-code"></label>
-        </div>
         <div class="error" id="error" role="alert"></div>
         <button class="cta" id="cta" type="submit"></button>
         <p class="note" id="ctaNote"></p>
@@ -321,7 +317,6 @@
     $('emailLabel').textContent = gift ? t().theirEmail : t().email;
     $('spotsRow').hidden = gift;
     $('giftFields').hidden = !gift;
-    $('optinBox').hidden = gift;
     const rec = ev.recommended;
     const tiers = [{ amt: 0, sub: gift ? t().tFreeGift : t().tFree }]
       .concat((ev.tiers || []).map((a) => ({ amt: a, sub: a === rec ? t().tRec : t().tPif })))
@@ -347,7 +342,7 @@
       : t().iPart(Math.max(1, Math.round(amount / cost * mins))) + (people <= 20 ? t().iPeople(people) : '');
     $('cta').textContent = free ? (gift ? t().ctaFreeGift : t().ctaFree) : t().ctaPay(amount);
     $('ctaNote').textContent = free ? t().noteFree : t().notePay;
-    document.querySelector('.paidOnly').hidden = free;
+
   }
 
   function render() {
@@ -401,7 +396,7 @@
       eventId: ev.id, amount, lang,
       name: $('name').value.trim(), email: $('email').value.trim(),
       spots: Number($('spots').value) || 1,
-      optIn: !gift && $('optIn').checked, city: gift ? '' : $('city').value.trim(),
+      optIn: false, city: '',
       gift, fromName: $('fromName').value.trim(), fromEmail: $('fromEmail').value.trim(), note: $('note').value.trim(),
     };
     if (!body.name || !body.email) return show(gift ? t().errNeedGift : t().errNeed);
