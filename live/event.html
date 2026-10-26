@@ -52,7 +52,7 @@
   .list a{display:block;padding:16px;margin-top:10px;background:var(--card);border:1px solid var(--rule);border-radius:14px;text-decoration:none;color:var(--ink)}
   .list a b{font-weight:600}
   .video-btn{margin-top:12px;height:44px;padding:0 16px;border-radius:12px;border:1.5px solid var(--field);background:transparent;font:inherit;font-size:16px;color:var(--ink);cursor:pointer}
-  .explainer{display:block;width:100%;max-width:300px;aspect-ratio:9/16;margin-top:12px;border-radius:14px;background:#000}
+  .explainer{display:block;width:100%;max-width:300px;aspect-ratio:9/16;margin:0 auto 18px;border-radius:14px;background:#000}
   .share-btn{margin-top:14px;height:44px;padding:0 16px;border-radius:12px;border:1.5px solid var(--field);background:transparent;font:inherit;font-size:16px;color:var(--ink);cursor:pointer}
   .left{margin:6px 0 0;color:var(--terra-deeper);font-weight:500}
   footer{max-width:560px;margin:0 auto;padding:16px 16px 40px;font-size:14px;color:var(--ink-soft);display:flex;gap:16px}
@@ -87,11 +87,10 @@
     <p id="seatsLeft" class="left" hidden></p>
 
     <div class="card">
+      <video class="explainer" id="explainer" controls playsinline preload="metadata"></video>
       <h2 data-i="paidTitle"></h2>
       <p data-i="paidP1"></p>
       <p><span data-i="paidP2"></span> <span id="costline"></span></p>
-      <button class="video-btn" id="videoBtn" type="button" aria-expanded="false" data-i="videoBtn"></button>
-      <video class="explainer" id="explainer" controls playsinline preload="none" hidden></video>
     </div>
 
     <div class="progress" id="progress" hidden>
@@ -250,8 +249,9 @@
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-i]').forEach((el) => { el.textContent = t()[el.dataset.i]; });
     $('langBtn').textContent = t().other;
-    const vid = $('explainer'), src = `/video/how-it-works-${lang === 'de' ? 'de' : 'en'}.mp4`;
-    if (vid.getAttribute('src') !== src) { const was = !vid.hidden; vid.pause(); vid.setAttribute('src', src); if (was) vid.load(); }
+    // #t=0.1 makes most browsers show the first frame instead of a black box
+    const vid = $('explainer'), src = `/video/how-it-works-${lang === 'de' ? 'de' : 'en'}.mp4#t=0.1`;
+    if (vid.getAttribute('src') !== src) { vid.pause(); vid.setAttribute('src', src); }
     $('giveLink').href = '/live/give.html' + (lang === 'de' ? '?lang=de' : '');
   }
 
@@ -352,11 +352,6 @@
     renderEvent();
   }
 
-  $('videoBtn').addEventListener('click', () => {
-    const vid = $('explainer'); vid.hidden = !vid.hidden;
-    $('videoBtn').setAttribute('aria-expanded', String(!vid.hidden));
-    if (vid.hidden) vid.pause(); else vid.play().catch(() => {});
-  });
   $('langBtn').addEventListener('click', () => { lang = lang === 'de' ? 'en' : 'de'; render(); });
   render();
   if (!ev) return;
