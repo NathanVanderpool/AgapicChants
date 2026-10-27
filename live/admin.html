@@ -168,6 +168,27 @@
     });
     ab.append(tb);
 
+    // One-time helper: add the Winter 2026 tour as unpublished drafts (removed again once used)
+    try {
+      const td = await fetch('/live/tour-drafts.json', { cache: 'no-store' });
+      if (td.ok) {
+        const { drafts } = await td.json();
+        const have = new Set(data.events.map((e) => e.city.toLowerCase() + '|' + e.date));
+        const todo = drafts.filter((d) => !have.has(d.city.toLowerCase() + '|' + d.date));
+        if (todo.length) {
+          const tbx = el('div', 'box'); tbx.style.marginTop = '16px';
+          tbx.append(el('p', '', `Your Winter 2026 tour: ${todo.length} evenings are ready to add as unpublished drafts. Nobody can see or book them until you tick “Published”.`));
+          const ib = el('button', 'primary', 'Add tour drafts'); ib.type = 'button';
+          ib.addEventListener('click', async () => {
+            ib.disabled = true; let n = 0;
+            for (const d of todo) { try { await api('/api/admin/save-event', { event: d }); n++; ib.textContent = `Adding… ${n} of ${todo.length}`; } catch (e) { show(`${d.city} ${d.date}: ${e.message}`); } }
+            show(`${n} tour evenings added as drafts.`, true); load();
+          });
+          tbx.append(ib); ab.after(tbx);
+        }
+      }
+    } catch (e) {}
+
     const list = $('list'); list.textContent = '';
     if (!data.events.length) list.append(el('p', '', 'No evenings yet. Tap “New evening” to add the first one.'));
     const today = new Date().toISOString().slice(0, 10);
