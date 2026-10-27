@@ -60,6 +60,8 @@
     <form id="form" hidden novalidate>
       <h2 id="formTitle">New evening</h2>
       <fieldset><legend>The basics</legend>
+        <label>What kind <select id="f_kind"><option value="tickets">Own page with pay-it-forward tickets</option><option value="listing">Listing only: a line in the list, no page, no tickets</option></select></label>
+        <label id="linkRow">Link elsewhere (optional, e.g. Luma or the venue) <input id="f_link" placeholder="https://…"></label>
         <label>What and where <input id="f_title" required placeholder="Chanting in Stockholm"></label>
         <div class="row">
           <label>Language of the page <select id="f_lang"><option value="de">German</option><option value="en">English</option></select></label>
@@ -99,7 +101,7 @@
         <label>Amount buttons in € (comma-separated) <input id="f_tiers" value="15, 25, 50"></label>
         <p class="hint">"€0" and a whole session (€200) are always shown as well.</p>
       </fieldset>
-      <label class="check" style="margin-top:20px"><input type="checkbox" id="f_published"> Published (people can see it and book)</label>
+      <label class="check" style="margin-top:20px"><input type="checkbox" id="f_published"> Published (people can see it; for a page with tickets, they can book)</label>
       <button class="primary" type="submit" id="saveBtn">Save evening</button>
       <button class="secondary" type="button" id="cancelBtn" style="width:100%;margin-top:10px">Cancel</button>
     </form>
@@ -122,7 +124,7 @@
   let key = '';
   try { key = sessionStorage.getItem('acKey') || ''; } catch (e) {}
   let editingId = null;
-  const FIELDS = ['title', 'lang', 'cohost', 'date', 'doors', 'start', 'end', 'venue', 'address', 'postcode', 'city', 'mapsUrl', 'blurb', 'blurbDe', 'note', 'noteDe', 'capacity', 'maxSpotsPerOrder', 'recommended', 'tiers'];
+  const FIELDS = ['kind', 'link', 'title', 'lang', 'cohost', 'date', 'doors', 'start', 'end', 'venue', 'address', 'postcode', 'city', 'mapsUrl', 'blurb', 'blurbDe', 'note', 'noteDe', 'capacity', 'maxSpotsPerOrder', 'recommended', 'tiers'];
 
   const show = (text, ok) => { const m = $('msg'); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); m.style.display = 'block'; m.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
   const api = async (path, body) => {
@@ -141,8 +143,17 @@
   function fill(ev) {
     for (const f of FIELDS) $('f_' + f).value = f === 'tiers' ? (ev.tiers || [15, 25, 50]).join(', ') : (ev[f] ?? '');
     if (!ev.lang) $('f_lang').value = 'de';
+    if (!ev.kind) $('f_kind').value = 'tickets';
+    kindView();
     $('f_published').checked = !!ev.published;
   }
+  // Listings only need what, when and where: hide the ticket parts of the form
+  function kindView() {
+    const listing = $('f_kind').value === 'listing';
+    $('f_capacity').closest('fieldset').hidden = listing;
+    for (const id of ['f_note', 'f_noteDe', 'f_doors', 'f_end', 'f_address', 'f_postcode', 'f_mapsUrl']) $(id).closest('label').hidden = listing;
+  }
+  $('f_kind').addEventListener('change', kindView);
   function openForm(ev, id, title) {
     editingId = id; fill(ev);
     $('formTitle').textContent = title; $('form').hidden = false; $('msg').style.display = 'none';
@@ -168,21 +179,25 @@
     });
     ab.append(tb);
 
-    // One-time helper: add the Winter 2026 tour as unpublished drafts (removed again once used)
+    // One-time helper: bring the Winter 2026 tour into the list (removed again once used)
     try {
       const td = await fetch('/live/tour-drafts.json', { cache: 'no-store' });
       if (td.ok) {
-        const { drafts } = await td.json();
+        const { items, remove } = await td.json();
+        const byId = new Map(data.events.map((e) => [e.id, e]));
         const have = new Set(data.events.map((e) => e.city.toLowerCase() + '|' + e.date));
-        const todo = drafts.filter((d) => !have.has(d.city.toLowerCase() + '|' + d.date));
-        if (todo.length) {
+        const same = (a, b) => ['kind', 'title', 'date', 'venue', 'city', 'published', 'blurb'].every((k) => String(a[k] ?? '') === String(b[k] ?? ''));
+        const todo = items.filter((d) => d.mode === 'set' ? !(byId.has(d.id) && same(byId.get(d.id), d)) : !(byId.has(d.id) || have.has(d.city.toLowerCase() + '|' + d.date)));
+        const gone = (remove || []).filter((id) => byId.has(id));
+        if (todo.length || gone.length) {
           const tbx = el('div', 'box'); tbx.style.marginTop = '16px';
-          tbx.append(el('p', '', `Your Winter 2026 tour: ${todo.length} evenings are ready to add as unpublished drafts. Nobody can see or book them until you tick “Published”.`));
-          const ib = el('button', 'primary', 'Add tour drafts'); ib.type = 'button';
+          tbx.append(el('p', '', `Your Winter 2026 tour: ${todo.length} evening${todo.length === 1 ? '' : 's'} to add or update${gone.length ? ` and ${gone.length} old draft to remove` : ''}. Nothing new becomes public.`));
+          const ib = el('button', 'primary', 'Update tour list'); ib.type = 'button';
           ib.addEventListener('click', async () => {
             ib.disabled = true; let n = 0;
-            for (const d of todo) { try { await api('/api/admin/save-event', { event: d }); n++; ib.textContent = `Adding… ${n} of ${todo.length}`; } catch (e) { show(`${d.city} ${d.date}: ${e.message}`); } }
-            show(`${n} tour evenings added as drafts.`, true); load();
+            for (const d of todo) { const ev = { ...d }; delete ev.mode; try { await api('/api/admin/save-event', { event: ev }); n++; ib.textContent = `Working… ${n} of ${todo.length}`; } catch (e) { show(`${d.city} ${d.date}: ${e.message}`); } }
+            for (const id of gone) { try { await api('/api/admin/delete-event', { id }); } catch (e) { show(e.message); } }
+            show(`Tour list updated: ${n} saved${gone.length ? `, ${gone.length} removed` : ''}.`, true); load();
           });
           tbx.append(ib); ab.after(tbx);
         }
@@ -195,10 +210,12 @@
     for (const ev of data.events) {
       const card = el('div', 'ev');
       card.append(el('h3', '', ev.title));
-      card.append(el('div', 'meta', `${fmt(ev.date)} · ${ev.start} · ${ev.venue}, ${ev.city}${ev.cohost ? ' · with ' + ev.cohost : ''}`));
+      const listing = ev.kind === 'listing';
+      card.append(el('div', 'meta', [fmt(ev.date), ev.start, [ev.venue, ev.city].filter(Boolean).join(', ')].filter(Boolean).join(' · ') + (ev.cohost ? ' · with ' + ev.cohost : '')));
       const tags = el('div', 'tags');
-      tags.append(el('span', 'tag' + (ev.published ? ' live' : ''), ev.published ? 'Published' : 'Draft'));
-      tags.append(el('span', 'tag', ev.capacity ? `${ev.spotsTaken} of ${ev.capacity} seats taken` : `${ev.spotsTaken} seats taken`));
+      tags.append(el('span', 'tag' + (ev.published ? ' live' : ''), ev.published ? (listing ? 'Shown in the list' : 'Published') : (listing ? 'Hidden' : 'Draft')));
+      tags.append(el('span', 'tag', listing ? 'Listing only' : 'Tickets'));
+      if (!listing) tags.append(el('span', 'tag', ev.capacity ? `${ev.spotsTaken} of ${ev.capacity} seats taken` : `${ev.spotsTaken} seats taken`));
       if (ev.waitlist) tags.append(el('span', 'tag', `${ev.waitlist} on the waitlist`));
       tags.append(el('span', 'tag', ev.lang === 'en' ? 'English' : 'German'));
       if (ev.reminded) tags.append(el('span', 'tag', 'Reminder sent'));
@@ -209,8 +226,7 @@
       const b = (label, fn) => { const x = el('button', 'secondary small', label); x.type = 'button'; x.addEventListener('click', () => fn(x)); acts.append(x); };
       b('Edit', () => openForm(ev, ev.id, 'Edit evening'));
       b('Duplicate', () => openForm({ ...ev, date: '', published: false }, null, 'New evening (copy)'));
-      b('Copy link (German)', (x) => copy(ev.shareDe, x));
-      b('Copy link (English)', (x) => copy(ev.shareEn, x));
+      if (!listing) { b('Copy link (German)', (x) => copy(ev.shareDe, x)); b('Copy link (English)', (x) => copy(ev.shareEn, x)); }
       if (ev.editable && !ev.spotsTaken) b('Delete', async () => {
         if (!confirm(`Delete “${ev.title}”?`)) return;
         try { await api('/api/admin/delete-event', { id: ev.id }); await load(); show('Deleted.', true); } catch (e) { show(e.message); }

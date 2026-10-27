@@ -50,7 +50,9 @@
   .error{margin-top:14px;padding:12px 14px;border-radius:12px;background:#f6d6cc;color:#5c1f12;display:none}
   .small{font-size:15px;color:var(--ink-soft)} .small b{color:var(--ink);font-weight:600}
   .list a{display:block;padding:16px;margin-top:10px;background:var(--card);border:1px solid var(--rule);border-radius:14px;text-decoration:none;color:var(--ink)}
-  .list a b{font-weight:600}
+  .list a b,.list .listing b{font-weight:600}
+  .list .listing{display:block;padding:16px;margin-top:10px;border:1px dashed var(--rule);border-radius:14px;color:var(--ink);text-decoration:none}
+  .list .sub{font-size:15px;color:var(--ink-soft)} .list .more{font-size:15px;color:var(--terra-dark);font-weight:500}
   .video-btn{margin-top:12px;height:44px;padding:0 16px;border-radius:12px;border:1.5px solid var(--field);background:transparent;font:inherit;font-size:16px;color:var(--ink);cursor:pointer}
   .explainer{display:block;width:100%;max-width:200px;aspect-ratio:9/16;margin:0 auto 18px;border-radius:14px;background:#000}
   .share-btn{margin-top:14px;height:44px;padding:0 16px;border-radius:12px;border:1.5px solid var(--field);background:transparent;font:inherit;font-size:16px;color:var(--ink);cursor:pointer}
@@ -160,7 +162,7 @@
   const $ = (id) => document.getElementById(id);
   const T = {
     en: {
-      other: 'Deutsch', listEyebrow: 'Upcoming evenings', listTitle: 'Come sing with us', listEmpty: 'No evenings are open right now. Check back soon.',
+      other: 'Deutsch', listEyebrow: 'Upcoming evenings', listTitle: 'Come sing with us', listEmpty: 'No evenings are open right now. Check back soon.', moreInfo: 'More info →',
       eyebrow: 'Communal chant evening', hosted: (c) => `Hosted by Nathan & ${c}`, times: (d, s) => `doors ${d}, singing ${s}`, tDoors: 'Doors open', tStart: 'Singing starts', tEnd: 'Ends around', mapsTitle: 'Open in maps',
       paidTitle: 'Tonight is already paid for.',
       videoBtn: '▶ Watch how it works (about a minute)',
@@ -193,7 +195,7 @@
       waitBtn: 'Put me on the waitlist', waitDone: 'You’re on the waitlist. I’ve sent you a short confirmation.'
     },
     de: {
-      other: 'English', listEyebrow: 'Kommende Abende', listTitle: 'Sing mit uns', listEmpty: 'Gerade sind keine Abende offen. Schau bald wieder vorbei.',
+      other: 'English', listEyebrow: 'Kommende Abende', listTitle: 'Sing mit uns', listEmpty: 'Gerade sind keine Abende offen. Schau bald wieder vorbei.', moreInfo: 'Mehr Infos →',
       eyebrow: 'Gemeinsamer Chant-Abend', hosted: (c) => `Mit Nathan & ${c}`, times: (d, s) => `Einlass ${d}, Beginn ${s}`, tDoors: 'Einlass', tStart: 'Beginn', tEnd: 'Ende gegen', mapsTitle: 'In Karten öffnen',
       paidTitle: 'Dieser Abend ist schon bezahlt.',
       videoBtn: '▶ Im Video erklärt (gut eine Minute)',
@@ -238,7 +240,7 @@
   const upcoming = (cfg.events || []).filter((e) => e.published && e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
   const id = params.get('e');
   const gift = params.get('gift') === '1';
-  const ev = id ? upcoming.find((e) => e.id === id) : null;
+  const ev = id ? upcoming.find((e) => e.id === id && e.kind !== 'listing') : null;
   const cost = cfg.sessionCost || 200;
   const mins = cfg.sessionMinutes || 210;
   let lang = ['de', 'en'].includes(params.get('lang')) ? params.get('lang')
@@ -264,10 +266,16 @@
     const box = $('listItems'); box.textContent = '';
     if (!upcoming.length) { const p = document.createElement('p'); p.textContent = t().listEmpty; box.append(p); return; }
     for (const e of upcoming) {
-      const a = document.createElement('a');
-      a.href = '?e=' + encodeURIComponent(e.id);
+      // Listings are just a line: what, when, where. Only evenings with tickets open their own page.
+      const listing = e.kind === 'listing';
+      const a = document.createElement(listing ? (e.link ? 'a' : 'div') : 'a');
+      if (listing) { a.className = 'listing'; if (e.link) { a.href = e.link; a.target = '_blank'; a.rel = 'noopener'; } }
+      else a.href = '?e=' + encodeURIComponent(e.id);
       const b = document.createElement('b'); b.textContent = e.title;
-      a.append(b, document.createElement('br'), document.createTextNode(`${fmt(e.date)} · ${e.city}`));
+      a.append(b, document.createElement('br'), document.createTextNode([fmt(e.date), e.start, [e.venue, e.city].filter(Boolean).join(', ')].filter(Boolean).join(' · ')));
+      const blurb = (lang === 'de' && e.blurbDe) || e.blurb;
+      if (blurb) { const p = document.createElement('span'); p.className = 'sub'; p.textContent = blurb; a.append(document.createElement('br'), p); }
+      if (listing && e.link) { const m = document.createElement('span'); m.className = 'more'; m.textContent = t().moreInfo; a.append(document.createElement('br'), m); }
       box.append(a);
     }
   }

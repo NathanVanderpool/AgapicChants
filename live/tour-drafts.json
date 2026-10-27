@@ -1,23 +1,57 @@
 {
- "drafts": [
+ "items": [
   {
-   "title": "Heart Choices in Copenhagen",
+   "id": "copenhagen-2026-11-20",
+   "kind": "listing",
+   "link": "",
+   "title": "Secret Chord Collective with Freja",
    "lang": "en",
    "date": "2026-11-20",
-   "doors": "18:30",
-   "start": "19:00",
-   "end": "21:30",
-   "venue": "Solaeger",
+   "doors": "",
+   "start": "",
+   "end": "",
+   "venue": "Solager",
+   "address": "",
+   "postcode": "",
+   "city": "near Copenhagen",
+   "mapsUrl": "",
+   "cohost": "",
+   "blurb": "A Secret Chord Collective evening at Signe's garden house.",
+   "blurbDe": "Ein Abend mit Secret Chord Collective in Signes Gartenhaus.",
+   "note": "",
+   "noteDe": "",
+   "capacity": 0,
+   "maxSpotsPerOrder": 4,
+   "recommended": 25,
+   "tiers": [
+    15,
+    25,
+    50
+   ],
+   "published": false,
+   "mode": "set"
+  },
+  {
+   "id": "copenhagen-agapic-2026-11-21",
+   "kind": "listing",
+   "link": "",
+   "title": "Agapic Chants evening in Copenhagen",
+   "lang": "en",
+   "date": "2026-11-21",
+   "doors": "",
+   "start": "",
+   "end": "",
+   "venue": "At Benjamin and Ramona's",
    "address": "",
    "postcode": "",
    "city": "Copenhagen",
    "mapsUrl": "",
    "cohost": "",
-   "blurb": "Two to three hours of singing together, with room to find your way to a decision that matters to you.",
-   "blurbDe": "Zwei bis drei Stunden gemeinsames Singen, mit Raum für eine Entscheidung, die dir am Herzen liegt.",
+   "blurb": "Donation-based, no tickets. Write to me for the address.",
+   "blurbDe": "Auf Spendenbasis, ohne Tickets. Schreib mir für die Adresse.",
    "note": "",
    "noteDe": "",
-   "capacity": 20,
+   "capacity": 0,
    "maxSpotsPerOrder": 4,
    "recommended": 25,
    "tiers": [
@@ -25,53 +59,30 @@
     25,
     50
    ],
-   "published": false
+   "published": false,
+   "mode": "set"
   },
   {
-   "title": "Herzensentscheidung in Kopenhagen",
-   "lang": "de",
-   "date": "2026-11-22",
-   "doors": "18:30",
-   "start": "19:00",
-   "end": "21:30",
-   "venue": "Ort folgt",
-   "address": "",
-   "postcode": "",
-   "city": "Kopenhagen",
-   "mapsUrl": "",
-   "cohost": "",
-   "blurb": "Two to three hours of singing together, with room to find your way to a decision that matters to you.",
-   "blurbDe": "Zwei bis drei Stunden gemeinsames Singen, mit Raum für eine Entscheidung, die dir am Herzen liegt.",
-   "note": "",
-   "noteDe": "",
-   "capacity": 20,
-   "maxSpotsPerOrder": 4,
-   "recommended": 25,
-   "tiers": [
-    15,
-    25,
-    50
-   ],
-   "published": false
-  },
-  {
+   "id": "stockholm-2026-11-27",
+   "kind": "listing",
+   "link": "",
    "title": "Heart Choices in Stockholm",
    "lang": "en",
    "date": "2026-11-27",
-   "doors": "18:30",
-   "start": "19:00",
-   "end": "21:30",
+   "doors": "",
+   "start": "",
+   "end": "",
    "venue": "emerge Lakefront",
    "address": "",
    "postcode": "",
    "city": "Stockholm",
    "mapsUrl": "",
    "cohost": "",
-   "blurb": "Two to three hours of singing together, with room to find your way to a decision that matters to you.",
-   "blurbDe": "Zwei bis drei Stunden gemeinsames Singen, mit Raum für eine Entscheidung, die dir am Herzen liegt.",
+   "blurb": "Tickets through Luma.",
+   "blurbDe": "Tickets über Luma.",
    "note": "",
    "noteDe": "",
-   "capacity": 20,
+   "capacity": 0,
    "maxSpotsPerOrder": 4,
    "recommended": 25,
    "tiers": [
@@ -79,6 +90,100 @@
     25,
     50
    ],
+   "published": false,
+   "mode": "set"
+  },
+  {
+   "id": "koln-2026-12-07",
+   "kind": "listing",
+   "link": "",
+   "title": "Secret Chord Collective at Kunst gegen Bares",
+   "lang": "de",
+   "date": "2026-12-07",
+   "doors": "",
+   "start": "",
+   "end": "",
+   "venue": "",
+   "address": "",
+   "postcode": "",
+   "city": "Köln",
+   "mapsUrl": "",
+   "cohost": "",
+   "blurb": "",
+   "blurbDe": "",
+   "note": "",
+   "noteDe": "",
+   "capacity": 0,
+   "maxSpotsPerOrder": 4,
+   "recommended": 25,
+   "tiers": [
+    15,
+    25,
+    50
+   ],
+   "published": false,
+   "mode": "set"
+  },
+  {
+   "id": "fursteneck-2026-12-09",
+   "kind": "listing",
+   "link": "",
+   "title": "Visit to Burg Fürsteneck",
+   "lang": "de",
+   "date": "2026-12-09",
+   "doors": "",
+   "start": "",
+   "end": "",
+   "venue": "Akademie Burg Fürsteneck",
+   "address": "",
+   "postcode": "",
+   "city": "Eiterfeld",
+   "mapsUrl": "",
+   "cohost": "",
+   "blurb": "Private visit, 9–10 Dec. Not a public event.",
+   "blurbDe": "Privater Besuch, 9.–10. Dez. Keine öffentliche Veranstaltung.",
+   "note": "",
+   "noteDe": "",
+   "capacity": 0,
+   "maxSpotsPerOrder": 4,
+   "recommended": 25,
+   "tiers": [
+    15,
+    25,
+    50
+   ],
+   "published": false,
+   "mode": "set"
+  },
+  {
+   "mode": "set",
+   "id": "copenhagen-2026-11-21",
+   "kind": "tickets",
+   "link": "",
+   "title": "Agapic Chants Evening in Stockholm",
+   "lang": "en",
+   "date": "2026-11-21",
+   "doors": "18:30",
+   "start": "19:00",
+   "end": "21:30",
+   "venue": "Benjamin and Ramonas",
+   "address": "Street Example",
+   "postcode": "123456",
+   "city": "Copenhagen",
+   "mapsUrl": "https://maps.app.goo.gl/uPv3wRsVcN9uLz296",
+   "cohost": "SIgne",
+   "note": "We'll start with simple songs that anyone can learn in a minute",
+   "noteDe": "",
+   "blurb": "An evening of chanting and tea",
+   "blurbDe": "",
+   "recommended": 25,
+   "tiers": [
+    15,
+    25,
+    50
+   ],
+   "capacity": 20,
+   "maxSpotsPerOrder": 5,
    "published": false
   },
   {
@@ -106,7 +211,10 @@
     25,
     50
    ],
-   "published": false
+   "published": false,
+   "kind": "tickets",
+   "link": "",
+   "mode": "add"
   },
   {
    "title": "Heart Choices in Freiburg",
@@ -133,7 +241,10 @@
     25,
     50
    ],
-   "published": false
+   "published": false,
+   "kind": "tickets",
+   "link": "",
+   "mode": "add"
   },
   {
    "title": "Herzensentscheidung in Freiburg",
@@ -160,34 +271,10 @@
     25,
     50
    ],
-   "published": false
-  },
-  {
-   "title": "Herzensentscheidung in Köln",
-   "lang": "de",
-   "date": "2026-12-07",
-   "doors": "18:30",
-   "start": "19:00",
-   "end": "21:30",
-   "venue": "Ort folgt",
-   "address": "",
-   "postcode": "",
-   "city": "Köln",
-   "mapsUrl": "",
-   "cohost": "",
-   "blurb": "Two to three hours of singing together, with room to find your way to a decision that matters to you.",
-   "blurbDe": "Zwei bis drei Stunden gemeinsames Singen, mit Raum für eine Entscheidung, die dir am Herzen liegt.",
-   "note": "",
-   "noteDe": "",
-   "capacity": 20,
-   "maxSpotsPerOrder": 4,
-   "recommended": 25,
-   "tiers": [
-    15,
-    25,
-    50
-   ],
-   "published": false
+   "published": false,
+   "kind": "tickets",
+   "link": "",
+   "mode": "add"
   },
   {
    "title": "Herzensentscheidung in Waldkappel",
@@ -214,7 +301,10 @@
     25,
     50
    ],
-   "published": false
+   "published": false,
+   "kind": "tickets",
+   "link": "",
+   "mode": "add"
   },
   {
    "title": "Heart Choices in Witzenhausen",
@@ -241,7 +331,10 @@
     25,
     50
    ],
-   "published": false
+   "published": false,
+   "kind": "tickets",
+   "link": "",
+   "mode": "add"
   },
   {
    "title": "Herzensentscheidung in München",
@@ -268,7 +361,10 @@
     15,
     25
    ],
-   "published": false
+   "published": false,
+   "kind": "tickets",
+   "link": "",
+   "mode": "add"
   },
   {
    "title": "Herzensentscheidung in Salzburg",
@@ -295,7 +391,13 @@
     15,
     25
    ],
-   "published": false
+   "published": false,
+   "kind": "tickets",
+   "link": "",
+   "mode": "add"
   }
+ ],
+ "remove": [
+  "kopenhagen-2026-11-22"
  ]
 }
