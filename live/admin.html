@@ -179,35 +179,11 @@
     });
     ab.append(tb);
 
-    // One-time helper: bring the Winter 2026 tour into the list (removed again once used)
-    try {
-      const td = await fetch('/live/tour-drafts.json', { cache: 'no-store' });
-      if (td.ok) {
-        const { items, remove } = await td.json();
-        const byId = new Map(data.events.map((e) => [e.id, e]));
-        const have = new Set(data.events.map((e) => e.city.toLowerCase() + '|' + e.date));
-        const same = (a, b) => ['kind', 'title', 'date', 'venue', 'city', 'published', 'blurb'].every((k) => String(a[k] ?? '') === String(b[k] ?? ''));
-        const todo = items.filter((d) => d.mode === 'set' ? !(byId.has(d.id) && same(byId.get(d.id), d)) : !(byId.has(d.id) || have.has(d.city.toLowerCase() + '|' + d.date)));
-        const gone = (remove || []).filter((id) => byId.has(id));
-        if (todo.length || gone.length) {
-          const tbx = el('div', 'box'); tbx.style.marginTop = '16px';
-          tbx.append(el('p', '', `Your Winter 2026 tour: ${todo.length} evening${todo.length === 1 ? '' : 's'} to add or update${gone.length ? ` and ${gone.length} old draft to remove` : ''}. Nothing new becomes public.`));
-          const ib = el('button', 'primary', 'Update tour list'); ib.type = 'button';
-          ib.addEventListener('click', async () => {
-            ib.disabled = true; let n = 0;
-            for (const d of todo) { const ev = { ...d }; delete ev.mode; try { await api('/api/admin/save-event', { event: ev }); n++; ib.textContent = `Working… ${n} of ${todo.length}`; } catch (e) { show(`${d.city} ${d.date}: ${e.message}`); } }
-            for (const id of gone) { try { await api('/api/admin/delete-event', { id }); } catch (e) { show(e.message); } }
-            show(`Tour list updated: ${n} saved${gone.length ? `, ${gone.length} removed` : ''}.`, true); load();
-          });
-          tbx.append(ib); ab.after(tbx);
-        }
-      }
-    } catch (e) {}
 
     const list = $('list'); list.textContent = '';
     if (!data.events.length) list.append(el('p', '', 'No evenings yet. Tap “New evening” to add the first one.'));
     const today = new Date().toISOString().slice(0, 10);
-    for (const ev of data.events) {
+    for (const ev of data.events.filter((x) => !x.archived)) {
       const card = el('div', 'ev');
       card.append(el('h3', '', ev.title));
       const listing = ev.kind === 'listing';
@@ -227,6 +203,11 @@
       b('Edit', () => openForm(ev, ev.id, 'Edit evening'));
       b('Duplicate', () => openForm({ ...ev, date: '', published: false }, null, 'New evening (copy)'));
       if (!listing) { b('Copy link (German)', (x) => copy(ev.shareDe, x)); b('Copy link (English)', (x) => copy(ev.shareEn, x)); }
+      // Evenings that had tickets can't be deleted (their guests' data still needs its automatic cleanup), but they can leave the list
+      if (ev.editable && ev.spotsTaken) b('Remove from list', async () => {
+        if (!confirm(`Remove “${ev.title}” from this list? It stays unpublished in the background, so its guests' data is still cleaned up on time.`)) return;
+        try { await api('/api/admin/save-event', { event: { ...ev, archived: true, published: false } }); await load(); show('Removed from the list.', true); } catch (e) { show(e.message); }
+      });
       if (ev.editable && !ev.spotsTaken) b('Delete', async () => {
         if (!confirm(`Delete “${ev.title}”?`)) return;
         try { await api('/api/admin/delete-event', { id: ev.id }); await load(); show('Deleted.', true); } catch (e) { show(e.message); }
