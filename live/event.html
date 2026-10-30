@@ -163,7 +163,7 @@
   const T = {
     en: {
       other: 'Deutsch', listEyebrow: 'Upcoming evenings', listTitle: 'Come sing with us', listEmpty: 'No evenings are open right now. Check back soon.', moreInfo: 'More info →',
-      eyebrow: 'Communal chant evening', hosted: (c) => `Hosted by Nathan & ${c}`, times: (d, s) => `doors ${d}, singing ${s}`, tDoors: 'Doors open', tStart: 'Singing starts', tEnd: 'Ends around', mapsTitle: 'Open in maps',
+      eyebrow: 'Communal chant evening', hosted: (c) => `Hosted by Nathan & ${c}`, times: (d, s) => `doors ${d}, singing ${s}`, tDoors: 'Doors open', privNote: 'It’s a private home, so the exact address comes with your ticket.', tStart: 'Singing starts', tEnd: 'Ends around', mapsTitle: 'Open in maps',
       paidTitle: 'Tonight is already paid for.',
       videoBtn: '▶ Watch how it works (about a minute)',
       paidP1: 'People who came before you gave so this evening could be free for you. If money is tight right now, reserve your spot and come. You’re welcome as you are, and you don’t need to explain anything.',
@@ -196,7 +196,7 @@
     },
     de: {
       other: 'English', listEyebrow: 'Kommende Abende', listTitle: 'Sing mit uns', listEmpty: 'Gerade sind keine Abende offen. Schau bald wieder vorbei.', moreInfo: 'Mehr Infos →',
-      eyebrow: 'Gemeinsamer Chant-Abend', hosted: (c) => `Mit Nathan & ${c}`, times: (d, s) => `Einlass ${d}, Beginn ${s}`, tDoors: 'Einlass', tStart: 'Beginn', tEnd: 'Ende gegen', mapsTitle: 'In Karten öffnen',
+      eyebrow: 'Gemeinsamer Chant-Abend', hosted: (c) => `Mit Nathan & ${c}`, times: (d, s) => `Einlass ${d}, Beginn ${s}`, tDoors: 'Einlass', privNote: 'Es ist eine private Wohnung, deshalb kommt die genaue Adresse mit deinem Ticket.', tStart: 'Beginn', tEnd: 'Ende gegen', mapsTitle: 'In Karten öffnen',
       paidTitle: 'Dieser Abend ist schon bezahlt.',
       videoBtn: '▶ Im Video erklärt (gut eine Minute)',
       paidP1: 'Menschen, die vor dir da waren, haben gegeben, damit dieser Abend für dich frei ist. Wenn das Geld gerade knapp ist, reservier dir einen Platz und komm. Du bist willkommen, so wie du bist, und musst nichts erklären.',
@@ -330,9 +330,14 @@
     const mapsHref = /^https:\/\//.test(ev.mapsUrl || '') ? ev.mapsUrl
       : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([ev.venue, ev.address, ev.postcode, ev.city].filter(Boolean).join(' '));
     const pl = $('place'); pl.textContent = '';
+    if (ev.privateAddress) { // a private home: no street, no map, just the area
+      pl.append(document.createTextNode([ev.venue, ev.city].filter(Boolean).join(', ')));
+      const pn = document.createElement('div'); pn.style.cssText = 'font-size:15px;color:var(--ink-soft);margin-top:4px'; pn.textContent = t().privNote; pl.append(pn);
+    } else {
     const pa = document.createElement('a'); pa.href = mapsHref; pa.target = '_blank'; pa.rel = 'noopener'; pa.title = t().mapsTitle; pa.textContent = placeText;
     pl.append(pa);
     renderMap(mapsHref);
+    }
     $('blurb').textContent = (lang === 'de' && ev.blurbDe) || ev.blurb || '';
     $('hosts').hidden = !ev.cohost;
     if (ev.cohost) $('hosts').textContent = t().hosted(ev.cohost);

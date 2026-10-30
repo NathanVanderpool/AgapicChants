@@ -83,6 +83,7 @@
           <label>Postal code <input id="f_postcode" inputmode="numeric"></label>
           <label>City <input id="f_city" required></label>
         </div>
+        <label class="check"><input type="checkbox" id="f_privateAddress"> Private home: show only the venue line and city on the page; the street and maps link go out with the ticket</label>
         <label>Maps link (optional: without one, the address opens in Google Maps by itself) <input id="f_mapsUrl" placeholder="https://maps.app.goo.gl/…"></label>
       </fieldset>
       <fieldset><legend>Words for guests</legend>
@@ -146,6 +147,7 @@
     if (!ev.kind) $('f_kind').value = 'tickets';
     kindView();
     $('f_published').checked = !!ev.published;
+    $('f_privateAddress').checked = !!ev.privateAddress;
   }
   // Listings only need what, when and where: hide the ticket parts of the form
   function kindView() {
@@ -246,7 +248,7 @@
 
   $('form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const event = { published: $('f_published').checked };
+    const event = { published: $('f_published').checked, privateAddress: $('f_privateAddress').checked };
     for (const f of FIELDS) event[f] = $('f_' + f).value;
     if (editingId) event.id = editingId;
     $('saveBtn').disabled = true;
