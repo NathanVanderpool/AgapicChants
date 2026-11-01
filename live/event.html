@@ -93,7 +93,7 @@
     </div>
     <p id="seatsLeft" class="left" hidden></p>
 
-    <div class="card">
+    <div class="card" id="paidCard">
       <video class="explainer" id="explainer" controls playsinline preload="metadata"></video>
       <h2 data-i="paidTitle"></h2>
       <p data-i="paidP1"></p>
@@ -143,7 +143,13 @@
       <p class="impact" id="wDone" hidden data-i="waitDone"></p>
     </section>
 
-    <section class="small">
+    <section id="extBox" hidden>
+      <a class="cta" id="extBtn" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none"></a>
+      <p class="note" data-i="extNote"></p>
+      <div style="text-align:center" id="extShare"></div>
+    </section>
+
+    <section class="small" id="moreBox">
       <p><b data-i="backH"></b> <span data-i="backP"></span></p>
       <p><b data-i="giveH"></b> <a id="giveLink" href="/live/give.html" data-i="giveLink"></a></p>
       <p data-i="notTax"></p>
@@ -163,7 +169,7 @@
   const T = {
     en: {
       other: 'Deutsch', listEyebrow: 'Upcoming evenings', listTitle: 'Come sing with us', listEmpty: 'No evenings are open right now. Check back soon.', moreInfo: 'More info →',
-      eyebrow: 'Communal chant evening', hosted: (c) => `Hosted by Nathan & ${c}`, times: (d, s) => `doors ${d}, singing ${s}`, tDoors: 'Doors open', privNote: 'It’s a private home, so the exact address comes with your ticket.', tStart: 'Singing starts', tEnd: 'Ends around', mapsTitle: 'Open in maps',
+      eyebrow: 'Communal chant evening', hosted: (c) => `Hosted by Nathan & ${c}`, times: (d, s) => `doors ${d}, singing ${s}`, tDoors: 'Doors open', extBtn: 'Get tickets', extNote: 'Tickets are sold by the venue. The link opens their page.', privNote: 'It’s a private home, so the exact address comes with your ticket.', tStart: 'Singing starts', tEnd: 'Ends around', mapsTitle: 'Open in maps',
       paidTitle: 'Tonight is already paid for.',
       videoBtn: '▶ Watch how it works (about a minute)',
       paidP1: 'People who came before you gave so this evening could be free for you. If money is tight right now, reserve your spot and come. You’re welcome as you are, and you don’t need to explain anything.',
@@ -196,7 +202,7 @@
     },
     de: {
       other: 'English', listEyebrow: 'Kommende Abende', listTitle: 'Sing mit uns', listEmpty: 'Gerade sind keine Abende offen. Schau bald wieder vorbei.', moreInfo: 'Mehr Infos →',
-      eyebrow: 'Gemeinsamer Chant-Abend', hosted: (c) => `Mit Nathan & ${c}`, times: (d, s) => `Einlass ${d}, Beginn ${s}`, tDoors: 'Einlass', privNote: 'Es ist eine private Wohnung, deshalb kommt die genaue Adresse mit deinem Ticket.', tStart: 'Beginn', tEnd: 'Ende gegen', mapsTitle: 'In Karten öffnen',
+      eyebrow: 'Gemeinsamer Chant-Abend', hosted: (c) => `Mit Nathan & ${c}`, times: (d, s) => `Einlass ${d}, Beginn ${s}`, tDoors: 'Einlass', extBtn: 'Tickets kaufen', extNote: 'Die Tickets verkauft der Veranstaltungsort. Der Link öffnet seine Seite.', privNote: 'Es ist eine private Wohnung, deshalb kommt die genaue Adresse mit deinem Ticket.', tStart: 'Beginn', tEnd: 'Ende gegen', mapsTitle: 'In Karten öffnen',
       paidTitle: 'Dieser Abend ist schon bezahlt.',
       videoBtn: '▶ Im Video erklärt (gut eine Minute)',
       paidP1: 'Menschen, die vor dir da waren, haben gegeben, damit dieser Abend für dich frei ist. Wenn das Geld gerade knapp ist, reservier dir einen Platz und komm. Du bist willkommen, so wie du bist, und musst nichts erklären.',
@@ -306,7 +312,7 @@
   }
 
   function renderProgress() {
-    if (!progress) return;
+    if (!progress || (ev && ev.kind === 'external')) return;
     const p = progress;
     // Nothing raised yet: show no bar at all rather than an empty one.
     if (!p.sessionsFunded && !p.raisedTowardNext) { $('progress').hidden = true; return; }
@@ -349,6 +355,15 @@
       cl.append(a);
     } else cl.append(t().clinic);
     cl.append(t().cost2);
+    // Tickets sold elsewhere: same page, but the button goes to their ticket site and the pay-it-forward parts stay out
+    const ext = ev.kind === 'external';
+    $('paidCard').hidden = ext; $('moreBox').hidden = ext; $('extBox').hidden = !ext;
+    if (ext) {
+      $('form').hidden = true; $('waitBox').hidden = true; $('progress').hidden = true; $('seatsLeft').hidden = true;
+      $('extBtn').href = ev.link; $('extBtn').textContent = t().extBtn;
+      $('extShare').append($('shareBtn'));
+      return;
+    }
     const full = ev.spotsLeft === 0;
     $('form').hidden = full;
     $('waitBox').hidden = !full;

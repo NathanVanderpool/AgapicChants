@@ -60,8 +60,8 @@
     <form id="form" hidden novalidate>
       <h2 id="formTitle">New evening</h2>
       <fieldset><legend>The basics</legend>
-        <label>What kind <select id="f_kind"><option value="tickets">Own page with pay-it-forward tickets</option><option value="listing">Listing only: a line in the list, no page, no tickets</option></select></label>
-        <label id="linkRow">Link elsewhere (optional, e.g. Luma or the venue) <input id="f_link" placeholder="https://…"></label>
+        <label>What kind <select id="f_kind"><option value="tickets">Own page with pay-it-forward tickets</option><option value="external">Own page, tickets sold elsewhere: the button goes to their ticket site</option><option value="listing">Listing only: a line in the list, no page, no tickets</option></select></label>
+        <label id="linkRow">Link elsewhere (for "tickets sold elsewhere" this is the ticket page; otherwise optional, e.g. Luma) <input id="f_link" placeholder="https://…"></label>
         <label>What and where <input id="f_title" required placeholder="Chanting in Stockholm"></label>
         <div class="row">
           <label>Language of the page <select id="f_lang"><option value="de">German</option><option value="en">English</option></select></label>
@@ -151,9 +151,11 @@
   }
   // Listings only need what, when and where: hide the ticket parts of the form
   function kindView() {
-    const listing = $('f_kind').value === 'listing';
-    $('f_capacity').closest('fieldset').hidden = listing;
-    for (const id of ['f_note', 'f_noteDe', 'f_doors', 'f_end', 'f_address', 'f_postcode', 'f_mapsUrl']) $(id).closest('label').hidden = listing;
+    const kind = $('f_kind').value, listing = kind === 'listing', ext = kind === 'external';
+    $('f_capacity').closest('fieldset').hidden = listing || ext; // no seats or amounts when someone else sells the tickets
+    for (const id of ['f_note', 'f_noteDe']) $(id).closest('label').hidden = listing || ext;
+    for (const id of ['f_doors', 'f_end', 'f_address', 'f_postcode', 'f_mapsUrl']) $(id).closest('label').hidden = listing;
+    $('f_privateAddress').closest('label').hidden = listing || ext;
   }
   $('f_kind').addEventListener('change', kindView);
   function openForm(ev, id, title) {
@@ -192,8 +194,9 @@
       card.append(el('div', 'meta', [fmt(ev.date), ev.start, [ev.venue, ev.city].filter(Boolean).join(', ')].filter(Boolean).join(' · ') + (ev.cohost ? ' · with ' + ev.cohost : '')));
       const tags = el('div', 'tags');
       tags.append(el('span', 'tag' + (ev.published ? ' live' : ''), ev.published ? (listing ? 'Shown in the list' : 'Published') : (listing ? 'Hidden' : 'Draft')));
-      tags.append(el('span', 'tag', listing ? 'Listing only' : 'Tickets'));
-      if (!listing) tags.append(el('span', 'tag', ev.capacity ? `${ev.spotsTaken} of ${ev.capacity} seats taken` : `${ev.spotsTaken} seats taken`));
+      const ext = ev.kind === 'external';
+      tags.append(el('span', 'tag', listing ? 'Listing only' : ext ? 'Tickets elsewhere' : 'Tickets'));
+      if (!listing && !ext) tags.append(el('span', 'tag', ev.capacity ? `${ev.spotsTaken} of ${ev.capacity} seats taken` : `${ev.spotsTaken} seats taken`));
       if (ev.waitlist) tags.append(el('span', 'tag', `${ev.waitlist} on the waitlist`));
       tags.append(el('span', 'tag', ev.lang === 'en' ? 'English' : 'German'));
       if (ev.reminded) tags.append(el('span', 'tag', 'Reminder sent'));
