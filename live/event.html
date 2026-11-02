@@ -23,6 +23,11 @@
   h1{margin:0 0 10px;font-weight:500;font-size:clamp(32px,8vw,44px);line-height:1.05}
   h2{margin:0 0 10px;font-weight:500;font-size:24px;line-height:1.15}
   .meta{margin-top:16px} .meta b{font-weight:600} .meta .times{margin:2px 0 10px} .meta .times div{line-height:1.45}
+  .about{margin-top:28px} .about p{margin:0 0 12px} .about h3{margin:18px 0 8px;font-weight:500;font-size:20px}
+  .about .soft{font-size:15px;color:var(--ink-soft)} .about .come{font-weight:500;margin-top:14px}
+  .about .q{font-style:italic;color:var(--ink-soft)}
+  .listen{display:flex;gap:14px;align-items:center;margin:4px 0 6px;padding:12px 14px;background:var(--card);border:1px solid var(--rule);border-radius:14px}
+  .play{flex:0 0 46px;height:46px;border-radius:50%;border:none;background:var(--terra-dark);color:#fff;font-size:18px;cursor:pointer}
   .card{margin-top:18px;padding:20px;background:var(--card);border:1px solid var(--rule);border-radius:16px}
   .card p{margin:0 0 10px} .card p:last-child{margin:0}
   .progress{margin-top:18px;padding:20px;background:var(--ink);color:var(--cream);border-radius:16px}
@@ -92,6 +97,19 @@
       <a class="map" id="map" hidden target="_blank" rel="noopener"></a>
     </div>
     <p id="seatsLeft" class="left" hidden></p>
+
+    <section class="about" id="aboutBox" hidden>
+      <h2 data-i="aboutH"></h2>
+      <p data-i="aboutWhat"></p>
+      <div class="listen">
+        <button type="button" class="play" id="playBtn" aria-label="Play"><span id="playIcon">▶</span></button>
+        <div><b data-i="listenT"></b><br><span class="soft" data-i="listenS"></span></div>
+        <audio id="chant" src="/audio/Agapic_Chants_-_Sanctuary.mp3" preload="none"></audio>
+      </div>
+      <h3 id="howH"></h3>
+      <div id="howBody"></div>
+      <p class="come" data-i="come"></p>
+    </section>
 
     <div class="card" id="paidCard">
       <video class="explainer" id="explainer" controls playsinline preload="metadata"></video>
@@ -169,7 +187,15 @@
   const T = {
     en: {
       other: 'Deutsch', listEyebrow: 'Upcoming evenings', listTitle: 'Come sing with us', listEmpty: 'No evenings are open right now. Check back soon.', moreInfo: 'More info →',
-      eyebrow: 'Communal chant evening', hosted: (c) => `Hosted by Nathan & ${c}`, times: (d, s) => `doors ${d}, singing ${s}`, tDoors: 'Doors open', extBtn: 'Get tickets', extNote: 'Tickets are sold by the venue. The link opens their page.', privNote: 'It’s a private home, so the exact address comes with your ticket.', tStart: 'Singing starts', tEnd: 'Ends around', mapsTitle: 'Open in maps',
+      eyebrow: 'Communal chant evening', hosted: (c) => `Hosted by Nathan & ${c}`, times: (d, s) => `doors ${d}, singing ${s}`, aboutH: 'What happens on the evening',
+      aboutWhat: 'Agapic Chants is my project of simple, shared songs. The name comes from the Greek agape, unconditional love. The chants are short songs that repeat, made with people from the hopes and struggles of their lives, and easy enough to learn in a minute.',
+      listenT: 'Listen to “Sanctuary”', listenS: 'with Anne and Jake. One of the chants an evening begins with.',
+      howHC: 'How the evening goes',
+      howHCBody: ['We begin with singing: simple songs, nothing to prepare, no performance, just voices finding each other until the room grows still. Then we settle, and look honestly and kindly at our lives.', '<q>What matters to me? Where could I live a little more from love?</q>', 'There’s nothing to fix and nothing you have to do afterward. We simply look.', 'We sing a little more, and then there’s an open round. If something moves you, you can say out loud what you’d like to choose, anything, however small. The room says thank you and breathes out. And if you’d rather stay quiet, that’s good too. Then one last round of singing, tea, and time to simply be together.'],
+      howSing: 'How the evening goes',
+      howSingBody: ['We sing together for about two hours. I teach each song by ear, one line at a time, and we repeat it until the voices find each other. There’s nothing to prepare and nothing to perform, and you don’t need to read music or call yourself a singer.', 'The songs are calm and repeating, so after a while you stop thinking about the words and just sing. Between songs there’s room to breathe and to talk a little. At the end there’s time to simply be together.'],
+      come: 'No experience needed. Come just the way you are.',
+      tDoors: 'Doors open', extBtn: 'Get tickets', extNote: 'Tickets are sold by the venue. The link opens their page.', privNote: 'It’s a private home, so the exact address comes with your ticket.', tStart: 'Singing starts', tEnd: 'Ends around', mapsTitle: 'Open in maps',
       paidTitle: 'Tonight is already paid for.',
       videoBtn: '▶ Watch how it works (about a minute)',
       paidP1: 'People who came before you gave so this evening could be free for you. If money is tight right now, reserve your spot and come. You’re welcome as you are, and you don’t need to explain anything.',
@@ -202,7 +228,15 @@
     },
     de: {
       other: 'English', listEyebrow: 'Kommende Abende', listTitle: 'Sing mit uns', listEmpty: 'Gerade sind keine Abende offen. Schau bald wieder vorbei.', moreInfo: 'Mehr Infos →',
-      eyebrow: 'Gemeinsamer Chant-Abend', hosted: (c) => `Mit Nathan & ${c}`, times: (d, s) => `Einlass ${d}, Beginn ${s}`, tDoors: 'Einlass', extBtn: 'Tickets kaufen', extNote: 'Die Tickets verkauft der Veranstaltungsort. Der Link öffnet seine Seite.', privNote: 'Es ist eine private Wohnung, deshalb kommt die genaue Adresse mit deinem Ticket.', tStart: 'Beginn', tEnd: 'Ende gegen', mapsTitle: 'In Karten öffnen',
+      eyebrow: 'Gemeinsamer Chant-Abend', hosted: (c) => `Mit Nathan & ${c}`, times: (d, s) => `Einlass ${d}, Beginn ${s}`, aboutH: 'Was an dem Abend passiert',
+      aboutWhat: 'Agapic Chants ist mein Projekt für einfache, gemeinsame Lieder. Der Name kommt vom griechischen agape, bedingungslose Liebe. Die Chants sind kurze Lieder, die sich wiederholen, entstanden mit Menschen aus den Hoffnungen und Kämpfen ihres Lebens, und so einfach, dass man sie in einer Minute lernt.',
+      listenT: 'Hör dir „Sanctuary“ an', listenS: 'mit Anne und Jake. Einer der Chants, mit denen ein Abend beginnt.',
+      howHC: 'So läuft der Abend',
+      howHCBody: ['Wir beginnen mit gemeinsamem Singen: einfache Lieder, nichts vorzubereiten, keine Aufführung, nur Stimmen, die zueinanderfinden, bis der Raum still wird. Dann werden wir ruhig und schauen ehrlich und freundlich auf unser Leben.', '<q>Was ist mir wichtig? Wo könnte ich ein bisschen mehr aus der Liebe heraus leben?</q>', 'Es gibt nichts zu reparieren und nichts, was du hinterher tun musst. Wir schauen einfach hin.', 'Wir singen noch ein bisschen, und dann gibt es eine offene Runde. Wenn dich etwas bewegt, kannst du laut sagen, wofür du dich entscheiden möchtest, egal was, egal wie klein. Der Raum sagt danke und atmet auf. Und wenn du lieber zuhörst, ist das genauso willkommen. Dann singen wir noch einmal gemeinsam und lassen den Abend bei Tee ausklingen.'],
+      howSing: 'So läuft der Singkreis',
+      howSingBody: ['Wir singen etwa zwei Stunden zusammen. Ich bringe jedes Lied nach Gehör bei, Zeile für Zeile, und wir wiederholen es, bis die Stimmen zueinanderfinden. Es gibt nichts vorzubereiten und nichts aufzuführen, und du musst weder Noten lesen noch dich als Sänger:in sehen.', 'Die Lieder sind ruhig und wiederholen sich, sodass du irgendwann nicht mehr an die Worte denkst und einfach singst. Zwischen den Liedern ist Raum zum Durchatmen und für ein paar Worte. Am Ende bleibt Zeit, einfach zusammen zu sein.'],
+      come: 'Du musst nichts können und nichts vorbereiten. Komm einfach so, wie du bist.',
+      tDoors: 'Einlass', extBtn: 'Tickets kaufen', extNote: 'Die Tickets verkauft der Veranstaltungsort. Der Link öffnet seine Seite.', privNote: 'Es ist eine private Wohnung, deshalb kommt die genaue Adresse mit deinem Ticket.', tStart: 'Beginn', tEnd: 'Ende gegen', mapsTitle: 'In Karten öffnen',
       paidTitle: 'Dieser Abend ist schon bezahlt.',
       videoBtn: '▶ Im Video erklärt (gut eine Minute)',
       paidP1: 'Menschen, die vor dir da waren, haben gegeben, damit dieser Abend für dich frei ist. Wenn das Geld gerade knapp ist, reservier dir einen Platz und komm. Du bist willkommen, so wie du bist, und musst nichts erklären.',
@@ -355,6 +389,18 @@
       cl.append(a);
     } else cl.append(t().clinic);
     cl.append(t().cost2);
+    // What happens on the evening: Heart Choices (singing, reflection, open round) or a singing circle
+    const about = ev.about || (ev.kind === 'external' ? 'none' : /herz|heart/i.test(ev.title) ? 'hc' : 'sing');
+    $('aboutBox').hidden = about === 'none';
+    if (about !== 'none') {
+      $('howH').textContent = about === 'hc' ? t().howHC : t().howSing;
+      const hb = $('howBody'); hb.textContent = '';
+      for (const para of (about === 'hc' ? t().howHCBody : t().howSingBody)) {
+        const p = document.createElement('p');
+        if (para.startsWith('<q>')) { p.className = 'q'; p.textContent = para.replace(/<\/?q>/g, ''); } else p.textContent = para;
+        hb.append(p);
+      }
+    }
     // Tickets sold elsewhere: same page, but the button goes to their ticket site and the pay-it-forward parts stay out
     const ext = ev.kind === 'external';
     $('paidCard').hidden = ext; $('moreBox').hidden = ext; $('extBox').hidden = !ext;
@@ -410,6 +456,11 @@
     renderEvent();
   }
 
+  $('playBtn').addEventListener('click', () => {
+    const a = $('chant');
+    if (a.paused) { a.play().catch(() => {}); $('playIcon').textContent = '❚❚'; } else { a.pause(); $('playIcon').textContent = '▶'; }
+  });
+  $('chant').addEventListener('ended', () => { $('playIcon').textContent = '▶'; });
   $('langBtn').addEventListener('click', () => { lang = lang === 'de' ? 'en' : 'de'; render(); });
   render();
   if (!ev) return;

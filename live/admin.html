@@ -87,6 +87,7 @@
         <label>Maps link (optional: without one, the address opens in Google Maps by itself) <input id="f_mapsUrl" placeholder="https://maps.app.goo.gl/…"></label>
       </fieldset>
       <fieldset><legend>Words for guests</legend>
+        <label>"What happens on the evening" text <select id="f_about"><option value="">Guess from the title</option><option value="hc">Heart Choices: singing, a quiet look at your life, an open round</option><option value="sing">Singkreis: singing together</option><option value="none">No description</option></select></label>
         <label>Short description (English) <textarea id="f_blurb"></textarea></label>
         <label>Short description (German) <textarea id="f_blurbDe"></textarea></label>
         <label>Note on the ticket (English) <textarea id="f_note" placeholder="We'll start with a simple song everyone can learn in a minute."></textarea></label>
@@ -125,7 +126,7 @@
   let key = '';
   try { key = sessionStorage.getItem('acKey') || ''; } catch (e) {}
   let editingId = null;
-  const FIELDS = ['kind', 'link', 'title', 'lang', 'cohost', 'date', 'doors', 'start', 'end', 'venue', 'address', 'postcode', 'city', 'mapsUrl', 'blurb', 'blurbDe', 'note', 'noteDe', 'capacity', 'maxSpotsPerOrder', 'recommended', 'tiers'];
+  const FIELDS = ['kind', 'link', 'about', 'title', 'lang', 'cohost', 'date', 'doors', 'start', 'end', 'venue', 'address', 'postcode', 'city', 'mapsUrl', 'blurb', 'blurbDe', 'note', 'noteDe', 'capacity', 'maxSpotsPerOrder', 'recommended', 'tiers'];
 
   const show = (text, ok) => { const m = $('msg'); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); m.style.display = 'block'; m.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
   const api = async (path, body) => {
