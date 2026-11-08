@@ -77,13 +77,13 @@
         </div>
       </fieldset>
       <fieldset><legend>Where</legend>
-        <label>Venue <input id="f_venue" required placeholder="Quäker-Haus"></label>
+        <label class="check"><input type="checkbox" id="f_privateAddress"> Private home: the page shows only the general area and says the exact address comes with the ticket</label>
+        <label><span id="venueLabel">Venue</span> <input id="f_venue" required placeholder="Quäker-Haus"></label>
         <label>Street and number <input id="f_address"></label>
         <div class="row">
           <label>Postal code <input id="f_postcode" inputmode="numeric"></label>
           <label>City <input id="f_city" required></label>
         </div>
-        <label class="check"><input type="checkbox" id="f_privateAddress"> Private home: show only the venue line and city on the page; the street and maps link go out with the ticket</label>
         <label>Maps link (optional: without one, the address opens in Google Maps by itself) <input id="f_mapsUrl" placeholder="https://maps.app.goo.gl/…"></label>
       </fieldset>
       <fieldset><legend>Words for guests</legend>
@@ -149,6 +149,7 @@
     kindView();
     $('f_published').checked = !!ev.published;
     $('f_privateAddress').checked = !!ev.privateAddress;
+    privView();
   }
   // Listings only need what, when and where: hide the ticket parts of the form
   function kindView() {
@@ -159,6 +160,13 @@
     $('f_privateAddress').closest('label').hidden = listing || ext;
   }
   $('f_kind').addEventListener('change', kindView);
+  // With a private home, the venue line is the only place shown publicly: ask for the general area
+  function privView() {
+    const priv = $('f_privateAddress').checked;
+    $('venueLabel').textContent = priv ? 'General area (shown publicly, e.g. “Wohnzimmer in Lehen”)' : 'Venue';
+    $('f_venue').placeholder = priv ? 'Wohnzimmer in Lehen, 5 Min. von der S-Bahn' : 'Quäker-Haus';
+  }
+  $('f_privateAddress').addEventListener('change', privView);
   function openForm(ev, id, title) {
     editingId = id; fill(ev);
     $('formTitle').textContent = title; $('form').hidden = false; $('msg').style.display = 'none';
