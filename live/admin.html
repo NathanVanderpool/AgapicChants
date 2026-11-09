@@ -163,8 +163,9 @@
   // With a private home, the venue line is the only place shown publicly: ask for the general area
   function privView() {
     const priv = $('f_privateAddress').checked;
-    $('venueLabel').textContent = priv ? 'General area (shown publicly, e.g. “Wohnzimmer in Lehen”)' : 'Venue';
-    $('f_venue').placeholder = priv ? 'Wohnzimmer in Lehen, 5 Min. von der S-Bahn' : 'Quäker-Haus';
+    $('venueLabel').textContent = priv ? 'General area, shown publicly. Leave it empty and it’s filled in from the address (neighbourhood and nearest stop)' : 'Venue';
+    $('f_venue').placeholder = priv ? 'filled in for you when you save' : 'Quäker-Haus';
+    $('f_venue').required = !priv;
   }
   $('f_privateAddress').addEventListener('change', privView);
   function openForm(ev, id, title) {
@@ -268,7 +269,8 @@
       const r = await api('/api/admin/save-event', { event });
       $('form').hidden = true;
       await load();
-      show(r.event.published ? `Saved and published. Use “Copy link” to share it.` : 'Saved as a draft. Tick “Published” when you’re ready for people to book.', true);
+      const area = r.event.privateAddress ? ` The page shows: “${r.event.venue}, ${r.event.city}”.` : '';
+      show((r.event.published ? `Saved and published. Use “Copy link” to share it.` : 'Saved as a draft. Tick “Published” when you’re ready for people to book.') + area, true);
     } catch (x) { show(x.message); }
     $('saveBtn').disabled = false;
   });
