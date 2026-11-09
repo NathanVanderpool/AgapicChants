@@ -193,6 +193,33 @@
     });
     ab.append(tb);
 
+    // One-time helper (9 Nov): private-home addresses for Freiburg 5 Dec, München and Salzburg. Removed again once used.
+    {
+      const fixes = [
+        { id: 'freiburg-2026-12-05', set: { address: 'Hochrüttestr. 15', postcode: '79117', city: 'Freiburg', privateAddress: true }, clearVenue: /Adresse kommt/ },
+        { id: 'munchen-2026-12-17', set: { title: 'Singkreis in München', address: 'Dorfstraße 8a', postcode: '85662', city: 'Hohenbrunn', privateAddress: true }, clearVenue: /Adresse kommt/, maps: 'https://maps.app.goo.gl/AUT7cLeTrnZBX8569' },
+        { id: 'salzburg-2026-12-18', set: { privateAddress: true }, ifNoAddress: { address: 'Hüttenberg Straße 8', postcode: '5020', city: 'Salzburg' } },
+      ];
+      const todo = fixes.map((f) => ({ f, ev: data.events.find((x) => x.id === f.id) })).filter(({ f, ev }) => ev && (!ev.privateAddress || !ev.address || (f.set.title && ev.title !== f.set.title)));
+      if (todo.length) {
+        const box = el('div', 'box'); box.style.marginTop = '16px';
+        box.append(el('p', '', `Private-home addresses: ${todo.map(({ ev }) => ev.city + ' ' + fmt(ev.date)).join(', ')}. The street moves into the address field and only goes out with the ticket; the page shows a general area instead.`));
+        const btn = el('button', 'primary', 'Apply'); btn.type = 'button';
+        btn.addEventListener('click', async () => {
+          btn.disabled = true; const out = [];
+          for (const { f, ev } of todo) {
+            const e = { ...ev, ...f.set };
+            if (f.ifNoAddress && !ev.address) Object.assign(e, f.ifNoAddress);
+            if (f.clearVenue && f.clearVenue.test(ev.venue || '')) e.venue = '';
+            if (f.maps && !ev.mapsUrl) e.mapsUrl = f.maps;
+            try { const r = await api('/api/admin/save-event', { event: e }); out.push(`${r.event.city}: “${r.event.venue}”`); } catch (x) { out.push(`${ev.city}: ${x.message}`); }
+          }
+          show('Done. The pages now show ' + out.join(' · '), true); load();
+        });
+        box.append(btn); ab.after(box);
+      }
+    }
+
 
     const list = $('list'); list.textContent = '';
     if (!data.events.length) list.append(el('p', '', 'No evenings yet. Tap “New evening” to add the first one.'));
